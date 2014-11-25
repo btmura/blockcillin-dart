@@ -1,5 +1,8 @@
 import 'dart:html';
 
-void main() {
-  querySelector("#text").text = "Hello, blockcillin!";
+import 'package:blockcillin/src/game.dart';
+
+main() {
+  var g = new Game();
+  querySelector("#text").text = g.text;
 }
