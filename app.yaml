@@ -2,3 +2,6 @@ version: 1
 runtime: custom
 vm: true
 api_version: 1
+
+env_variables:
+  DART_PUB_SERVE: 'http://172.17.42.1:7777'
