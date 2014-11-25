@@ -4,11 +4,10 @@ import 'package:appengine/appengine.dart';
 
 main() {
   runAppEngine((HttpRequest request) {
-    if (request.uri.path == "/favicon.ico") {
-     context.assets.serve();   
+    if (request.uri.path == "/") {
+      context.assets.serve("/index.html");
     } else {
-      request.response..write('Hello, blockcillin!')
-                      ..close();
+      context.assets.serve();
     }
   });
 }
