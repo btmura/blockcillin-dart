@@ -2,7 +2,7 @@ import 'package:blockcillin/src/board.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
-  test("Board constructor", () {
+  test("Board", () {
     var b = new Board([]);
   });
 }

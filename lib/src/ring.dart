@@ -1,3 +1,5 @@
+library ring;
+
 import 'package:blockcillin/src/cell.dart';
 
 class Ring {

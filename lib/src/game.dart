@@ -1,5 +1,10 @@
+library game;
+
+import 'package:blockcillin/src/board.dart';
+
 class Game {
 
-  get text => "Hello, blockcillin!";
+  final Board board;
 
+  Game(this.board);
 }

@@ -1,3 +1,5 @@
+library block;
+
 class Block {
 
   final BlockColor color;
