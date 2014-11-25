@@ -1,6 +1,6 @@
 class Block {
 
-  BlockColor color;
+  final BlockColor color;
 
   Block(this.color);
 }

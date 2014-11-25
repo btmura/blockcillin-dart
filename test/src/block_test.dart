@@ -5,8 +5,5 @@ main() {
   test("Block.color", () {
     var b = new Block(BlockColor.RED);
     expect(b.color, equals(BlockColor.RED));
-
-    b.color = BlockColor.BLUE;
-    expect(b.color, equals(BlockColor.BLUE));
   });
 }
