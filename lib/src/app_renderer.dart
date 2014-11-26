@@ -10,7 +10,15 @@ class AppRenderer {
 
   final App app;
 
-  AppRenderer(this.app);
+  BodyElement _body;
+  DivElement _buttonBar;
+  CanvasElement _canvas;
+
+  AppRenderer(this.app) {
+    _body = querySelector("body");
+    _buttonBar = querySelector("#button-bar");
+    _canvas = querySelector("#canvas");
+  }
 
   void render() {
     _resizeCanvas();
@@ -22,17 +30,15 @@ class AppRenderer {
   }
 
   void _resizeCanvas() {
-    var bodyHeight = _getElementHeight("body");
-    var buttonBarHeight = _getElementHeight("#button-bar");
-    var canvasHeight = bodyHeight - buttonBarHeight - 1;
+    var wantedTop = _buttonBar.clientHeight;
+    if (_canvas.clientTop != wantedTop) {
+      _canvas.style.top = "${wantedTop}px";
+    }
 
-    var canvas = querySelector("#canvas");
-    canvas.style.top = "${buttonBarHeight}px";
-    canvas.style.height = "${canvasHeight}px";
-  }
-
-  int _getElementHeight(String selector) {
-    return querySelector(selector).clientHeight;
+    var wantedHeight = _body.clientHeight - _buttonBar.clientHeight - 1;
+    if (_canvas.clientHeight != wantedHeight) {
+      _canvas.style.height = "${wantedHeight}px";
+    }
   }
 
   void _initGL() {
