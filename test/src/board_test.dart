@@ -1,6 +1,7 @@
+import 'package:unittest/unittest.dart';
+
 import 'package:blockcillin/src/board.dart';
 import 'package:blockcillin/src/ring.dart';
-import 'package:unittest/unittest.dart';
 
 main() {
   group("Board", () {

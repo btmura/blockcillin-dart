@@ -1,6 +1,7 @@
-import 'package:blockcillin/src/gl.dart';
-import 'package:unittest/unittest.dart';
 import 'package:unittest/html_config.dart';
+import 'package:unittest/unittest.dart';
+
+import 'package:blockcillin/src/gl.dart';
 
 main() {
   useHtmlConfiguration();

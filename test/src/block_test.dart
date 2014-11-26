@@ -1,5 +1,6 @@
-import 'package:blockcillin/src/block.dart';
 import 'package:unittest/unittest.dart';
+
+import 'package:blockcillin/src/block.dart';
 
 main() {
   group("Block", () {

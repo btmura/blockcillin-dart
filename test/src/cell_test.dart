@@ -1,6 +1,7 @@
+import 'package:unittest/unittest.dart';
+
 import 'package:blockcillin/src/block.dart';
 import 'package:blockcillin/src/cell.dart';
-import 'package:unittest/unittest.dart';
 
 main() {
   group("Cell", () {
