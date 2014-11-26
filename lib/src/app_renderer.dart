@@ -31,14 +31,16 @@ class AppRenderer {
   }
 
   void _resizeCanvas() {
-    var wantedTop = _buttonBar.clientHeight;
-    if (_canvas.clientTop != wantedTop) {
-      _canvas.style.top = "${wantedTop}px";
-    }
-
-    var wantedHeight = _body.clientHeight - _buttonBar.clientHeight - 1;
+    // Adjust the height of the canvas if it has changed.
+    var wantedHeight = _body.clientHeight - _buttonBar.clientHeight - 5;
     if (_canvas.clientHeight != wantedHeight) {
       _canvas.style.height = "${wantedHeight}px";
+    }
+
+    // Adjust the canvas dimensions to match it's displayed size to avoid scaling.
+    if (_canvas.width != _canvas.clientWidth || _canvas.height != _canvas.clientHeight) {
+      _canvas.width = _canvas.clientWidth;
+      _canvas.height = _canvas.clientHeight;
     }
   }
 
