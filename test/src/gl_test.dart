@@ -1,7 +1,3 @@
-library gl;
-
-import 'dart:html';
-
 import 'package:blockcillin/src/gl.dart';
 import 'package:unittest/unittest.dart';
 import 'package:unittest/html_config.dart';
@@ -9,10 +5,7 @@ import 'package:unittest/html_config.dart';
 main() {
   useHtmlConfiguration();
 
-  var canvas = querySelector("#canvas");
-  expect(canvas, isNotNull);
-
-  var gl = getWebGL(canvas);
+  var gl = getWebGL("#canvas");
   expect(gl, isNotNull);
 
   var vertexShaderSource = '''

@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:web_gl' as webgl;
 
 import 'package:blockcillin/src/game.dart';
@@ -7,8 +6,7 @@ import 'package:blockcillin/src/gl.dart';
 main() {
   var game = new Game.withRandomBoard(3, 3);
 
-  var canvas = querySelector("#canvas");
-  var gl = getWebGL(canvas);
+  var gl = getWebGL("#canvas");
   if (gl == null) {
     return;
   }
