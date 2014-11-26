@@ -6,5 +6,9 @@ class Cell {
 
   Block block;
 
-  Cell.withBlock(this.block);
+  Cell(this.block);
+
+  factory Cell.withRandomBlock([int seed]) {
+    return new Cell(new Block.withRandomColor(seed));
+  }
 }

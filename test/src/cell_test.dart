@@ -3,12 +3,24 @@ import 'package:blockcillin/src/cell.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
-  test("Cell.withBlock", () {
-    var block = new Block(BlockColor.RED);
-    var cell = new Cell.withBlock(block);
-    expect(cell.block, equals(block));
+  group("Cell", () {
+    test("Cell(block)", () {
+      var block = new Block.withRandomColor();
+      var cell = new Cell(block);
+      expect(cell.block, equals(block));
+    });
 
-    cell.block = null;
-    expect(cell.block, isNull);
+    test("Cell.withRandomBlock()", () {
+      var cell = new Cell.withRandomBlock(1337);
+      expect(cell.block, equals(new Block(BlockColor.red)));
+    });
+
+    test("block", () {
+      var cell = new Cell.withRandomBlock();
+      expect(cell.block, isNotNull);
+
+      cell.block = null;
+      expect(cell.block, isNull);
+    });
   });
 }
