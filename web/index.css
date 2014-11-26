@@ -1,0 +1,19 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: red;
+  margin: 0;
+}
+
+#button-bar {
+  background-color: blue;
+  width: 100%;
+}
+
+#canvas {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
