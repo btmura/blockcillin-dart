@@ -1,6 +1,7 @@
 library app_renderer;
 
 import 'dart:html';
+import 'dart:typed_data';
 import 'dart:web_gl' as webgl;
 
 import 'package:blockcillin/src/app.dart';
@@ -48,8 +49,10 @@ class AppRenderer {
     }
 
     var vertexShaderSource = '''
+      attribute vec4 a_position;
+
       void main(void) {
-        gl_Position = vec4(0.0, 0.0, 0.0, 0.0);    
+        gl_Position = a_position;    
       }
     ''';
 
@@ -67,7 +70,34 @@ class AppRenderer {
     }
     gl.useProgram(program);
 
+    var positionAttrib = gl.getAttribLocation(program, "a_position");
+    if (positionAttrib == null) {
+      print("positionAttrib is null");
+      return;
+    }
+
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(webgl.COLOR_BUFFER_BIT);
+
+    var vertexData = [
+        0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+    ];
+    webgl.Buffer vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(webgl.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(vertexData), webgl.STATIC_DRAW);
+
+    gl.enableVertexAttribArray(positionAttrib);
+    gl.vertexAttribPointer(positionAttrib, 3, webgl.FLOAT, false, 0, 0);
+
+    var indexData = [
+        0, 1, 2,
+    ];
+    webgl.Buffer indexBuffer = gl.createBuffer();
+    gl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
+
+    gl.drawElements(webgl.TRIANGLES, 3, webgl.UNSIGNED_SHORT, 0);
   }
 }
