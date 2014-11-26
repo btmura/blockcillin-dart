@@ -14,11 +14,28 @@ class AppRenderer {
 
   void render() {
     _resizeCanvas();
+    _initGL();
 
     window.onResize.listen((event) {
       _resizeCanvas();
     });
+  }
 
+  void _resizeCanvas() {
+    var bodyHeight = _getElementHeight("body");
+    var buttonBarHeight = _getElementHeight("#button-bar");
+    var canvasHeight = bodyHeight - buttonBarHeight - 1;
+
+    var canvas = querySelector("#canvas");
+    canvas.style.top = "${buttonBarHeight}px";
+    canvas.style.height = "${canvasHeight}px";
+  }
+
+  int _getElementHeight(String selector) {
+    return querySelector(selector).clientHeight;
+  }
+
+  void _initGL() {
     var gl = getWebGL("#canvas");
     if (gl == null) {
       return;
@@ -46,19 +63,5 @@ class AppRenderer {
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(webgl.COLOR_BUFFER_BIT);
-  }
-
-  void _resizeCanvas() {
-    var bodyHeight = _getElementHeight("body");
-    var buttonBarHeight = _getElementHeight("#button-bar");
-    var canvasHeight = bodyHeight - buttonBarHeight - 1;
-
-    var canvas = querySelector("#canvas");
-    canvas.style.top = "${buttonBarHeight}px";
-    canvas.style.height = "${canvasHeight}px";
-  }
-
-  int _getElementHeight(String selector) {
-    return querySelector(selector).clientHeight;
   }
 }
