@@ -13,4 +13,10 @@ html, body {
 #canvas {
   position: absolute;
   width: 100%;
+  z-index: 0;
+}
+
+.menu {
+  position: absolute;
+  z-index: 10;
 }
