@@ -19,7 +19,3 @@ deploy:
 test:
 	for test in $(TEST_SRCS); do dart $$test; done
 
-.PHONY: fmt
-fmt:
-	dartfmt --write --max_line_length Inf $(ALL_SRCS)
-
