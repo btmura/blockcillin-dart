@@ -1,17 +1,16 @@
 html, body {
+  background-color: #000;
+  color: #fff;
   height: 100%;
-}
-
-body {
-  background-color: red;
   margin: 0;
 }
 
 #button-bar {
-  background-color: blue;
+  text-align: center;
   width: 100%;
 }
 
 #canvas {
+  position: absolute;
   width: 100%;
 }

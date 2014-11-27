@@ -32,7 +32,7 @@ class AppRenderer {
 
   void _resizeCanvas() {
     // Adjust the height of the canvas if it has changed.
-    var wantedHeight = _body.clientHeight - _buttonBar.clientHeight - 5;
+    var wantedHeight = _body.clientHeight - _buttonBar.clientHeight;
     if (_canvas.clientHeight != wantedHeight) {
       _canvas.style.height = "${wantedHeight}px";
     }
@@ -85,6 +85,7 @@ class AppRenderer {
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
+        0.0, -1.0, 0.0,
     ];
     webgl.Buffer vertexBuffer = gl.createBuffer();
     gl.bindBuffer(webgl.ARRAY_BUFFER, vertexBuffer);
@@ -95,11 +96,12 @@ class AppRenderer {
 
     var indexData = [
         0, 1, 2,
+        0, 3, 2,
     ];
     webgl.Buffer indexBuffer = gl.createBuffer();
     gl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
 
-    gl.drawElements(webgl.TRIANGLES, 3, webgl.UNSIGNED_SHORT, 0);
+    gl.drawElements(webgl.TRIANGLES, 6, webgl.UNSIGNED_SHORT, 0);
   }
 }
