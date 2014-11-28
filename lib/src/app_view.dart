@@ -1,15 +1,12 @@
-library app_renderer;
+library app_view;
 
 import 'dart:html';
 import 'dart:typed_data';
 import 'dart:web_gl' as webgl;
 
-import 'package:blockcillin/src/app.dart';
 import 'package:blockcillin/src/gl.dart';
 
-class AppRenderer {
-
-  final App app;
+class AppView {
 
   BodyElement _body;
   DivElement _buttonBar;
@@ -21,38 +18,16 @@ class AppRenderer {
   webgl.Buffer _vertexBuffer;
   webgl.Buffer _indexBuffer;
 
-  AppRenderer(this.app) {
+  AppView() {
     _body = querySelector("body");
     _buttonBar = querySelector("#button-bar");
     _canvas = querySelector("#canvas");
     _newGameButton = querySelector("#new-game-button");
   }
 
-  void render() {
-    _resizeCanvas();
+  void init() {
+    resizeCanvas();
     _initGL();
-
-    window.onResize.listen((event) {
-      _resizeCanvas();
-    });
-
-    _newGameButton.onClick.listen((event) {
-      _draw();
-    });
-  }
-
-  void _resizeCanvas() {
-    // Adjust the height of the canvas if it has changed.
-    var wantedHeight = _body.clientHeight - _buttonBar.clientHeight;
-    if (_canvas.clientHeight != wantedHeight) {
-      _canvas.style.height = "${wantedHeight}px";
-    }
-
-    // Adjust the canvas dimensions to match it's displayed size to avoid scaling.
-    if (_canvas.width != _canvas.clientWidth || _canvas.height != _canvas.clientHeight) {
-      _canvas.width = _canvas.clientWidth;
-      _canvas.height = _canvas.clientHeight;
-    }
   }
 
   void _initGL() {
@@ -110,7 +85,7 @@ class AppRenderer {
     _gl.bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
   }
 
-  void _draw() {
+  void draw() {
     _gl.clear(webgl.COLOR_BUFFER_BIT);
 
     _gl.bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer);
@@ -119,5 +94,19 @@ class AppRenderer {
 
     _gl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer);
     _gl.drawElements(webgl.TRIANGLES, 6, webgl.UNSIGNED_SHORT, 0);
+  }
+
+  void resizeCanvas() {
+    // Adjust the height of the canvas if it has changed.
+    var wantedHeight = _body.clientHeight - _buttonBar.clientHeight;
+    if (_canvas.clientHeight != wantedHeight) {
+      _canvas.style.height = "${wantedHeight}px";
+    }
+
+    // Adjust the canvas dimensions to match it's displayed size to avoid scaling.
+    if (_canvas.width != _canvas.clientWidth || _canvas.height != _canvas.clientHeight) {
+      _canvas.width = _canvas.clientWidth;
+      _canvas.height = _canvas.clientHeight;
+    }
   }
 }
