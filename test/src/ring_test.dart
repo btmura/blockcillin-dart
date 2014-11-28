@@ -1,10 +1,7 @@
-import 'package:unittest/unittest.dart';
+part of tests;
 
-import 'package:blockcillin/src/cell.dart';
-import 'package:blockcillin/src/ring.dart';
-
-main() {
-  group("Ring", () {
+ring_tests() {
+  group("ring", () {
     test("Ring(cells)", () {
       var cells = [new Cell.withRandomBlock(), new Cell.withRandomBlock()];
       var ring = new Ring(cells);

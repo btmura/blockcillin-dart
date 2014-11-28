@@ -1,47 +1,40 @@
-library gl;
+part of tests;
 
-import 'package:unittest/html_config.dart';
-import 'package:unittest/unittest.dart';
+gl_tests() {
+  const vertexShaderSource = '''
+    void main(void) {
+      gl_Position = vec4(0.0, 0.0, 0.0, 0.0);    
+    }
+  ''';
 
-import 'package:blockcillin/src/gl.dart';
+  const fragmentShaderSource = '''
+    precision mediump float;
+  
+    void main(void) {
+      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    }
+  ''';
 
-const _vertexShaderSource = '''
-  void main(void) {
-    gl_Position = vec4(0.0, 0.0, 0.0, 0.0);    
-  }
-''';
-
-const _fragmentShaderSource = '''
-  precision mediump float;
-
-  void main(void) {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-  }
-''';
-
-var _gl;
-
-main() {
-  useHtmlConfiguration();
+  var gl;
 
   group("gl", () {
     setUp(() {
-      _gl = getWebGL("#canvas");
-      expect(_gl, isNotNull);
+      gl = getWebGL("#canvas");
+      expect(gl, isNotNull);
     });
 
     test("createProgram(gl, vertexShaderSource, fragmentShaderSource) - valid shaders", () {
-      var program = createProgram(_gl, _vertexShaderSource, _fragmentShaderSource);
+      var program = createProgram(gl, vertexShaderSource, fragmentShaderSource);
       expect(program, isNotNull);
     });
 
     test("createProgram(gl, vertexShaderSource, fragmentShaderSource) - invalid vertex shader", () {
-      var program = createProgram(_gl, "bad vertex shader source", _fragmentShaderSource);
+      var program = createProgram(gl, "bad vertex shader source", fragmentShaderSource);
       expect(program, isNull);
     });
 
     test("createProgram(gl, vertexShaderSource, fragmentShaderSource) - invalid fragment shader", () {
-      var program = createProgram(_gl, _vertexShaderSource, "bad fragment shader source");
+      var program = createProgram(gl, vertexShaderSource, "bad fragment shader source");
       expect(program, isNull);
     });
   });

@@ -1,10 +1,7 @@
-import 'package:unittest/unittest.dart';
+part of tests;
 
-import 'package:blockcillin/src/block.dart';
-import 'package:blockcillin/src/cell.dart';
-
-main() {
-  group("Cell", () {
+cell_tests() {
+  group("cell", () {
     test("Cell(block)", () {
       var block = new Block.withRandomColor();
       var cell = new Cell(block);
@@ -16,7 +13,7 @@ main() {
       expect(cell.block, equals(new Block(BlockColor.red)));
     });
 
-    test("block", () {
+    test("Cell.block", () {
       var cell = new Cell.withRandomBlock();
       expect(cell.block, isNotNull);
 

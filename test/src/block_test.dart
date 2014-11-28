@@ -1,9 +1,7 @@
-import 'package:unittest/unittest.dart';
+part of tests;
 
-import 'package:blockcillin/src/block.dart';
-
-main() {
-  group("Block", () {
+block_tests() {
+  group("block", () {
     test("Block(color)", () {
       var block = new Block(BlockColor.red);
       expect(block.color, equals(BlockColor.red));
@@ -14,7 +12,7 @@ main() {
       expect(block.color, equals(BlockColor.red));
     });
 
-    test("operator ==", () {
+    test("Block.operator ==", () {
       var block = new Block(BlockColor.red);
       var same = new Block(BlockColor.red);
       expect(same, equals(block));
@@ -22,10 +20,8 @@ main() {
       var different = new Block(BlockColor.blue);
       expect(different, isNot(equals(block)));
     });
-  });
 
-  group("BlockColor", () {
-    test("random()", () {
+    test("BlockColor.random()", () {
       var color = BlockColor.random(3007);
       expect(color, equals(BlockColor.blue));
     });

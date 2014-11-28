@@ -1,10 +1,7 @@
-import 'package:unittest/unittest.dart';
+part of tests;
 
-import 'package:blockcillin/src/board.dart';
-import 'package:blockcillin/src/game.dart';
-
-main() {
-  group("Game", () {
+game_tests() {
+  group("game", () {
     test("Game(board)", () {
       var board = new Board.withRandomRings(2, 1);
       var game = new Game(board);

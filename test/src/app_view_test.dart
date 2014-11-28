@@ -1,10 +1,8 @@
-import 'package:unittest/unittest.dart';
+part of tests;
 
-import 'package:blockcillin/src/app_view.dart';
-
-main() {
-  group("AppView", () {
-    test("AppView", () {
+app_view_tests() {
+  group("app_view", () {
+    test("AppView()", () {
       var appView = new AppView();
     });
   });
