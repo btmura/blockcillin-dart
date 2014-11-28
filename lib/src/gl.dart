@@ -16,20 +16,6 @@ webgl.RenderingContext getWebGL(String canvasId) {
 
   gl = canvas.getContext("experimental-webgl");
   if (gl != null) {
-    var vertexShaderSource = '''
-      void main(void) {
-        gl_Position = vec4(0.0, 0.0, 0.0, 0.0);    
-      }
-    ''';
-
-    var fragmentShaderSource = '''
-      precision mediump float;
-  
-      void main(void) {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-      }
-    ''';
-
     return gl;
   }
 
