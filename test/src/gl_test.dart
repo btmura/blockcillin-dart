@@ -20,11 +20,10 @@ gl_tests() {
 
   group("gl", () {
     setUp(() {
-      canvas = new CanvasElement()
-          ..id = "canvas";
+      canvas = new CanvasElement();
       document.body.children.add(canvas);
 
-      gl = getWebGL("#canvas");
+      gl = getWebGL(canvas);
       expect(gl, isNotNull);
     });
 

@@ -49,7 +49,7 @@ class GameView {
   }
 
   void _initGL() {
-    _gl = getWebGL("#canvas");
+    _gl = getWebGL(_canvas);
     if (_gl == null) {
       return;
     }

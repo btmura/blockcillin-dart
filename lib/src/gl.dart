@@ -3,12 +3,7 @@ library gl;
 import 'dart:html';
 import 'dart:web_gl' as webgl;
 
-webgl.RenderingContext getWebGL(String canvasId) {
-  var canvas = querySelector(canvasId);
-  if (canvas == null) {
-    return null;
-  }
-
+webgl.RenderingContext getWebGL(CanvasElement canvas) {
   var gl = canvas.getContext("webgl");
   if (gl != null) {
     return gl;
