@@ -8,6 +8,10 @@ main_menu_tests() {
       menu = new MainMenu();
     });
 
+    test("MainMenu.onNewGameButtonClick", () {
+      expect(menu.onNewGameButtonClick, isNotNull);
+    });
+
     test("MainMenu.visible = true", () {
       expect(querySelector("#main-menu"), isNull);
 
