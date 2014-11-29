@@ -11,7 +11,6 @@ class AppView {
   BodyElement _body;
   DivElement _buttonBar;
   CanvasElement _canvas;
-  DivElement _newGameButton;
 
   webgl.RenderingContext _gl;
   int _positionAttrib;
@@ -22,7 +21,6 @@ class AppView {
     _body = querySelector("body");
     _buttonBar = querySelector("#button-bar");
     _canvas = querySelector("#canvas");
-    _newGameButton = querySelector("#new-game-button");
   }
 
   void init() {

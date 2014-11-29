@@ -1,5 +1,7 @@
 library tests;
 
+import 'dart:async';
+import 'dart:html';
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 
@@ -11,6 +13,7 @@ import 'package:blockcillin/src/board.dart';
 import 'package:blockcillin/src/cell.dart';
 import 'package:blockcillin/src/game.dart';
 import 'package:blockcillin/src/gl.dart';
+import 'package:blockcillin/src/main_menu.dart';
 import 'package:blockcillin/src/ring.dart';
 
 part 'app_test.dart';
@@ -21,6 +24,7 @@ part 'board_test.dart';
 part 'cell_test.dart';
 part 'game_test.dart';
 part 'gl_test.dart';
+part 'main_menu_test.dart';
 part 'ring_test.dart';
 
 main() {
@@ -34,5 +38,6 @@ main() {
   cell_tests();
   game_tests();
   gl_tests();
+  main_menu_tests();
   ring_tests();
 }
