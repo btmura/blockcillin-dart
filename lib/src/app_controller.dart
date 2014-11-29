@@ -22,20 +22,31 @@ class AppController {
       appView.resizeCanvas();
     });
 
-    window.onKeyUp.listen((event) {
-      switch (event.keyCode) {
-        case KeyCode.ESC:
-          _mainMenu.show();
-          break;
-      }
-    });
+    window.onKeyUp
+        .where((event) => event.keyCode == KeyCode.ESC)
+        .listen((_) {
+          if (app.gameStarted) {
+            app.gamePaused = !app.gamePaused;
+            _update();
+          }
+        });
 
     _mainMenu.onNewGameButtonClick.listen((_) {
-      _mainMenu.hide();
-      appView.draw();
+      app.gameStarted = true;
+      app.gamePaused = false;
+      _update();
     });
 
     appView.init();
-    _mainMenu.show();
+
+    _update();
+  }
+
+  void _update() {
+    if (!app.gameStarted || app.gamePaused) {
+      _mainMenu.show();
+    } else {
+      _mainMenu.hide();
+    }
   }
 }
