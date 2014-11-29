@@ -1,6 +1,5 @@
 library tests;
 
-import 'dart:async';
 import 'dart:html';
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';

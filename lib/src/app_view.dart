@@ -8,7 +8,6 @@ import 'package:blockcillin/src/gl.dart';
 
 class AppView {
 
-  BodyElement _body;
   DivElement _buttonBar;
   CanvasElement _canvas;
 
@@ -18,12 +17,17 @@ class AppView {
   webgl.Buffer _indexBuffer;
 
   AppView() {
-    _body = querySelector("body");
-    _buttonBar = querySelector("#button-bar");
-    _canvas = querySelector("#canvas");
+    _buttonBar = new DivElement()
+        ..id = "button-bar"
+        ..text = "Buttons";
+    _canvas = new CanvasElement()
+        ..id = "canvas";
   }
 
   void init() {
+    document.body.children.add(_buttonBar);
+    document.body.children.add(_canvas);
+
     resizeCanvas();
     _initGL();
   }
@@ -96,7 +100,7 @@ class AppView {
 
   void resizeCanvas() {
     // Adjust the height of the canvas if it has changed.
-    var wantedHeight = _body.clientHeight - _buttonBar.clientHeight;
+    var wantedHeight = document.body.clientHeight - _buttonBar.clientHeight;
     if (_canvas.clientHeight != wantedHeight) {
       _canvas.style.height = "${wantedHeight}px";
     }
