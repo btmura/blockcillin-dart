@@ -42,10 +42,6 @@ class AppController {
   }
 
   void _update() {
-    if (!app.gameStarted || app.gamePaused) {
-      appView.mainMenu.show();
-    } else {
-      appView.mainMenu.hide();
-    }
+    appView.mainMenu.visible = !app.gameStarted || app.gamePaused;
   }
 }

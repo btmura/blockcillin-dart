@@ -19,11 +19,19 @@ class MainMenu {
 
   ElementStream<MouseEvent> get onNewGameButtonClick => _newGameButton.onClick;
 
-  void show() {
+  void set visible(bool visible) {
+    if (visible) {
+      _show();
+    } else {
+      _hide();
+    }
+  }
+
+  void _show() {
     document.body.children.add(_mainMenu);
   }
 
-  void hide() {
+  void _hide() {
     _mainMenu.remove();
   }
 }

@@ -8,27 +8,27 @@ main_menu_tests() {
       menu = new MainMenu();
     });
 
-    test("MainMenu.show()", () {
+    test("MainMenu.visible = true", () {
       expect(querySelector("#main-menu"), isNull);
 
-      menu.show();
+      menu.visible = true;
       expect(querySelector("#main-menu"), isNotNull);
 
-      menu.show();
+      menu.visible = true;
       expect(querySelector("#main-menu"), isNotNull);
     });
 
-    test("MainMenu.hide()", () {
-      menu.show();
+    test("MainMenu.visible = false", () {
+      menu.visible = true;
       expect(querySelector("#main-menu"), isNotNull);
 
-      menu.hide();
+      menu.visible = false;
       // TODO(btmura): check that menu is hidden
       // expect(querySelector("#main-menu"), isNull);
     });
 
     tearDown(() {
-      menu.hide();
+      menu.visible = false;
     });
   });
 }
