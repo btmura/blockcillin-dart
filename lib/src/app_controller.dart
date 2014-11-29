@@ -15,9 +15,10 @@ class AppController {
         appView = new AppView();
 
   void run() {
-    appView.gameView.setup();
-    _setupStreams();
-    _update();
+    if (appView.init()) {
+      _setupStreams();
+      _update();
+    }
   }
 
   void _setupStreams() {
@@ -40,7 +41,7 @@ class AppController {
       _update();
     });
 
-    appView.gameView.onPauseButtonClick.listen((_) {
+    appView.gameView.buttonBar.onPauseButtonClick.listen((_) {
       app.gamePaused = true;
       _update();
     });
@@ -48,6 +49,6 @@ class AppController {
 
   void _update() {
     appView.mainMenu.visible = !app.gameStarted || app.gamePaused;
-    appView.gameView.buttonBarVisible = app.gameStarted && !app.gamePaused;
+    appView.gameView.buttonBar.visible = app.gameStarted && !app.gamePaused;
   }
 }

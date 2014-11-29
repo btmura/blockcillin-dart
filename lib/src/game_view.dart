@@ -4,14 +4,12 @@ import 'dart:html';
 import 'dart:typed_data';
 import 'dart:web_gl' as webgl;
 
+import 'package:blockcillin/src/button_bar.dart';
 import 'package:blockcillin/src/gl.dart';
 
 class GameView {
 
-  // TODO(btmura): add ButtonBar class
-
-  final DivElement _buttonBar;
-  final ButtonElement _pauseButton;
+  final ButtonBar buttonBar;
   final CanvasElement _canvas;
 
   webgl.RenderingContext _gl;
@@ -20,35 +18,23 @@ class GameView {
   webgl.Buffer _indexBuffer;
 
   GameView()
-      : _buttonBar = new DivElement()
-            ..className = "button-bar",
-        _pauseButton = new ButtonElement()
-            ..text = "Pause",
+      : buttonBar = new ButtonBar(),
         _canvas = new CanvasElement()
             ..className = "canvas";
 
-  set buttonBarVisible(bool visible) => _buttonBar.style.visibility = visible ? "visible" : "hidden";
+  bool init() {
+    buttonBar.add();
+    document.body.children.add(_canvas);
 
-  ElementStream<MouseEvent> get onPauseButtonClick => _pauseButton.onClick;
-
-  bool setup() {
-    _setupElements();
     resize();
     return _setupGL();
-  }
-
-  void _setupElements() {
-    _buttonBar.children.add(_pauseButton);
-    document.body.children
-        ..add(_buttonBar)
-        ..add(_canvas);
   }
 
   bool resize() {
     var changed = false;
 
     // Adjust the height of the canvas if it has changed.
-    var wantedHeight = document.body.clientHeight - _buttonBar.clientHeight;
+    var wantedHeight = document.body.clientHeight - buttonBar.height;
     if (_canvas.clientHeight != wantedHeight) {
       _canvas.style.height = "${wantedHeight}px";
       changed = true;
