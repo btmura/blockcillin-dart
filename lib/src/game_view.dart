@@ -59,7 +59,6 @@ class GameView {
   bool _setupGL() {
     _gl = getWebGL(_canvas);
     if (_gl == null) {
-      print("game_view: couldn't get GL rendering context");
       return false;
     }
 
@@ -81,7 +80,6 @@ class GameView {
 
     var program = createProgram(_gl, vertexShaderSource, fragmentShaderSource);
     if (program == null) {
-      print("game_view: couldn't create program");
       return false;
     }
 

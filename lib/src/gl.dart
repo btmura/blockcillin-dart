@@ -14,6 +14,7 @@ webgl.RenderingContext getWebGL(CanvasElement canvas) {
     return gl;
   }
 
+  print("gl: couldn't get rendering context");
   return null;
 }
 
@@ -29,14 +30,15 @@ webgl.Program createProgram(webgl.RenderingContext gl, String vertexShaderSource
   }
 
   var program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
+  gl
+      ..attachShader(program, vertexShader)
+      ..attachShader(program, fragmentShader)
+      ..linkProgram(program);
 
   var linked = gl.getProgramParameter(program, webgl.LINK_STATUS);
   if (!linked) {
     var error = gl.getProgramInfoLog(program);
-    print("error linking program: $error");
+    print("gl: error linking program: $error");
     gl.deleteProgram(program);
     return null;
   }
@@ -46,13 +48,14 @@ webgl.Program createProgram(webgl.RenderingContext gl, String vertexShaderSource
 
 webgl.Shader _createShader(webgl.RenderingContext gl, int type, String source) {
   var shader = gl.createShader(type);
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
+  gl
+      ..shaderSource(shader, source)
+      ..compileShader(shader);
 
   var compiled = gl.getShaderParameter(shader, webgl.COMPILE_STATUS);
   if (!compiled) {
     var error = gl.getShaderInfoLog(shader);
-    print("error compiling shader: $type $error");
+    print("gl: error compiling shader: $type $error");
     gl.deleteShader(shader);
     return null;
   }
