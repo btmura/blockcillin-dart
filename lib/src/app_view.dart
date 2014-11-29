@@ -5,9 +5,11 @@ import 'dart:typed_data';
 import 'dart:web_gl' as webgl;
 
 import 'package:blockcillin/src/gl.dart';
+import 'package:blockcillin/src/main_menu.dart';
 
 class AppView {
 
+  final MainMenu mainMenu;
   DivElement _buttonBar;
   CanvasElement _canvas;
 
@@ -16,7 +18,7 @@ class AppView {
   webgl.Buffer _vertexBuffer;
   webgl.Buffer _indexBuffer;
 
-  AppView() {
+  AppView() : mainMenu = new MainMenu() {
     _buttonBar = new DivElement()
         ..id = "button-bar"
         ..text = "Buttons";
