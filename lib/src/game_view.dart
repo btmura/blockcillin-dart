@@ -8,7 +8,10 @@ import 'package:blockcillin/src/gl.dart';
 
 class GameView {
 
+  // TODO(btmura): add ButtonBar class
+
   final DivElement _buttonBar;
+  final ButtonElement _pauseButton;
   final CanvasElement _canvas;
 
   webgl.RenderingContext _gl;
@@ -18,18 +21,24 @@ class GameView {
 
   GameView()
       : _buttonBar = new DivElement()
-            ..className = "button-bar"
-            ..text = "Buttons",
+            ..className = "button-bar",
+        _pauseButton = new ButtonElement()
+            ..text = "Pause",
         _canvas = new CanvasElement()
             ..className = "canvas";
 
+  set buttonBarVisible(bool visible) => _buttonBar.style.visibility = visible ? "visible" : "hidden";
+
+  ElementStream<MouseEvent> get onPauseButtonClick => _pauseButton.onClick;
+
   bool setup() {
-    _addElements();
+    _setupElements();
     resize();
     return _setupGL();
   }
 
-  void _addElements() {
+  void _setupElements() {
+    _buttonBar.children.add(_pauseButton);
     document.body.children
         ..add(_buttonBar)
         ..add(_canvas);

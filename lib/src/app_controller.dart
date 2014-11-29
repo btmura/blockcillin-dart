@@ -39,9 +39,15 @@ class AppController {
       app.gamePaused = false;
       _update();
     });
+
+    appView.gameView.onPauseButtonClick.listen((_) {
+      app.gamePaused = true;
+      _update();
+    });
   }
 
   void _update() {
     appView.mainMenu.visible = !app.gameStarted || app.gamePaused;
+    appView.gameView.buttonBarVisible = app.gameStarted && !app.gamePaused;
   }
 }
