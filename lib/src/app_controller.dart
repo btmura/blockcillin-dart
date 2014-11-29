@@ -10,19 +10,19 @@ class AppController {
   final App app;
   final AppView appView;
 
-  AppController(this.app, this.appView);
+  AppController()
+      : app = new App(),
+        appView = new AppView();
 
   void run() {
-    _setupEventListeners();
-
-    appView.init();
-
+    appView.gameView.setup();
+    _setupStreams();
     _update();
   }
 
-  void _setupEventListeners() {
+  void _setupStreams() {
     window.onResize.listen((_) {
-      appView.resizeCanvas();
+      appView.gameView.resize();
     });
 
     window.onKeyUp
