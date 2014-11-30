@@ -11,8 +11,4 @@ class AppView {
   AppView()
       : mainMenu = new MainMenu(),
         gameView = new GameView();
-
-  bool init() {
-    return gameView.init();
-  }
 }

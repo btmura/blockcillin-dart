@@ -4,6 +4,7 @@ import 'dart:html';
 
 import 'package:blockcillin/src/app.dart';
 import 'package:blockcillin/src/app_view.dart';
+import 'package:blockcillin/src/game.dart';
 
 class AppController {
 
@@ -15,7 +16,7 @@ class AppController {
         appView = new AppView();
 
   void run() {
-    if (appView.init()) {
+    if (appView.gameView.init()) {
       _setupStreams();
       _update();
     }
@@ -38,6 +39,7 @@ class AppController {
     appView.mainMenu.onNewGameButtonClick.listen((_) {
       app.gameStarted = true;
       app.gamePaused = false;
+      app.game = new Game.withRandomBoard(3, 3);
       _update();
     });
 
@@ -50,5 +52,8 @@ class AppController {
   void _update() {
     appView.mainMenu.visible = !app.gameStarted || app.gamePaused;
     appView.gameView.buttonBar.visible = app.gameStarted && !app.gamePaused;
+    if (app.game != null) {
+      appView.gameView.draw(app.game);
+    }
   }
 }

@@ -29,5 +29,7 @@ class ButtonBar {
 
   bool get visible => _buttonBar.style.visibility != "hidden";
 
-  set visible(bool visible) => _buttonBar.style.visibility = visible ? "visible" : "hidden";
+  void set visible(bool visible) {
+    _buttonBar.style.visibility = visible ? "visible" : "hidden";
+  }
 }
