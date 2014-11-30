@@ -14,6 +14,7 @@ import 'package:blockcillin/src/cell.dart';
 import 'package:blockcillin/src/game.dart';
 import 'package:blockcillin/src/game_view.dart';
 import 'package:blockcillin/src/gl.dart';
+import 'package:blockcillin/src/gl_canvas.dart';
 import 'package:blockcillin/src/main_menu.dart';
 import 'package:blockcillin/src/ring.dart';
 
@@ -26,6 +27,7 @@ part 'button_bar_test.dart';
 part 'cell_test.dart';
 part 'game_test.dart';
 part 'game_view_test.dart';
+part 'gl_canvas_test.dart';
 part 'gl_test.dart';
 part 'main_menu_test.dart';
 part 'ring_test.dart';
@@ -42,6 +44,7 @@ main() {
   cell_tests();
   game_tests();
   game_view_tests();
+  gl_canvas_tests();
   gl_tests();
   main_menu_tests();
   ring_tests();
