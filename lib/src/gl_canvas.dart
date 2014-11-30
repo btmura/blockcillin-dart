@@ -13,6 +13,8 @@ class GLCanvas {
   webgl.RenderingContext _gl;
 
   webgl.RenderingContext get gl => _gl;
+  int get width => _canvas.width;
+  int get height => _canvas.height;
 
   bool init() {
     _gl = getWebGL(_canvas);

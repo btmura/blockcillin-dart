@@ -1,6 +1,7 @@
 library game_view;
 
 import 'dart:html';
+import 'dart:math' as math;
 import 'dart:web_gl' as webgl;
 
 import 'package:blockcillin/src/board_renderer.dart';
@@ -34,6 +35,23 @@ class GameView {
     }
 
     return true;
+  }
+
+  List<double> _makeProjectionMatrix() {
+    var aspect = glCanvas.width / glCanvas.height;
+    var fovRadians = math.PI / 2;
+    return _makePerspectiveMatrix(fovRadians, aspect, 1.0, 2000.0);
+  }
+
+  List<double> _makePerspectiveMatrix(double fovRadians, double aspect, double near, double far) {
+    var f = math.tan(math.PI * 0.5 - 0.5 * fovRadians);
+    var rangeInv = 1.0 / (near - far);
+    return [
+        f / aspect, 0, 0, 0,
+        0, f, 0, 0,
+        0, 0, (near + far) * rangeInv, -1,
+        0, 0, near * far * rangeInv * 2, 0
+    ];
   }
 
   bool resize() {
