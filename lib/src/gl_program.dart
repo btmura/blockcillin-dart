@@ -8,14 +8,16 @@ class GLProgram {
 
   final webgl.RenderingContext gl;
   final webgl.Program program;
+  final webgl.UniformLocation projectionMatrixLocation;
   final int positionAttrib;
 
   factory GLProgram(webgl.RenderingContext gl) {
     var vertexShaderSource = '''
+      uniform mat4 u_projectionMatrix;
       attribute vec4 a_position;
 
       void main(void) {
-        gl_Position = a_position;
+        gl_Position = u_projectionMatrix * a_position;
       }
     ''';
 
@@ -32,13 +34,18 @@ class GLProgram {
       throw new ArgumentError("couldn't create program");
     }
 
+    var projectionMatrixUniform = gl.getUniformLocation(program, "u_projectionMatrix");
+    if (projectionMatrixUniform == null) {
+      throw new ArgumentError("u_projectionMatrix not found");
+    }
+
     var positionAttrib = gl.getAttribLocation(program, "a_position");
     if (positionAttrib == null) {
       throw new ArgumentError("a_position not found");
     }
 
-    return new GLProgram._(gl, program, positionAttrib);
+    return new GLProgram._(gl, program, projectionMatrixUniform, positionAttrib);
   }
 
-  GLProgram._(this.gl, this.program, this.positionAttrib);
+  GLProgram._(this.gl, this.program, this.projectionMatrixLocation, this.positionAttrib);
 }

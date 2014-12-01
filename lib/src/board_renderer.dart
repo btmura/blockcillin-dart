@@ -45,8 +45,6 @@ class BoardRenderer {
   BoardRenderer._(this._gl, this._program, this._positionAttrib, this._vertexBuffer, this._indexBuffer);
 
   void render(Board board) {
-    _gl.useProgram(_program);
-
     _gl
         ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
         ..enableVertexAttribArray(_positionAttrib)
