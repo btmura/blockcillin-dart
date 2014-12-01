@@ -20,11 +20,13 @@ class AppController {
   }
 
   void run() {
-    _setupStreams();
+    _init();
     _update();
   }
 
-  void _setupStreams() {
+  void _init() {
+    appView.gameView.resize();
+
     window.onResize.listen((_) {
       appView.gameView.resize();
     });
