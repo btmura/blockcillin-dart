@@ -16,10 +16,8 @@ class AppController {
         appView = new AppView();
 
   void run() {
-    if (appView.gameView.init()) {
-      _setupStreams();
-      _update();
-    }
+    _setupStreams();
+    _update();
   }
 
   void _setupStreams() {

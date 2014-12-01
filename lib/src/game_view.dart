@@ -12,25 +12,29 @@ import 'package:blockcillin/src/gl_program.dart';
 
 class GameView {
 
-  final ButtonBar buttonBar = new ButtonBar();
-  final GLCanvas glCanvas = new GLCanvas();
+  final ButtonBar buttonBar;
+  final GLCanvas glCanvas;
 
-  webgl.RenderingContext _gl;
-  BoardRenderer _boardRenderer;
+  final webgl.RenderingContext _gl;
+  final BoardRenderer _boardRenderer;
 
-  bool init() {
+  factory GameView() {
+    var buttonBar = new ButtonBar();
+    var glCanvas = new GLCanvas();
+
     buttonBar.add();
     glCanvas.add();
-    resize();
 
-    _gl = glCanvas.gl;
-    _gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    var gl = glCanvas.gl;
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-    var program = new GLProgram(glCanvas.gl);
-    _boardRenderer = new BoardRenderer(program);
+    var program = new GLProgram(gl);
+    var boardRenderer = new BoardRenderer(program);
 
-    return true;
+    return new GameView._(buttonBar, glCanvas, gl, boardRenderer);
   }
+
+  GameView._(this.buttonBar, this.glCanvas, this._gl, this._boardRenderer);
 
   List<double> _makeProjectionMatrix() {
     var aspect = glCanvas.width / glCanvas.height;
