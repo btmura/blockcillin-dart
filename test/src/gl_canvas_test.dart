@@ -10,8 +10,6 @@ gl_canvas_tests() {
     });
 
     test("GLCanvas.gl", () {
-      expect(glCanvas.gl, isNull);
-      expect(glCanvas.init(), isTrue);
       expect(glCanvas.gl, isNotNull);
     });
 

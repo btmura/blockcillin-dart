@@ -22,10 +22,6 @@ class GameView {
     glCanvas.add();
     resize();
 
-    if (!glCanvas.init()) {
-      return false;
-    }
-
     _gl = glCanvas.gl;
     _gl.clearColor(0.0, 0.0, 0.0, 1.0);
 

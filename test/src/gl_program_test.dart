@@ -9,7 +9,6 @@ gl_program_tests() {
     setUp(() {
       glCanvas = new GLCanvas();
       glCanvas.add();
-      glCanvas.init();
       glProgram = new GLProgram(glCanvas.gl);
     });
 
@@ -22,7 +21,7 @@ gl_program_tests() {
     });
 
     test("GLProgram.positionAttrib", () {
-      expect(glProgram.positionAttrib, isNonZero);
+      expect(glProgram.positionAttrib, isNonNegative);
     });
 
     tearDown(() {

@@ -7,19 +7,25 @@ import 'package:blockcillin/src/gl.dart';
 
 class GLCanvas {
 
-  final CanvasElement _canvas = new CanvasElement()
-      ..className = "canvas";
+  final CanvasElement _canvas;
+  final webgl.RenderingContext gl;
 
-  webgl.RenderingContext _gl;
+  factory GLCanvas() {
+    var canvas = new CanvasElement()
+        ..className = "canvas";
 
-  webgl.RenderingContext get gl => _gl;
+    var gl = getWebGL(canvas);
+    if (gl == null) {
+      throw new StateError("couldn't get GL rendering context");
+    }
+
+    return new GLCanvas._(canvas, gl);
+  }
+
+  GLCanvas._(this._canvas, this.gl);
+
   int get width => _canvas.width;
   int get height => _canvas.height;
-
-  bool init() {
-    _gl = getWebGL(_canvas);
-    return _gl != null;
-  }
 
   void add() {
     document.body.children.add(_canvas);
