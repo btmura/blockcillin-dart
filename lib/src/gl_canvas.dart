@@ -10,7 +10,9 @@ class GLCanvas {
   final CanvasElement _canvas;
   final webgl.RenderingContext gl;
 
-  factory GLCanvas() {
+  GLCanvas(this._canvas, this.gl);
+
+  factory GLCanvas.append() {
     var canvas = new CanvasElement()
         ..className = "canvas";
 
@@ -19,21 +21,13 @@ class GLCanvas {
       throw new StateError("couldn't get GL rendering context");
     }
 
-    return new GLCanvas._(canvas, gl);
-  }
+    document.body.children.add(canvas);
 
-  GLCanvas._(this._canvas, this.gl);
+    return new GLCanvas(canvas, gl);
+  }
 
   int get width => _canvas.width;
   int get height => _canvas.height;
-
-  void add() {
-    document.body.children.add(_canvas);
-  }
-
-  void remove() {
-    _canvas.remove();
-  }
 
   bool resize(int height) {
     var changed = false;
@@ -53,5 +47,9 @@ class GLCanvas {
     }
 
     return changed;
+  }
+
+  void remove() {
+    _canvas.remove();
   }
 }

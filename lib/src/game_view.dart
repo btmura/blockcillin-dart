@@ -18,11 +18,11 @@ class GameView {
   final webgl.RenderingContext _gl;
   final BoardRenderer _boardRenderer;
 
-  factory GameView() {
-    var buttonBar = new ButtonBar.append();
-    var glCanvas = new GLCanvas();
+  GameView(this.buttonBar, this.glCanvas, this._gl, this._boardRenderer);
 
-    glCanvas.add();
+  factory GameView.append() {
+    var buttonBar = new ButtonBar.append();
+    var glCanvas = new GLCanvas.append();
 
     var gl = glCanvas.gl;
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -30,10 +30,13 @@ class GameView {
     var program = new GLProgram(gl);
     var boardRenderer = new BoardRenderer(program);
 
-    return new GameView._(buttonBar, glCanvas, gl, boardRenderer);
+    return new GameView(buttonBar, glCanvas, gl, boardRenderer);
   }
 
-  GameView._(this.buttonBar, this.glCanvas, this._gl, this._boardRenderer);
+  void remove() {
+    buttonBar.remove();
+    glCanvas.remove();
+  }
 
   List<double> _makeProjectionMatrix() {
     var aspect = glCanvas.width / glCanvas.height;

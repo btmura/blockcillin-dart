@@ -7,8 +7,7 @@ gl_program_tests() {
 
   group("gl_program", () {
     setUp(() {
-      glCanvas = new GLCanvas();
-      glCanvas.add();
+      glCanvas = new GLCanvas.append();
       glProgram = new GLProgram(glCanvas.gl);
     });
 

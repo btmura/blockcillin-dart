@@ -11,9 +11,17 @@ class AppController {
   final App app;
   final AppView appView;
 
-  AppController()
-      : app = new App(),
-        appView = new AppView();
+  AppController(this.app, this.appView);
+
+  factory AppController.append() {
+    var app = new App();
+    var appView = new AppView.append();
+    return new AppController(app, appView);
+  }
+
+  void remove() {
+    appView.remove();
+  }
 
   void run() {
     _setupStreams();

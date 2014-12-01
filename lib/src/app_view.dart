@@ -8,7 +8,15 @@ class AppView {
   final MainMenu mainMenu;
   final GameView gameView;
 
-  AppView()
-      : mainMenu = new MainMenu(),
-        gameView = new GameView();
+  AppView(this.mainMenu, this.gameView);
+
+  factory AppView.append() {
+    var mainMenu = new MainMenu();
+    var gameView = new GameView.append();
+    return new AppView(mainMenu, gameView);
+  }
+
+  void remove() {
+    gameView.remove();
+  }
 }

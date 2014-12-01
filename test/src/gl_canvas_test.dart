@@ -5,8 +5,7 @@ gl_canvas_tests() {
 
   group("gl_canvas", () {
     setUp(() {
-      glCanvas = new GLCanvas();
-      glCanvas.add();
+      glCanvas = new GLCanvas.append();
     });
 
     test("GLCanvas.gl", () {

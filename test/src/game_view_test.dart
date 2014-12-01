@@ -1,9 +1,24 @@
 part of tests;
 
 game_view_tests() {
+
+  var gameView;
+
   group("game_view", () {
-    test("GameView()", () {
-      var gameView = new GameView();
+    setUp(() {
+      gameView = new GameView.append();
+    });
+
+    test("GameView.buttonBar", () {
+      expect(gameView.buttonBar, isNotNull);
+    });
+
+    test("GameView.glCanvas", () {
+      expect(gameView.glCanvas, isNotNull);
+    });
+
+    tearDown(() {
+      gameView.remove();
     });
   });
 }
