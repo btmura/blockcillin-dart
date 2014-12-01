@@ -5,7 +5,7 @@ button_bar_tests() {
 
   group("button_bar", () {
     setUp(() {
-      buttonBar = new ButtonBar.append();
+      buttonBar = new ButtonBar.attached();
     });
 
     test("ButtonBar.height", () {
@@ -27,7 +27,7 @@ button_bar_tests() {
     });
 
     tearDown(() {
-      buttonBar.remove();
+      buttonBar.detach();
     });
   });
 }

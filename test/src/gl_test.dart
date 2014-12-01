@@ -43,7 +43,7 @@ gl_tests() {
     });
 
     tearDown(() {
-      canvas.remove();
+      canvas.detach();
     });
   });
 }

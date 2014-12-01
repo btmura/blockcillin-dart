@@ -6,7 +6,7 @@ app_controller_tests() {
 
   group("app_controller", () {
     setUp(() {
-      appController = new AppController.append();
+      appController = new AppController.attached();
     });
 
     test("AppController.app", () {
@@ -18,7 +18,7 @@ app_controller_tests() {
     });
 
     tearDown(() {
-      appController.remove();
+      appController.detach();
     });
   });
 }

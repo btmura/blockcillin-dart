@@ -7,7 +7,7 @@ gl_program_tests() {
 
   group("gl_program", () {
     setUp(() {
-      glCanvas = new GLCanvas.append();
+      glCanvas = new GLCanvas.attached();
       glProgram = new GLProgram(glCanvas.gl);
     });
 
@@ -24,7 +24,7 @@ gl_program_tests() {
     });
 
     tearDown(() {
-      glCanvas.remove();
+      glCanvas.detach();
     });
   });
 }

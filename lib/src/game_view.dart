@@ -20,9 +20,9 @@ class GameView {
 
   GameView(this.buttonBar, this.glCanvas, this._gl, this._boardRenderer);
 
-  factory GameView.append() {
-    var buttonBar = new ButtonBar.append();
-    var glCanvas = new GLCanvas.append();
+  factory GameView.attached() {
+    var buttonBar = new ButtonBar.attached();
+    var glCanvas = new GLCanvas.attached();
 
     var gl = glCanvas.gl;
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -31,11 +31,6 @@ class GameView {
     var boardRenderer = new BoardRenderer(program);
 
     return new GameView(buttonBar, glCanvas, gl, boardRenderer);
-  }
-
-  void remove() {
-    buttonBar.remove();
-    glCanvas.remove();
   }
 
   List<double> _makeProjectionMatrix() {
@@ -63,5 +58,10 @@ class GameView {
   void draw(Game game) {
     _gl.clear(webgl.COLOR_BUFFER_BIT);
     _boardRenderer.render(game.board);
+  }
+
+  void detach() {
+    buttonBar.detach();
+    glCanvas.detach();
   }
 }

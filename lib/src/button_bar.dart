@@ -9,7 +9,7 @@ class ButtonBar {
 
   ButtonBar(this._buttonBar, this._pauseButton);
 
-  factory ButtonBar.append() {
+  factory ButtonBar.attached() {
     ButtonElement pauseButton = new ButtonElement()
         ..text = "Pause";
 
@@ -32,7 +32,7 @@ class ButtonBar {
     _buttonBar.style.visibility = visible ? "visible" : "hidden";
   }
 
-  void remove() {
+  void detach() {
     _buttonBar.remove();
   }
 }

@@ -5,7 +5,7 @@ gl_canvas_tests() {
 
   group("gl_canvas", () {
     setUp(() {
-      glCanvas = new GLCanvas.append();
+      glCanvas = new GLCanvas.attached();
     });
 
     test("GLCanvas.gl", () {
@@ -18,7 +18,7 @@ gl_canvas_tests() {
     });
 
     tearDown(() {
-      glCanvas.remove();
+      glCanvas.detach();
     });
   });
 }

@@ -6,7 +6,7 @@ game_view_tests() {
 
   group("game_view", () {
     setUp(() {
-      gameView = new GameView.append();
+      gameView = new GameView.attached();
     });
 
     test("GameView.buttonBar", () {
@@ -18,7 +18,7 @@ game_view_tests() {
     });
 
     tearDown(() {
-      gameView.remove();
+      gameView.detach();
     });
   });
 }

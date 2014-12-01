@@ -13,14 +13,10 @@ class AppController {
 
   AppController(this.app, this.appView);
 
-  factory AppController.append() {
+  factory AppController.attached() {
     var app = new App();
-    var appView = new AppView.append();
+    var appView = new AppView.attached();
     return new AppController(app, appView);
-  }
-
-  void remove() {
-    appView.remove();
   }
 
   void run() {
@@ -61,5 +57,9 @@ class AppController {
     if (app.game != null) {
       appView.gameView.draw(app.game);
     }
+  }
+
+  void detach() {
+    appView.detach();
   }
 }

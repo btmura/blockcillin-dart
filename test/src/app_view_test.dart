@@ -6,7 +6,7 @@ app_view_tests() {
 
   group("app_view", () {
     setUp(() {
-      appView = new AppView.append();
+      appView = new AppView.attached();
     });
 
     test("AppView.mainMenu", () {
@@ -18,7 +18,7 @@ app_view_tests() {
     });
 
     tearDown(() {
-      appView.remove();
+      appView.detach();
     });
   });
 }

@@ -12,7 +12,7 @@ class GLCanvas {
 
   GLCanvas(this._canvas, this.gl);
 
-  factory GLCanvas.append() {
+  factory GLCanvas.attached() {
     var canvas = new CanvasElement()
         ..className = "canvas";
 
@@ -49,7 +49,7 @@ class GLCanvas {
     return changed;
   }
 
-  void remove() {
+  void detach() {
     _canvas.remove();
   }
 }
