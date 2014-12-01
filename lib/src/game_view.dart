@@ -19,10 +19,9 @@ class GameView {
   final BoardRenderer _boardRenderer;
 
   factory GameView() {
-    var buttonBar = new ButtonBar();
+    var buttonBar = new ButtonBar.append();
     var glCanvas = new GLCanvas();
 
-    buttonBar.add();
     glCanvas.add();
 
     var gl = glCanvas.gl;

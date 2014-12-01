@@ -5,8 +5,7 @@ button_bar_tests() {
 
   group("button_bar", () {
     setUp(() {
-      buttonBar = new ButtonBar();
-      buttonBar.add();
+      buttonBar = new ButtonBar.append();
     });
 
     test("ButtonBar.height", () {

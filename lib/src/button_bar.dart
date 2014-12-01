@@ -7,20 +7,19 @@ class ButtonBar {
   final DivElement _buttonBar;
   final ButtonElement _pauseButton;
 
-  ButtonBar()
-      : _buttonBar = new DivElement()
-            ..className = "button-bar",
-        _pauseButton = new ButtonElement()
-            ..text = "Pause" {
-    _buttonBar.append(_pauseButton);
-  }
+  ButtonBar(this._buttonBar, this._pauseButton);
 
-  void add() {
-    document.body.children.add(_buttonBar);
-  }
+  factory ButtonBar.append() {
+    ButtonElement pauseButton = new ButtonElement()
+        ..text = "Pause";
 
-  void remove() {
-    _buttonBar.remove();
+    DivElement buttonBar = new DivElement()
+        ..className = "button-bar"
+        ..append(pauseButton);
+
+    document.body.children.add(buttonBar);
+
+    return new ButtonBar(buttonBar, pauseButton);
   }
 
   int get height => _buttonBar.clientHeight;
@@ -31,5 +30,9 @@ class ButtonBar {
 
   void set visible(bool visible) {
     _buttonBar.style.visibility = visible ? "visible" : "hidden";
+  }
+
+  void remove() {
+    _buttonBar.remove();
   }
 }
