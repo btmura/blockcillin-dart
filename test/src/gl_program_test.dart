@@ -19,8 +19,8 @@ gl_program_tests() {
       expect(glProgram.program, isNotNull);
     });
 
-    test("GLProgram.positionAttrib", () {
-      expect(glProgram.positionAttrib, isNonNegative);
+    test("GLProgram.positionLocation", () {
+      expect(glProgram.positionLocation, isNonNegative);
     });
 
     tearDown(() {

@@ -39,7 +39,7 @@ class BoardRenderer {
         ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer)
         ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
 
-    return new BoardRenderer._(gl, program, glProgram.positionAttrib, vertexBuffer, indexBuffer);
+    return new BoardRenderer._(gl, program, glProgram.positionLocation, vertexBuffer, indexBuffer);
   }
 
   BoardRenderer._(this._gl, this._program, this._positionAttrib, this._vertexBuffer, this._indexBuffer);

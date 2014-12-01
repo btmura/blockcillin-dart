@@ -9,7 +9,7 @@ class GLProgram {
   final webgl.RenderingContext gl;
   final webgl.Program program;
   final webgl.UniformLocation projectionMatrixLocation;
-  final int positionAttrib;
+  final int positionLocation;
 
   factory GLProgram(webgl.RenderingContext gl) {
     var vertexShaderSource = '''
@@ -47,5 +47,5 @@ class GLProgram {
     return new GLProgram._(gl, program, projectionMatrixUniform, positionAttrib);
   }
 
-  GLProgram._(this.gl, this.program, this.projectionMatrixLocation, this.positionAttrib);
+  GLProgram._(this.gl, this.program, this.projectionMatrixLocation, this.positionLocation);
 }
