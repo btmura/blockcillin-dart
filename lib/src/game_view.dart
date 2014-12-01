@@ -8,6 +8,7 @@ import 'package:blockcillin/src/board_renderer.dart';
 import 'package:blockcillin/src/button_bar.dart';
 import 'package:blockcillin/src/game.dart';
 import 'package:blockcillin/src/gl_canvas.dart';
+import 'package:blockcillin/src/gl_program.dart';
 
 class GameView {
 
@@ -25,10 +26,8 @@ class GameView {
     _gl = glCanvas.gl;
     _gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-    _boardRenderer = new BoardRenderer(_gl);
-    if (!_boardRenderer.init()) {
-      return false;
-    }
+    var program = new GLProgram(glCanvas.gl);
+    _boardRenderer = new BoardRenderer(program);
 
     return true;
   }

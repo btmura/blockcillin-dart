@@ -4,48 +4,20 @@ import 'dart:typed_data';
 import 'dart:web_gl' as webgl;
 
 import 'package:blockcillin/src/board.dart';
-import 'package:blockcillin/src/gl.dart';
+import 'package:blockcillin/src/gl_program.dart';
 
 class BoardRenderer {
 
   final webgl.RenderingContext _gl;
+  final webgl.Program _program;
+  final int _positionAttrib;
 
-  webgl.Program _program;
-  int _positionAttrib;
-  webgl.Buffer _vertexBuffer;
-  webgl.Buffer _indexBuffer;
+  final webgl.Buffer _vertexBuffer;
+  final webgl.Buffer _indexBuffer;
 
-  BoardRenderer(this._gl);
-
-  bool init() {
-    var vertexShaderSource = '''
-      attribute vec4 a_position;
-
-      void main(void) {
-        gl_Position = a_position;    
-      }
-    ''';
-
-    var fragmentShaderSource = '''
-      precision mediump float;
-  
-      void main(void) {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-      }
-    ''';
-
-    _program = createProgram(_gl, vertexShaderSource, fragmentShaderSource);
-    if (_program == null) {
-      return false;
-    }
-
-    _positionAttrib = _gl.getAttribLocation(_program, "a_position");
-    if (_positionAttrib == null) {
-      print("board_renderer: couldn't get a_position location");
-      return false;
-    }
-
-    _gl.useProgram(_program);
+  factory BoardRenderer(GLProgram glProgram) {
+    var gl = glProgram.gl;
+    var program = glProgram.program;
 
     var vertexData = [
         0.0, 0.0, 0.0,
@@ -53,22 +25,24 @@ class BoardRenderer {
         1.0, 0.0, 0.0,
         0.0, -1.0, 0.0,
     ];
-    _vertexBuffer = _gl.createBuffer();
-    _gl
-        ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
+    var vertexBuffer = gl.createBuffer();
+    gl
+        ..bindBuffer(webgl.ARRAY_BUFFER, vertexBuffer)
         ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(vertexData), webgl.STATIC_DRAW);
 
     var indexData = [
         0, 1, 2,
         0, 3, 2,
     ];
-    _indexBuffer = _gl.createBuffer();
-    _gl
-        ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
+    var indexBuffer = gl.createBuffer();
+    gl
+        ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer)
         ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
 
-    return true;
+    return new BoardRenderer._(gl, program, glProgram.positionAttrib, vertexBuffer, indexBuffer);
   }
+
+  BoardRenderer._(this._gl, this._program, this._positionAttrib, this._vertexBuffer, this._indexBuffer);
 
   void render(Board board) {
     _gl.useProgram(_program);
