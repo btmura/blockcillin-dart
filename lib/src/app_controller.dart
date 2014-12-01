@@ -28,7 +28,9 @@ class AppController {
     appView.gameView.resize();
 
     window.onResize.listen((_) {
-      appView.gameView.resize();
+      if (appView.gameView.resize()) {
+        _update();
+      }
     });
 
     window.onKeyUp
