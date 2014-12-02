@@ -13,12 +13,6 @@ class AppController {
 
   AppController(this.app, this.appView);
 
-  factory AppController.attached() {
-    var app = new App();
-    var appView = new AppView.attached();
-    return new AppController(app, appView);
-  }
-
   void run() {
     _init();
     _update();

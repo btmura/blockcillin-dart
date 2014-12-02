@@ -6,7 +6,9 @@ app_controller_tests() {
 
   group("app_controller", () {
     setUp(() {
-      appController = new AppController.attached();
+      var app = new App();
+      var appView = new AppView.attached();
+      appController = new AppController(app, appView);
     });
 
     test("AppController.app", () {
