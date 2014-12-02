@@ -56,8 +56,4 @@ class AppController {
       appView.gameView.draw(app.game);
     }
   }
-
-  void detach() {
-    appView.detach();
-  }
 }

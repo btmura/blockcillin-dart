@@ -7,7 +7,11 @@ app_controller_tests() {
   group("app_controller", () {
     setUp(() {
       var app = new App();
-      var appView = new AppView.attached();
+
+      var mainMenu = new MainMenu();
+      var gameView = new GameView.attached();
+      var appView = new AppView(mainMenu, gameView);
+
       appController = new AppController(app, appView);
     });
 
@@ -17,10 +21,6 @@ app_controller_tests() {
 
     test("AppController.appView", () {
       expect(appController.appView, isNotNull);
-    });
-
-    tearDown(() {
-      appController.detach();
     });
   });
 }

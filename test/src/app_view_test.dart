@@ -6,7 +6,9 @@ app_view_tests() {
 
   group("app_view", () {
     setUp(() {
-      appView = new AppView.attached();
+      var mainMenu = new MainMenu();
+      var gameView = new GameView.attached();
+      appView = new AppView(mainMenu, gameView);
     });
 
     test("AppView.mainMenu", () {
@@ -15,10 +17,6 @@ app_view_tests() {
 
     test("AppView.gameView", () {
       expect(appView.gameView, isNotNull);
-    });
-
-    tearDown(() {
-      appView.detach();
     });
   });
 }

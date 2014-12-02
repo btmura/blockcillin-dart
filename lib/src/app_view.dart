@@ -10,13 +10,4 @@ class AppView {
 
   AppView(this.mainMenu, this.gameView);
 
-  factory AppView.attached() {
-    var mainMenu = new MainMenu();
-    var gameView = new GameView.attached();
-    return new AppView(mainMenu, gameView);
-  }
-
-  void detach() {
-    gameView.detach();
-  }
 }
