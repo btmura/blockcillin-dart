@@ -23,20 +23,8 @@ class GameView {
   Float32List _projectionMatrix;
 
   GameView(this.buttonBar, this.glCanvas, this._gl, this._program, this._boardRenderer) {
+    _gl.clearColor(0.0, 0.0, 0.0, 1.0);
     _projectionMatrix = _makeProjectionMatrix();
-  }
-
-  factory GameView.attached() {
-    var buttonBar = new ButtonBar.attached();
-    var glCanvas = new GLCanvas.attached();
-
-    var gl = glCanvas.gl;
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
-    var program = new GLProgram(gl);
-    var boardRenderer = new BoardRenderer(program);
-
-    return new GameView(buttonBar, glCanvas, gl, program, boardRenderer);
   }
 
   bool resize() {
@@ -73,10 +61,5 @@ class GameView {
         0.0, 0.0, (near + far) * rangeInv, -1.0,
         0.0, 0.0, near * far * rangeInv * 2.0, 0.0
     ]);
-  }
-
-  void detach() {
-    buttonBar.detach();
-    glCanvas.detach();
   }
 }

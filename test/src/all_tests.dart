@@ -9,6 +9,7 @@ import 'package:blockcillin/src/app_controller.dart';
 import 'package:blockcillin/src/app_view.dart';
 import 'package:blockcillin/src/block.dart';
 import 'package:blockcillin/src/board.dart';
+import 'package:blockcillin/src/board_renderer.dart';
 import 'package:blockcillin/src/button_bar.dart';
 import 'package:blockcillin/src/cell.dart';
 import 'package:blockcillin/src/game.dart';

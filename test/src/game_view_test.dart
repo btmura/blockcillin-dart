@@ -6,7 +6,12 @@ game_view_tests() {
 
   group("game_view", () {
     setUp(() {
-      gameView = new GameView.attached();
+      var buttonBar = new ButtonBar.attached();
+      var glCanvas = new GLCanvas.attached();
+      var gl = glCanvas.gl;
+      var program = new GLProgram(gl);
+      var boardRenderer = new BoardRenderer(program);
+      gameView = new GameView(buttonBar, glCanvas, gl, program, boardRenderer);
     });
 
     test("GameView.buttonBar", () {
@@ -15,10 +20,6 @@ game_view_tests() {
 
     test("GameView.glCanvas", () {
       expect(gameView.glCanvas, isNotNull);
-    });
-
-    tearDown(() {
-      gameView.detach();
     });
   });
 }

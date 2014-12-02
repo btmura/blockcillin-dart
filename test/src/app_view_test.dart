@@ -7,7 +7,12 @@ app_view_tests() {
   group("app_view", () {
     setUp(() {
       var mainMenu = new MainMenu();
-      var gameView = new GameView.attached();
+      var buttonBar = new ButtonBar.attached();
+      var glCanvas = new GLCanvas.attached();
+      var gl = glCanvas.gl;
+      var program = new GLProgram(gl);
+      var boardRenderer = new BoardRenderer(program);
+      var gameView = new GameView(buttonBar, glCanvas, gl, program, boardRenderer);
       appView = new AppView(mainMenu, gameView);
     });
 
