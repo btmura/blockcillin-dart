@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:blockcillin/src/app.dart';
 import 'package:blockcillin/src/app_controller.dart';
 import 'package:blockcillin/src/app_view.dart';
@@ -13,7 +15,17 @@ main() {
 
   var mainMenu = new MainMenu();
 
-  var buttonBar = new ButtonBar.attached();
+  ButtonElement pauseButton = new ButtonElement()
+      ..text = "Pause";
+
+  DivElement buttonBarElement = new DivElement()
+      ..className = "button-bar"
+      ..append(pauseButton);
+
+  document.body.children.add(buttonBarElement);
+
+  var buttonBar = new ButtonBar(buttonBarElement, pauseButton);
+
   var glCanvas = new GLCanvas.attached();
   var gl = glCanvas.gl;
   var program = new GLProgram(gl);

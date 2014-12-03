@@ -5,7 +5,7 @@ button_bar_tests() {
 
   group("button_bar", () {
     setUp(() {
-      buttonBar = new ButtonBar.attached();
+      buttonBar = new ButtonBar(new DivElement(), new ButtonElement());
     });
 
     test("ButtonBar.height", () {
@@ -24,10 +24,6 @@ button_bar_tests() {
 
       buttonBar.visible = true;
       expect(buttonBar.visible, isTrue);
-    });
-
-    tearDown(() {
-      buttonBar.detach();
     });
   });
 }
