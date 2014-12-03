@@ -8,8 +8,8 @@ game_view_tests() {
     setUp(() {
       var buttonBar = new ButtonBar(new DivElement(), new ButtonElement());
       var canvas = new CanvasElement();
+      var glCanvas = new GLCanvas(canvas);
       var gl = getWebGL(canvas);
-      var glCanvas = new GLCanvas(canvas, gl);
       var program = new GLProgram(gl);
       var boardRenderer = new BoardRenderer(program);
       gameView = new GameView(buttonBar, glCanvas, gl, program, boardRenderer);

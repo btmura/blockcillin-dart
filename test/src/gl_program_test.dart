@@ -9,8 +9,7 @@ gl_program_tests() {
     setUp(() {
       var canvas = new CanvasElement();
       var gl = getWebGL(canvas);
-      glCanvas = new GLCanvas(canvas, gl);
-      glProgram = new GLProgram(glCanvas.gl);
+      glProgram = new GLProgram(gl);
     });
 
     test("GLProgram.gl", () {

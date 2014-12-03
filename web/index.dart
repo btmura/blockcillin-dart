@@ -43,7 +43,7 @@ main() {
 
   var buttonBar = new ButtonBar(buttonBarElement, pauseButton);
 
-  var glCanvas = new GLCanvas(canvas, gl);
+  var glCanvas = new GLCanvas(canvas);
 
   var program = new GLProgram(gl);
 

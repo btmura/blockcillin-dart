@@ -1,14 +1,12 @@
 library gl_canvas;
 
 import 'dart:html';
-import 'dart:web_gl' as webgl;
 
 class GLCanvas {
 
   final CanvasElement _canvas;
-  final webgl.RenderingContext gl;
 
-  GLCanvas(this._canvas, this.gl);
+  GLCanvas(this._canvas);
 
   int get width => _canvas.width;
   int get height => _canvas.height;

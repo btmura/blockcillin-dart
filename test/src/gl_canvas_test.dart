@@ -6,12 +6,7 @@ gl_canvas_tests() {
   group("gl_canvas", () {
     setUp(() {
       var canvas = new CanvasElement();
-      var gl = getWebGL(canvas);
-      glCanvas = new GLCanvas(canvas, gl);
-    });
-
-    test("GLCanvas.gl", () {
-      expect(glCanvas.gl, isNotNull);
+      glCanvas = new GLCanvas(canvas);
     });
 
     test("GLCanvas.resize", () {

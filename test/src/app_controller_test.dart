@@ -13,9 +13,9 @@ app_controller_tests() {
       var buttonBar = new ButtonBar(new DivElement(), new ButtonElement());
 
       var canvas = new CanvasElement();
-      var gl = getWebGL(canvas);
-      var glCanvas = new GLCanvas(canvas, gl);
+      var glCanvas = new GLCanvas(canvas);
 
+      var gl = getWebGL(canvas);
       var program = new GLProgram(gl);
       var boardRenderer = new BoardRenderer(program);
       var gameView = new GameView(buttonBar, glCanvas, gl, program, boardRenderer);
