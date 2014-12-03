@@ -11,8 +11,11 @@ app_controller_tests() {
       var mainMenu = new MainMenu();
 
       var buttonBar = new ButtonBar(new DivElement(), new ButtonElement());
-      var glCanvas = new GLCanvas.attached();
-      var gl = glCanvas.gl;
+
+      var canvas = new CanvasElement();
+      var gl = getWebGL(canvas);
+      var glCanvas = new GLCanvas(canvas, gl);
+
       var program = new GLProgram(gl);
       var boardRenderer = new BoardRenderer(program);
       var gameView = new GameView(buttonBar, glCanvas, gl, program, boardRenderer);

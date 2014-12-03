@@ -21,8 +21,6 @@ gl_tests() {
   group("gl", () {
     setUp(() {
       canvas = new CanvasElement();
-      document.body.children.add(canvas);
-
       gl = getWebGL(canvas);
       expect(gl, isNotNull);
     });
@@ -40,10 +38,6 @@ gl_tests() {
     test("createProgram(gl, vertexShaderSource, fragmentShaderSource) - invalid fragment shader", () {
       var program = createProgram(gl, vertexShaderSource, "bad fragment shader source");
       expect(program, isNull);
-    });
-
-    tearDown(() {
-      canvas.detach();
     });
   });
 }

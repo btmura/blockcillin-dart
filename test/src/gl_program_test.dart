@@ -7,7 +7,9 @@ gl_program_tests() {
 
   group("gl_program", () {
     setUp(() {
-      glCanvas = new GLCanvas.attached();
+      var canvas = new CanvasElement();
+      var gl = getWebGL(canvas);
+      glCanvas = new GLCanvas(canvas, gl);
       glProgram = new GLProgram(glCanvas.gl);
     });
 
@@ -21,10 +23,6 @@ gl_program_tests() {
 
     test("GLProgram.positionLocation", () {
       expect(glProgram.positionLocation, isNonNegative);
-    });
-
-    tearDown(() {
-      glCanvas.detach();
     });
   });
 }

@@ -3,28 +3,12 @@ library gl_canvas;
 import 'dart:html';
 import 'dart:web_gl' as webgl;
 
-import 'package:blockcillin/src/gl.dart';
-
 class GLCanvas {
 
   final CanvasElement _canvas;
   final webgl.RenderingContext gl;
 
   GLCanvas(this._canvas, this.gl);
-
-  factory GLCanvas.attached() {
-    var canvas = new CanvasElement()
-        ..className = "canvas";
-
-    var gl = getWebGL(canvas);
-    if (gl == null) {
-      throw new StateError("couldn't get GL rendering context");
-    }
-
-    document.body.children.add(canvas);
-
-    return new GLCanvas(canvas, gl);
-  }
 
   int get width => _canvas.width;
   int get height => _canvas.height;
@@ -47,9 +31,5 @@ class GLCanvas {
     }
 
     return changed;
-  }
-
-  void detach() {
-    _canvas.remove();
   }
 }
