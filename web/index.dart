@@ -12,9 +12,8 @@ import 'package:blockcillin/src/gl_program.dart';
 import 'package:blockcillin/src/main_menu.dart';
 
 main() {
-  var app = new App();
 
-  var mainMenu = new MainMenu();
+  // Construct the button bar's DOM tree and add it to the body.
 
   ButtonElement pauseButton = new ButtonElement()
       ..text = "Pause";
@@ -25,20 +24,29 @@ main() {
 
   document.body.children.add(buttonBarElement);
 
-  var buttonBar = new ButtonBar(buttonBarElement, pauseButton);
+  // Add canvas after button bar. Some code relies on this order.
 
   var canvas = new CanvasElement()
       ..className = "canvas";
 
-  var gl = getWebGL(canvas);
-  if (gl == null) {
-    throw new StateError("couldn't get GL rendering context");
-  }
-
   document.body.children.add(canvas);
 
+  var gl = getWebGL(canvas);
+  if (gl == null) {
+    // TODO(btmura): handle when WebGL isn't supported
+    return;
+  }
+
+  var app = new App();
+
+  var mainMenu = new MainMenu();
+
+  var buttonBar = new ButtonBar(buttonBarElement, pauseButton);
+
   var glCanvas = new GLCanvas(canvas, gl);
+
   var program = new GLProgram(gl);
+
   var boardRenderer = new BoardRenderer(program);
 
   var gameView = new GameView(buttonBar, glCanvas, gl, program, boardRenderer);
@@ -46,5 +54,6 @@ main() {
   var appView = new AppView(mainMenu, gameView);
 
   var appController = new AppController(app, appView);
+
   appController.run();
 }
