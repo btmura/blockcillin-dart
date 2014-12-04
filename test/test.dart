@@ -2,6 +2,7 @@ library test;
 
 import 'dart:html';
 import 'package:mock/mock.dart';
+import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 
 import 'package:blockcillin/client.dart';
@@ -20,7 +21,9 @@ part 'src/gl_test.dart';
 part 'src/main_menu_test.dart';
 part 'src/ring_test.dart';
 
-void run_tests() {
+void test_main() {
+  useHtmlEnhancedConfiguration();
+
   _app_tests();
   _app_controller_tests();
   _app_view_tests();
