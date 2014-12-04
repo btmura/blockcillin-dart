@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-app_view_tests() {
+_app_view_tests() {
 
   var appView;
 

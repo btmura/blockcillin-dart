@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-gl_program_tests() {
+_gl_program_tests() {
 
   var glCanvas;
   var glProgram;

@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-game_view_tests() {
+_game_view_tests() {
 
   var gameView;
 

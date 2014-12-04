@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-app_controller_tests() {
+_app_controller_tests() {
 
   var mockApp;
   var mockAppView;

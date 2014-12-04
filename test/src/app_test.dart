@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-app_tests() {
+_app_tests() {
   group("app", () {
     test("App()", () {
       var app = new App();

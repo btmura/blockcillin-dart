@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-game_tests() {
+_game_tests() {
   group("game", () {
     test("Game(board)", () {
       var board = new Board.withRandomRings(2, 1);

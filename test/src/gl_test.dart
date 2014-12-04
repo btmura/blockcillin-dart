@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-gl_tests() {
+_gl_tests() {
   const vertexShaderSource = '''
     void main(void) {
       gl_Position = vec4(0.0, 0.0, 0.0, 0.0);    

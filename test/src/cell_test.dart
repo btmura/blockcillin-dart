@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-cell_tests() {
+_cell_tests() {
   group("cell", () {
     test("Cell(block)", () {
       var block = new Block.withRandomColor();

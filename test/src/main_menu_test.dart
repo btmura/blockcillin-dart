@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-main_menu_tests() {
+_main_menu_tests() {
   var menu;
 
   group("main_menu", () {

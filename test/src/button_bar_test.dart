@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-button_bar_tests() {
+_button_bar_tests() {
   var buttonBar;
 
   group("button_bar", () {

@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-block_tests() {
+_block_tests() {
   group("block", () {
     test("Block(color)", () {
       var block = new Block(BlockColor.red);

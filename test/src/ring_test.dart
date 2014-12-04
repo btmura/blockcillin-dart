@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-ring_tests() {
+_ring_tests() {
   group("ring", () {
     test("Ring(cells)", () {
       var cells = [new Cell.withRandomBlock(), new Cell.withRandomBlock()];

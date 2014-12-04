@@ -1,6 +1,6 @@
-part of tests;
+part of test;
 
-board_tests() {
+_board_tests() {
   group("board", () {
     test("Board(rings)", () {
       var rings = [new Ring.withRandomCells(3), new Ring.withRandomCells(3)];
