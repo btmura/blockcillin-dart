@@ -4,6 +4,7 @@ pub_serve:
 
 .PHONY: serve
 serve:
+	pub build
 	goapp serve -host 0.0.0.0 -use_mtime_file_watcher
 
 .PHONY: deploy
