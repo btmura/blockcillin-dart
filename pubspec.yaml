@@ -3,4 +3,5 @@ version: 0.1.0
 author: Brian Muramatsu
 dependencies:
   browser: any
+  mock: any
   unittest: any

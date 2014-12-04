@@ -1,6 +1,7 @@
 library tests;
 
 import 'dart:html';
+import 'package:mock/mock.dart';
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 
