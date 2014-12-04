@@ -8,11 +8,10 @@ game_view_tests() {
     setUp(() {
       var buttonBar = new ButtonBar(new DivElement(), new ButtonElement());
       var canvas = new CanvasElement();
-      var glCanvas = new GLCanvas(canvas);
       var gl = getWebGL(canvas);
       var program = new GLProgram(gl);
       var boardRenderer = new BoardRenderer(program);
-      gameView = new GameView(buttonBar, glCanvas, gl, program, boardRenderer);
+      gameView = new GameView(buttonBar, canvas, gl, program, boardRenderer);
     });
 
     test("GameView.buttonBar", () {
@@ -20,7 +19,7 @@ game_view_tests() {
     });
 
     test("GameView.glCanvas", () {
-      expect(gameView.glCanvas, isNotNull);
+      expect(gameView.canvas, isNotNull);
     });
   });
 }

@@ -7,7 +7,6 @@ import 'package:blockcillin/src/board_renderer.dart';
 import 'package:blockcillin/src/button_bar.dart';
 import 'package:blockcillin/src/game_view.dart';
 import 'package:blockcillin/src/gl.dart';
-import 'package:blockcillin/src/gl_canvas.dart';
 import 'package:blockcillin/src/gl_program.dart';
 import 'package:blockcillin/src/main_menu.dart';
 
@@ -43,13 +42,11 @@ main() {
 
   var buttonBar = new ButtonBar(buttonBarElement, pauseButton);
 
-  var glCanvas = new GLCanvas(canvas);
-
   var program = new GLProgram(gl);
 
   var boardRenderer = new BoardRenderer(program);
 
-  var gameView = new GameView(buttonBar, glCanvas, gl, program, boardRenderer);
+  var gameView = new GameView(buttonBar, canvas, gl, program, boardRenderer);
 
   var appView = new AppView(mainMenu, gameView);
 
