@@ -1,6 +1,4 @@
-library block;
-
-import 'dart:math';
+part of client;
 
 class Block {
 
@@ -29,7 +27,7 @@ class BlockColor {
   const BlockColor._(this._value);
 
   static BlockColor random([int seed]) {
-    var random = new Random(seed);
+    var random = new math.Random(seed);
     var i = random.nextInt(_allColors.length);
     return _allColors[i];
   }

@@ -1,6 +1,4 @@
-library cell;
-
-import 'package:blockcillin/src/block.dart';
+part of client;
 
 class Cell {
 

@@ -1,6 +1,4 @@
-library button_bar;
-
-import 'dart:html';
+part of client;
 
 class ButtonBar {
 

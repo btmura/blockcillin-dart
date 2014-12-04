@@ -1,6 +1,4 @@
-library game;
-
-import 'package:blockcillin/src/board.dart';
+part of client;
 
 class Game {
 

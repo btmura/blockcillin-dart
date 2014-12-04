@@ -1,8 +1,4 @@
-library gl_program;
-
-import 'dart:web_gl' as webgl;
-
-import 'package:blockcillin/src/gl.dart';
+part of client;
 
 class GLProgram {
 

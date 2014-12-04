@@ -4,20 +4,7 @@ import 'dart:html';
 import 'package:mock/mock.dart';
 import 'package:unittest/unittest.dart';
 
-import 'package:blockcillin/src/app.dart';
-import 'package:blockcillin/src/app_controller.dart';
-import 'package:blockcillin/src/app_view.dart';
-import 'package:blockcillin/src/block.dart';
-import 'package:blockcillin/src/board.dart';
-import 'package:blockcillin/src/board_renderer.dart';
-import 'package:blockcillin/src/button_bar.dart';
-import 'package:blockcillin/src/cell.dart';
-import 'package:blockcillin/src/game.dart';
-import 'package:blockcillin/src/game_view.dart';
-import 'package:blockcillin/src/gl.dart';
-import 'package:blockcillin/src/gl_program.dart';
-import 'package:blockcillin/src/main_menu.dart';
-import 'package:blockcillin/src/ring.dart';
+import 'package:blockcillin/client.dart';
 
 part 'src/app_test.dart';
 part 'src/app_controller_test.dart';

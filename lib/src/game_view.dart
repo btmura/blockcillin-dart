@@ -1,14 +1,4 @@
-library game_view;
-
-import 'dart:html';
-import 'dart:typed_data';
-import 'dart:math' as math;
-import 'dart:web_gl' as webgl;
-
-import 'package:blockcillin/src/board_renderer.dart';
-import 'package:blockcillin/src/button_bar.dart';
-import 'package:blockcillin/src/game.dart';
-import 'package:blockcillin/src/gl_program.dart';
+part of client;
 
 class GameView {
 

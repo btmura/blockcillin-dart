@@ -1,6 +1,4 @@
-library app;
-
-import 'package:blockcillin/src/game.dart';
+part of client;
 
 class App {
 

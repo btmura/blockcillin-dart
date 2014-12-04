@@ -1,6 +1,4 @@
-library main_menu;
-
-import 'dart:html';
+part of client;
 
 class MainMenu {
 

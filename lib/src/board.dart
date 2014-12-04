@@ -1,6 +1,4 @@
-library board;
-
-import 'package:blockcillin/src/ring.dart';
+part of client;
 
 class Board {
 

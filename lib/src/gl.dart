@@ -1,7 +1,4 @@
-library gl;
-
-import 'dart:html';
-import 'dart:web_gl' as webgl;
+part of client;
 
 webgl.RenderingContext getWebGL(CanvasElement canvas) {
   var gl = canvas.getContext("webgl");

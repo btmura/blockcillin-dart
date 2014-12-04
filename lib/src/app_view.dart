@@ -1,7 +1,4 @@
-library app_view;
-
-import 'package:blockcillin/src/game_view.dart';
-import 'package:blockcillin/src/main_menu.dart';
+part of client;
 
 class AppView {
 

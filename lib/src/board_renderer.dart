@@ -1,10 +1,4 @@
-library board_renderer;
-
-import 'dart:typed_data';
-import 'dart:web_gl' as webgl;
-
-import 'package:blockcillin/src/board.dart';
-import 'package:blockcillin/src/gl_program.dart';
+part of client;
 
 class BoardRenderer {
 

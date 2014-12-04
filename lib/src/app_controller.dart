@@ -1,10 +1,4 @@
-library app_controller;
-
-import 'dart:html';
-
-import 'package:blockcillin/src/app.dart';
-import 'package:blockcillin/src/app_view.dart';
-import 'package:blockcillin/src/game.dart';
+part of client;
 
 class AppController {
 
