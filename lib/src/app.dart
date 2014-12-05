@@ -6,4 +6,9 @@ class App {
   bool gamePaused = false;
   Game game;
 
+  void startGame(Game game) {
+    this.gameStarted = true;
+    this.gamePaused = false;
+    this.game = game;
+  }
 }

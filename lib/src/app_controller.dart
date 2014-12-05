@@ -31,9 +31,7 @@ class AppController {
         });
 
     appView.mainMenu.onNewGameButtonClick.listen((_) {
-      app.gameStarted = true;
-      app.gamePaused = false;
-      app.game = new Game.withRandomBoard(3, 3);
+      app.startGame(new Game.withRandomBoard(3, 3));
       _update();
     });
 
