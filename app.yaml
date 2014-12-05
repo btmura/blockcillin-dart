@@ -4,6 +4,10 @@ runtime: go
 api_version: go1
 
 handlers:
+- url: /favicon.ico
+  static_files: build/web/packages/blockcillin/favicon.ico
+  upload: build/web/packages/blockcillin/favicon.ico
+
 - url: /(.+)
   static_files: build/web/\1
   upload: build/web/.*
