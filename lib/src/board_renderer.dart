@@ -12,10 +12,10 @@ class BoardRenderer {
     var program = glProgram.program;
 
     var vertexData = [
-        -0.5, -0.5, 0.0,
-        -0.5, 0.5, 0.0,
-        0.5, 0.5, 0.0,
-        0.5, -0.5, 0.0,
+        -0.5, -0.5, 0,
+        -0.5, 0.5, 0,
+        0.5, 0.5, 0,
+        0.5, -0.5, 0,
     ];
     var vertexBuffer = gl.createBuffer();
     gl
@@ -26,6 +26,15 @@ class BoardRenderer {
     var green = [0, 255, 0, 255];
     gl.bindTexture(webgl.TEXTURE_2D, texture);
     gl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, 1, 1, 0, webgl.RGBA, webgl.UNSIGNED_BYTE, new Uint8List.fromList(green));
+
+    var image = new ImageElement(src: "packages/blockcillin/texture.png");
+    image.onLoad.listen((_) {
+      gl.bindTexture(webgl.TEXTURE_2D, texture);
+      gl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, image);
+      gl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR);
+      gl.texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR_MIPMAP_NEAREST);
+      gl.generateMipmap(webgl.TEXTURE_2D);
+    });
 
     var textureData = [
         1, 0,
