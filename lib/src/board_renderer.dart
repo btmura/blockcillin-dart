@@ -14,10 +14,10 @@ class BoardRenderer {
     var program = glProgram.program;
 
     var vertexData = [
-        0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0,
-        1.0, 0.0, 0.0,
-        0.0, -1.0, 0.0,
+        -0.5, -0.5, 0.0,
+        -0.5, 0.5, 0.0,
+        0.5, 0.5, 0.0,
+        0.5, -0.5, 0.0,
     ];
     var vertexBuffer = gl.createBuffer();
     gl
@@ -26,7 +26,7 @@ class BoardRenderer {
 
     var indexData = [
         0, 1, 2,
-        0, 3, 2,
+        0, 2, 3,
     ];
     var indexBuffer = gl.createBuffer();
     gl
