@@ -2,11 +2,7 @@ part of client;
 
 class BoardRenderer {
 
-  final webgl.RenderingContext _gl;
-  final webgl.Program _program;
-  final int _positionLocation;
-  final int _textureCoordLocation;
-
+  final GLProgram _glProgram;
   final webgl.Buffer _vertexBuffer;
   final webgl.Buffer _textureBuffer;
   final webgl.Buffer _indexBuffer;
@@ -52,23 +48,23 @@ class BoardRenderer {
         ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
 
 
-    return new BoardRenderer._(gl, program, glProgram.positionLocation, glProgram.textureCoordLocation, vertexBuffer, textureBuffer, indexBuffer);
+    return new BoardRenderer._(glProgram, vertexBuffer, textureBuffer, indexBuffer);
   }
 
-  BoardRenderer._(this._gl, this._program, this._positionLocation, this._textureCoordLocation, this._vertexBuffer, this._textureBuffer, this._indexBuffer);
+  BoardRenderer._(this._glProgram, this._vertexBuffer, this._textureBuffer, this._indexBuffer);
 
   void render(Board board) {
-    _gl
+    _glProgram.gl
         ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
-        ..enableVertexAttribArray(_positionLocation)
-        ..vertexAttribPointer(_positionLocation, 3, webgl.FLOAT, false, 0, 0);
+        ..enableVertexAttribArray(_glProgram.positionLocation)
+        ..vertexAttribPointer(_glProgram.positionLocation, 3, webgl.FLOAT, false, 0, 0);
 
-    _gl
+    _glProgram.gl
         ..bindBuffer(webgl.ARRAY_BUFFER, _textureBuffer)
-        ..enableVertexAttribArray(_textureCoordLocation)
-        ..vertexAttribPointer(_textureCoordLocation, 2, webgl.FLOAT, false, 0, 0);
+        ..enableVertexAttribArray(_glProgram.textureCoordLocation)
+        ..vertexAttribPointer(_glProgram.textureCoordLocation, 2, webgl.FLOAT, false, 0, 0);
 
-    _gl
+    _glProgram.gl
         ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
         ..drawElements(webgl.TRIANGLES, 6, webgl.UNSIGNED_SHORT, 0);
   }
