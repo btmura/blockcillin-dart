@@ -6,6 +6,7 @@ class GLProgram {
   final webgl.Program program;
   final webgl.UniformLocation projectionMatrixLocation;
   final webgl.UniformLocation viewMatrixLocation;
+  final webgl.UniformLocation boardRotationMatrixLocation;
   final int positionLocation;
   final int textureCoordLocation;
 
@@ -13,13 +14,15 @@ class GLProgram {
     var vertexShaderSource = '''
       uniform mat4 u_projectionMatrix;
       uniform mat4 u_viewMatrix;
+      uniform mat4 u_boardRotationMatrix;
+
       attribute vec4 a_position;
       attribute vec2 a_textureCoord;
 
       varying vec2 v_textureCoord;
 
       void main(void) {
-        gl_Position = u_projectionMatrix * u_viewMatrix * a_position;
+        gl_Position = u_projectionMatrix * u_viewMatrix * u_boardRotationMatrix * a_position;
         v_textureCoord = a_textureCoord;
       }
     ''';
@@ -50,6 +53,11 @@ class GLProgram {
       throw new StateError("u_viewMatrix not found");
     }
 
+    var boardRotationMatrixLocation = gl.getUniformLocation(program, "u_boardRotationMatrix");
+    if (boardRotationMatrixLocation == null) {
+      throw new StateError("u_boardRotationMatrix not found");
+    }
+
     var positionLocation = gl.getAttribLocation(program, "a_position");
     if (positionLocation == null) {
       throw new StateError("a_position not found");
@@ -60,8 +68,8 @@ class GLProgram {
       throw new StateError("a_textureCoord not found");
     }
 
-    return new GLProgram._(gl, program, projectionMatrixLocation, viewMatrixLocation, positionLocation, textureCoordLocation);
+    return new GLProgram._(gl, program, projectionMatrixLocation, viewMatrixLocation, boardRotationMatrixLocation, positionLocation, textureCoordLocation);
   }
 
-  GLProgram._(this.gl, this.program, this.projectionMatrixLocation, this.viewMatrixLocation, this.positionLocation, this.textureCoordLocation);
+  GLProgram._(this.gl, this.program, this.projectionMatrixLocation, this.viewMatrixLocation, this.boardRotationMatrixLocation, this.positionLocation, this.textureCoordLocation);
 }

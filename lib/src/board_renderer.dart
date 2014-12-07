@@ -7,6 +7,8 @@ class BoardRenderer {
   final webgl.Buffer _textureBuffer;
   final webgl.Buffer _indexBuffer;
 
+  Matrix _boardRotationMatrix;
+
   factory BoardRenderer(GLProgram glProgram) {
     var gl = glProgram.gl;
     var program = glProgram.program;
@@ -60,13 +62,17 @@ class BoardRenderer {
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer)
       ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
 
+    var boardRotationMatrix = new Matrix.rotationZ(math.PI / 4);
 
-    return new BoardRenderer._(glProgram, vertexBuffer, textureBuffer, indexBuffer);
+    return new BoardRenderer._(glProgram, vertexBuffer, textureBuffer, indexBuffer, boardRotationMatrix);
   }
 
-  BoardRenderer._(this._glProgram, this._vertexBuffer, this._textureBuffer, this._indexBuffer);
+  BoardRenderer._(this._glProgram, this._vertexBuffer, this._textureBuffer, this._indexBuffer, this._boardRotationMatrix);
 
   void render(Board board) {
+    _glProgram.gl
+      ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, _boardRotationMatrix.values);
+
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
       ..enableVertexAttribArray(_glProgram.positionLocation)
