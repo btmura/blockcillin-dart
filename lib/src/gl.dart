@@ -28,9 +28,9 @@ webgl.Program createProgram(webgl.RenderingContext gl, String vertexShaderSource
 
   var program = gl.createProgram();
   gl
-      ..attachShader(program, vertexShader)
-      ..attachShader(program, fragmentShader)
-      ..linkProgram(program);
+    ..attachShader(program, vertexShader)
+    ..attachShader(program, fragmentShader)
+    ..linkProgram(program);
 
   var linked = gl.getProgramParameter(program, webgl.LINK_STATUS);
   if (!linked) {
@@ -46,8 +46,8 @@ webgl.Program createProgram(webgl.RenderingContext gl, String vertexShaderSource
 webgl.Shader _createShader(webgl.RenderingContext gl, int type, String source) {
   var shader = gl.createShader(type);
   gl
-      ..shaderSource(shader, source)
-      ..compileShader(shader);
+    ..shaderSource(shader, source)
+    ..compileShader(shader);
 
   var compiled = gl.getShaderParameter(shader, webgl.COMPILE_STATUS);
   if (!compiled) {

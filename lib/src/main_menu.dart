@@ -7,13 +7,13 @@ class MainMenu {
 
   factory MainMenu() {
     var newGameButton = new ButtonElement()
-        ..id = "new-game-button"
-        ..text = "New Game";
+      ..id = "new-game-button"
+      ..text = "New Game";
 
     var mainMenu = new DivElement()
-        ..id = "main-menu"
-        ..className = "menu"
-        ..append(newGameButton);
+      ..id = "main-menu"
+      ..className = "menu"
+      ..append(newGameButton);
 
     return new MainMenu._(mainMenu, newGameButton);
   }
