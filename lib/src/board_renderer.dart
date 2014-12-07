@@ -11,10 +11,11 @@ class BoardRenderer {
     var gl = glProgram.gl;
     var program = glProgram.program;
 
+    // ur, ccw
     var vertexData = [
-        -0.5, -0.5, 0,
-        -0.5, 0.5, 0,
         0.5, 0.5, 0,
+        -0.5, 0.5, 0,
+        -0.5, -0.5, 0,
         0.5, -0.5, 0,
     ];
     var vertexBuffer = gl.createBuffer();
@@ -36,6 +37,7 @@ class BoardRenderer {
       gl.generateMipmap(webgl.TEXTURE_2D);
     });
 
+    // ul = (0, 0), br = (1, 1)
     var textureData = [
         1, 0,
         0, 0,
@@ -49,7 +51,7 @@ class BoardRenderer {
 
     var indexData = [
         0, 1, 2,
-        0, 2, 3,
+        2, 3, 0,
     ];
     var indexBuffer = gl.createBuffer();
     gl
