@@ -6,14 +6,9 @@ _app_view_tests() {
 
   group("app_view", () {
     setUp(() {
-      var mainMenu = new MainMenu();
-      var buttonBar = new ButtonBar(new DivElement(), new ButtonElement());
-      var canvas = new CanvasElement();
-      var gl = getWebGL(canvas);
-      var program = new GLProgram(gl);
-      var boardRenderer = new BoardRenderer(program);
-      var gameView = new GameView(buttonBar, canvas, gl, program, boardRenderer);
-      appView = new AppView(mainMenu, gameView);
+      var mockMainMenu = new MockMainMenu();
+      var mockGameView = new MockGameView();
+      appView = new AppView(mockMainMenu, mockGameView);
     });
 
     test("AppView.mainMenu", () {
@@ -24,4 +19,12 @@ _app_view_tests() {
       expect(appView.gameView, isNotNull);
     });
   });
+}
+
+class MockMainMenu extends Mock implements MainMenu {
+  noSuchMethod(Invocation invocation) {}
+}
+
+class MockGameView extends Mock implements GameView {
+  noSuchMethod(Invocation invocation) {}
 }

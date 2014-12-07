@@ -5,20 +5,7 @@ class MainMenu {
   final DivElement _mainMenu;
   final ButtonElement _newGameButton;
 
-  factory MainMenu() {
-    var newGameButton = new ButtonElement()
-      ..id = "new-game-button"
-      ..text = "New Game";
-
-    var mainMenu = new DivElement()
-      ..id = "main-menu"
-      ..className = "menu"
-      ..append(newGameButton);
-
-    return new MainMenu._(mainMenu, newGameButton);
-  }
-
-  MainMenu._(this._mainMenu, this._newGameButton);
+  MainMenu(this._mainMenu, this._newGameButton);
 
   ElementStream<MouseEvent> get onNewGameButtonClick => _newGameButton.onClick;
 

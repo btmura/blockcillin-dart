@@ -48,7 +48,7 @@ void client_main() {
 
   var app = new App();
 
-  var mainMenu = new MainMenu();
+  var mainMenu = _createMainMenu();
 
   var buttonBar = new ButtonBar(buttonBarElement, pauseButton);
 
@@ -63,4 +63,15 @@ void client_main() {
   var appController = new AppController(app, appView);
 
   appController.run();
+}
+
+MainMenu _createMainMenu() {
+  var newGameButton = new ButtonElement()
+    ..text = "New Game";
+
+  var menu = new DivElement()
+    ..className = "menu"
+    ..append(newGameButton);
+
+  return new MainMenu(menu, newGameButton);
 }
