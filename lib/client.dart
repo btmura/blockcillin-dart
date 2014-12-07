@@ -66,12 +66,16 @@ void client_main() {
 }
 
 MainMenu _createMainMenu() {
+  var continueGameButton = new ButtonElement()
+    ..text = "Continue Game";
+
   var newGameButton = new ButtonElement()
     ..text = "New Game";
 
   var menu = new DivElement()
     ..className = "menu"
+    ..append(continueGameButton)
     ..append(newGameButton);
 
-  return new MainMenu(menu, newGameButton);
+  return new MainMenu(menu, continueGameButton, newGameButton);
 }

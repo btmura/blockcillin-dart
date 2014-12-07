@@ -30,6 +30,13 @@ class AppController {
           }
         });
 
+    appView.mainMenu.onContinueGameButtonClick.listen((_) {
+      if (app.gameStarted && app.gamePaused) {
+        app.gamePaused = false;
+        _update();
+      }
+    });
+
     appView.mainMenu.onNewGameButtonClick.listen((_) {
       app.startGame(new Game.withRandomBoard(3, 3));
       _update();
@@ -44,6 +51,7 @@ class AppController {
   void _update([num delta]) {
     app.update();
 
+    appView.mainMenu.continueGameButtonVisible = app.gameStarted && app.gamePaused;
     appView.mainMenu.visible = !app.gameStarted || app.gamePaused;
     appView.gameView.buttonBar.visible = app.gameStarted && !app.gamePaused;
     if (app.game != null) {

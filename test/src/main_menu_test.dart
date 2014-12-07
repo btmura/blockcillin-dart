@@ -3,6 +3,7 @@ part of test;
 _main_menu_tests() {
 
   var menu;
+  var continueGameButton;
   var newGameButton;
   var mainMenu;
 
@@ -10,9 +11,18 @@ _main_menu_tests() {
     setUp(() {
       menu = new DivElement()
         ..id = "main-menu";
+
+      continueGameButton = new ButtonElement()
+        ..id = "continue-game-button";
+
       newGameButton = new ButtonElement()
         ..id = "new-game-button";
-      mainMenu = new MainMenu(menu, newGameButton);
+
+      mainMenu = new MainMenu(menu, continueGameButton, newGameButton);
+    });
+
+    test("MainMenu.onContinueGameButtonClick", () {
+      expect(mainMenu.onContinueGameButtonClick, isNotNull);
     });
 
     test("MainMenu.onNewGameButtonClick", () {
