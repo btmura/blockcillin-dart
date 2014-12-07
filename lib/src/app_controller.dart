@@ -41,11 +41,17 @@ class AppController {
     });
   }
 
-  void _update() {
+  void _update([num delta]) {
+    app.update();
+
     appView.mainMenu.visible = !app.gameStarted || app.gamePaused;
     appView.gameView.buttonBar.visible = app.gameStarted && !app.gamePaused;
     if (app.game != null) {
       appView.gameView.draw(app.game);
+    }
+
+    if (app.gameStarted && !app.gamePaused) {
+      window.animationFrame.then(_update);
     }
   }
 }

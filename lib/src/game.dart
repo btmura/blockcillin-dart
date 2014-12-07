@@ -10,4 +10,8 @@ class Game {
     var board = new Board.withRandomRings(numRings, numCells);
     return new Game(board);
   }
+
+  void update() {
+    board.update();
+  }
 }

@@ -11,4 +11,10 @@ class App {
     this.gamePaused = false;
     this.game = game;
   }
+
+  void update() {
+    if (game != null) {
+      game.update();
+    }
+  }
 }
