@@ -67,7 +67,7 @@ class BoardRenderer {
   BoardRenderer._(this._glProgram, this._vertexBuffer, this._textureBuffer, this._indexBuffer);
 
   void render(Board board) {
-    var boardRotationMatrix = new Matrix.rotationZ(board.rotation[2]);
+    var boardRotationMatrix = new Matrix.rotationY(board.rotation[1]);
 
     _glProgram.gl
       ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, boardRotationMatrix.values);

@@ -4,6 +4,17 @@ class Matrix {
 
   final Float32List values;
 
+  factory Matrix.rotationY(double radians) {
+    var c = math.cos(radians);
+    var s = math.sin(radians);
+    return new Matrix.fromList([
+      c, 0, -s, 0,
+      0, 1, 0, 0,
+      s, 0, c, 0,
+      0, 0, 0, 1
+    ]);
+  }
+
   factory Matrix.rotationZ(double radians) {
     var c = math.cos(radians);
     var s = math.sin(radians);
