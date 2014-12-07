@@ -13,10 +13,10 @@ class BoardRenderer {
 
     // ur, ccw
     var vertexData = [
-        0.5, 0.5, 0,
-        -0.5, 0.5, 0,
-        -0.5, -0.5, 0,
-        0.5, -0.5, 0,
+        0.5, 0.5, 0.0,
+        -0.5, 0.5, 0.0,
+        -0.5, -0.5, 0.0,
+        0.5, -0.5, 0.0,
     ];
     var vertexBuffer = gl.createBuffer();
     gl
@@ -41,10 +41,10 @@ class BoardRenderer {
 
     // ul = (0, 0), br = (1, 1)
     var textureData = [
-        1, 0,
-        0, 0,
-        0, 1,
-        1, 1,
+        1.0, 0.0,
+        0.0, 0.0,
+        0.0, 1.0,
+        1.0, 1.0,
     ];
     var textureBuffer = gl.createBuffer();
     gl
