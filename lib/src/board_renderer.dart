@@ -13,10 +13,17 @@ class BoardRenderer {
 
     // ur, ccw
     var vertexData = [
-        0.5, 0.5, 0.0,
-        -0.5, 0.5, 0.0,
-        -0.5, -0.5, 0.0,
-        0.5, -0.5, 0.0,
+        // Front
+        0.5, 0.5, 0.5,
+        -0.5, 0.5, 0.5,
+        -0.5, -0.5, 0.5,
+        0.5, -0.5, 0.5,
+
+        // Back
+        -0.5, 0.5, -0.5,
+        0.5, 0.5, -0.5,
+        0.5, -0.5, -0.5,
+        -0.5, -0.5, -0.5,
     ];
     var vertexBuffer = gl.createBuffer();
     gl
@@ -41,6 +48,13 @@ class BoardRenderer {
 
     // ul = (0, 0), br = (1, 1)
     var textureData = [
+        // Front
+        1.0, 0.0,
+        0.0, 0.0,
+        0.0, 1.0,
+        1.0, 1.0,
+
+        // Back
         1.0, 0.0,
         0.0, 0.0,
         0.0, 1.0,
@@ -52,8 +66,13 @@ class BoardRenderer {
       ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(textureData), webgl.STATIC_DRAW);
 
     var indexData = [
+        // Front
         0, 1, 2,
         2, 3, 0,
+
+        // Back
+        4, 5, 6,
+        6, 7, 4,
     ];
     var indexBuffer = gl.createBuffer();
     gl
@@ -84,6 +103,6 @@ class BoardRenderer {
 
     _glProgram.gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
-      ..drawElements(webgl.TRIANGLES, 6, webgl.UNSIGNED_SHORT, 0);
+      ..drawElements(webgl.TRIANGLES, 12, webgl.UNSIGNED_SHORT, 0);
   }
 }

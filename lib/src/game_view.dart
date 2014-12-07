@@ -13,7 +13,10 @@ class GameView {
   Float32List _viewMatrix;
 
   GameView(this.buttonBar, this.canvas, this._gl, this._program, this._boardRenderer) {
-    _gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    _gl
+      ..clearColor(0.0, 0.0, 0.0, 1.0)
+      ..enable(webgl.DEPTH_TEST);
+
     _projectionMatrix = _makeProjectionMatrix();
     _viewMatrix = _makeViewMatrix();
   }
