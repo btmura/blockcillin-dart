@@ -20,6 +20,7 @@ part 'src/gl_program.dart';
 part 'src/main_menu.dart';
 part 'src/matrix4.dart';
 part 'src/ring.dart';
+part 'src/vector3.dart';
 
 void client_main() {
   // Construct the button bar's DOM tree and add it to the body.
