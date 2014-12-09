@@ -1,20 +1,20 @@
 part of client;
 
-class Matrix {
+class Matrix4 {
 
   final Float32List values;
 
-  factory Matrix.rotationXYZ(List<double> radians) {
-    var x = new Matrix.rotationX(radians[0]);
-    var y = new Matrix.rotationY(radians[1]);
-    var z = new Matrix.rotationZ(radians[2]);
+  factory Matrix4.rotationXYZ(List<double> radians) {
+    var x = new Matrix4.rotationX(radians[0]);
+    var y = new Matrix4.rotationY(radians[1]);
+    var z = new Matrix4.rotationZ(radians[2]);
     return x * y * z;
   }
 
-  factory Matrix.rotationX(double radians) {
+  factory Matrix4.rotationX(double radians) {
     var c = math.cos(radians);
     var s = math.sin(radians);
-    return new Matrix.fromList([
+    return new Matrix4.fromList([
       1.0, 0.0, 0.0, 0.0,
       0.0, c, s, 0.0,
       0.0, -s, c, 0.0,
@@ -22,10 +22,10 @@ class Matrix {
     ]);
   }
 
-  factory Matrix.rotationY(double radians) {
+  factory Matrix4.rotationY(double radians) {
     var c = math.cos(radians);
     var s = math.sin(radians);
-    return new Matrix.fromList([
+    return new Matrix4.fromList([
       c, 0.0, -s, 0.0,
       0.0, 1.0, 0.0, 0.0,
       s, 0.0, c, 0.0,
@@ -33,10 +33,10 @@ class Matrix {
     ]);
   }
 
-  factory Matrix.rotationZ(double radians) {
+  factory Matrix4.rotationZ(double radians) {
     var c = math.cos(radians);
     var s = math.sin(radians);
-    return new Matrix.fromList([
+    return new Matrix4.fromList([
       c, s, 0.0, 0.0,
       -s, c, 0.0, 0.0,
       0.0, 0.0, 1.0, 0.0,
@@ -44,18 +44,18 @@ class Matrix {
     ]);
   }
 
-  factory Matrix.fromList(List<double> elements) {
-    return new Matrix._(new Float32List.fromList(elements));
+  factory Matrix4.fromList(List<double> elements) {
+    return new Matrix4._(new Float32List.fromList(elements));
   }
 
-  Matrix._(this.values);
+  Matrix4._(this.values);
 
   double operator [](int i) => values[i];
 
-  Matrix operator *(Matrix other) {
+  Matrix4 operator *(Matrix4 other) {
     var m = this;
     var n = other;
-    return new Matrix.fromList([
+    return new Matrix4.fromList([
       m[0]*n[0] + m[1]*n[4] + m[2]*n[8] + m[3]*n[12],
       m[0]*n[1] + m[1]*n[5] + m[2]*n[9] + m[3]*n[13],
       m[0]*n[2] + m[1]*n[6] + m[2]*n[10] + m[3]*n[14],

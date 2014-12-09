@@ -18,7 +18,7 @@ part 'src/game_view.dart';
 part 'src/gl.dart';
 part 'src/gl_program.dart';
 part 'src/main_menu.dart';
-part 'src/matrix.dart';
+part 'src/matrix4.dart';
 part 'src/ring.dart';
 
 void client_main() {
