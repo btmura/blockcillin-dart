@@ -14,5 +14,12 @@ class Vector3 {
     return new Vector3(x - o.x, y - o.y, z - o.z);
   }
 
+  Vector3 cross(Vector3 o) {
+    return new Vector3(
+        y * o.z - z * o.y,
+        z * o.x - x * o.z,
+        x * o.y - y * o.x);
+  }
+
   toString() => "($x, $y, $z)";
 }
