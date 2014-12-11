@@ -4,10 +4,10 @@ class Matrix4 {
 
   final Float32List values;
 
-  factory Matrix4.rotationXYZ(List<double> radians) {
-    var x = new Matrix4.rotationX(radians[0]);
-    var y = new Matrix4.rotationY(radians[1]);
-    var z = new Matrix4.rotationZ(radians[2]);
+  factory Matrix4.rotation(double radiansX, double radiansY, double radiansZ) {
+    var x = new Matrix4.rotationX(radiansX);
+    var y = new Matrix4.rotationY(radiansY);
+    var z = new Matrix4.rotationZ(radiansZ);
     return x * y * z;
   }
 
@@ -52,9 +52,9 @@ class Matrix4 {
 
   double operator [](int i) => values[i];
 
-  Matrix4 operator *(Matrix4 other) {
+  Matrix4 operator *(Matrix4 o) {
     var m = this;
-    var n = other;
+    var n = o;
     return new Matrix4.fromList([
       m[0]*n[0] + m[1]*n[4] + m[2]*n[8] + m[3]*n[12],
       m[0]*n[1] + m[1]*n[5] + m[2]*n[9] + m[3]*n[13],
