@@ -153,7 +153,7 @@ class BoardRenderer {
     var boardRotationMatrix = new Matrix4.rotation(board.rotation[0], board.rotation[1], board.rotation[2]);
 
     _glProgram.gl
-      ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, boardRotationMatrix.values);
+      ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, boardRotationMatrix.floatList);
 
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)

@@ -4,7 +4,7 @@ class Matrix4 {
 
   // TODO(btmura): add test for Matrix4
 
-  final Float32List values;
+  final Float32List floatList;
 
   factory Matrix4.rotation(double radiansX, double radiansY, double radiansZ) {
     var x = new Matrix4.rotationX(radiansX);
@@ -50,9 +50,9 @@ class Matrix4 {
     return new Matrix4._(new Float32List.fromList(elements));
   }
 
-  Matrix4._(this.values);
+  Matrix4._(this.floatList);
 
-  double operator [](int i) => values[i];
+  double operator [](int i) => floatList[i];
 
   Matrix4 operator *(Matrix4 o) {
     var m = this;

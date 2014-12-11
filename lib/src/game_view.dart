@@ -26,8 +26,8 @@ class GameView {
     _gl.viewport(0, 0, canvas.width, canvas.height);
 
     _gl.useProgram(_program.program);
-    _gl.uniformMatrix4fv(_program.projectionMatrixLocation, false, _projectionMatrix.values);
-    _gl.uniformMatrix4fv(_program.viewMatrixLocation, false, _viewMatrix.values);
+    _gl.uniformMatrix4fv(_program.projectionMatrixLocation, false, _projectionMatrix.floatList);
+    _gl.uniformMatrix4fv(_program.viewMatrixLocation, false, _viewMatrix.floatList);
 
     _boardRenderer.render(game.board);
   }
