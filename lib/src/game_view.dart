@@ -50,52 +50,22 @@ class GameView {
   }
 
   Float32List _makeViewMatrix() {
-    var cameraPosition = [0.0, 0.1, 3.0];
-    var targetPosition = [0.0, 0.0, 0.0];
-    var up = [0.0, 1.0, 0.0];
+    var cameraPosition = new Vector3(0.0, 0.1, 3.0);
+    var targetPosition = new Vector3(0.0, 0.0, 0.0);
+    var up = new Vector3(0.0, 1.0, 0.0);
     var cameraMatrix = _makeLookAt(cameraPosition, targetPosition, up);
     return new Float32List.fromList(_makeInverse(cameraMatrix));
   }
 
-  List<double> _makeLookAt(List<double> cameraPosition, List<double> target, List<double> up) {
-    var zAxis = _normalize(_subtractVectors(cameraPosition, target));
-    var xAxis = _cross(up, zAxis);
-    var yAxis = _cross(zAxis, xAxis);
+  List<double> _makeLookAt(Vector3 cameraPosition, Vector3 target, Vector3 up) {
+    var zAxis = (cameraPosition - target).normalize();
+    var xAxis = up.cross(zAxis);
+    var yAxis = zAxis.cross(xAxis);
     return [
-      xAxis[0], xAxis[1], xAxis[2], 0,
-      yAxis[0], yAxis[1], yAxis[2], 0,
-      zAxis[0], zAxis[1], zAxis[2], 0,
-      cameraPosition[0], cameraPosition[1], cameraPosition[2], 1
-    ];
-  }
-
-  List<double> _normalize(List<double> v) {
-    var length = math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    // make sure we don't divide by 0.
-    if (length > 0.00001) {
-      return [
-        v[0] / length,
-        v[1] / length,
-        v[2] / length
-      ];
-    } else {
-      return [0, 0, 0];
-    }
-  }
-
-  List<double> _subtractVectors(List<double> a, List<double> b) {
-    return [
-      a[0] - b[0],
-      a[1] - b[1],
-      a[2] - b[2]
-    ];
-  }
-
-  List<double> _cross(List<double> a, List<double> b) {
-    return [
-      a[1] * b[2] - a[2] * b[1],
-      a[2] * b[0] - a[0] * b[2],
-      a[0] * b[1] - a[1] * b[0]
+      xAxis.x, xAxis.y, xAxis.z, 0,
+      yAxis.x, yAxis.y, yAxis.z, 0,
+      zAxis.x, zAxis.y, zAxis.z, 0,
+      cameraPosition.x, cameraPosition.y, cameraPosition.z, 1
     ];
   }
 
