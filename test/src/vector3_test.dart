@@ -13,5 +13,11 @@ _vector3_tests() {
       var b = new Vector3(2.0, -6.0, 1.5);
       expect(a.cross(b), equals(new Vector3(-7.5, -11.5, -36.0)));
     });
+
+    test("Vector3.normalize()", () {
+      var v = new Vector3(2.0, 2.0, 2.0);
+      // TODO(btmura): fix float comparison
+      // expect(v.normalize(), equals(new Vector3(0.57, 0.57, 0.57)));
+    });
   });
 }

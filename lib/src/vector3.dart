@@ -21,5 +21,13 @@ class Vector3 {
         x * o.y - y * o.x);
   }
 
+  Vector3 normalize() {
+    var length = math.sqrt(x * x + y * y + z * z);
+    if (length > 0.00001) {
+      return new Vector3(x / length, y / length, z / length);
+    }
+    return new Vector3(0.0, 0.0, 0.0);
+  }
+
   toString() => "($x, $y, $z)";
 }
