@@ -35,18 +35,7 @@ class GameView {
   Matrix4 _makeProjectionMatrix() {
     var aspect = canvas.width / canvas.height;
     var fovRadians = math.PI / 2;
-    return _makePerspectiveMatrix(fovRadians, aspect, 1.0, 2000.0);
-  }
-
-  Matrix4 _makePerspectiveMatrix(double fovRadians, double aspect, double near, double far) {
-    var f = math.tan(math.PI * 0.5 - 0.5 * fovRadians);
-    var rangeInv = 1.0 / (near - far);
-    return new Matrix4.fromList([
-        f / aspect, 0.0, 0.0, 0.0,
-        0.0, f, 0.0, 0.0,
-        0.0, 0.0, (near + far) * rangeInv, -1.0,
-        0.0, 0.0, near * far * rangeInv * 2.0, 0.0
-    ]);
+    return new Matrix4.perspective(fovRadians, aspect, 1.0, 2000.0);
   }
 
   Matrix4 _makeViewMatrix() {

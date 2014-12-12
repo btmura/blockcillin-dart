@@ -46,6 +46,17 @@ class Matrix4 {
     ]);
   }
 
+  factory Matrix4.perspective(double fovRadians, double aspect, double near, double far) {
+    var f = math.tan(math.PI * 0.5 - 0.5 * fovRadians);
+    var rangeInv = 1.0 / (near - far);
+    return new Matrix4.fromList([
+        f / aspect, 0.0, 0.0, 0.0,
+        0.0, f, 0.0, 0.0,
+        0.0, 0.0, (near + far) * rangeInv, -1.0,
+        0.0, 0.0, near * far * rangeInv * 2.0, 0.0
+    ]);
+  }
+
   factory Matrix4.fromList(List<double> elements) {
     return new Matrix4._(new Float32List.fromList(elements));
   }
