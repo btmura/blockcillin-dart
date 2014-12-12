@@ -13,10 +13,10 @@ class AppController {
   }
 
   void _init() {
-    appView.gameView.resize();
+    appView.resize();
 
     window.onResize.listen((_) {
-      if (appView.gameView.resize()) {
+      if (appView.resize()) {
         _update();
       }
     });
@@ -30,19 +30,19 @@ class AppController {
           }
         });
 
-    appView.mainMenu.onContinueGameButtonClick.listen((_) {
+    appView.onContinueGameButtonClick.listen((_) {
       if (app.gameStarted && app.gamePaused) {
         app.gamePaused = false;
         _update();
       }
     });
 
-    appView.mainMenu.onNewGameButtonClick.listen((_) {
+    appView.onNewGameButtonClick.listen((_) {
       app.startGame(new Game.withRandomBoard(3, 3));
       _update();
     });
 
-    appView.gameView.buttonBar.onPauseButtonClick.listen((_) {
+    appView.onPauseButtonClick.listen((_) {
       app.gamePaused = true;
       _update();
     });
