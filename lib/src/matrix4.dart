@@ -57,6 +57,23 @@ class Matrix4 {
     ]);
   }
 
+  factory Matrix4.view(Vector3 cameraPosition, Vector3 target, Vector3 up) {
+    var cameraMatrix = new Matrix4._lookAt(cameraPosition, target, up);
+    return cameraMatrix.inverse();
+  }
+
+  factory Matrix4._lookAt(Vector3 cameraPosition, Vector3 target, Vector3 up) {
+    var zAxis = (cameraPosition - target).normalize();
+    var xAxis = up.cross(zAxis);
+    var yAxis = zAxis.cross(xAxis);
+    return new Matrix4.fromList([
+      xAxis.x, xAxis.y, xAxis.z, 0.0,
+      yAxis.x, yAxis.y, yAxis.z, 0.0,
+      zAxis.x, zAxis.y, zAxis.z, 0.0,
+      cameraPosition.x, cameraPosition.y, cameraPosition.z, 1.0
+    ]);
+  }
+
   factory Matrix4.fromList(List<double> elements) {
     return new Matrix4._(new Float32List.fromList(elements));
   }

@@ -42,20 +42,7 @@ class GameView {
     var cameraPosition = new Vector3(0.0, 0.1, 3.0);
     var targetPosition = new Vector3(0.0, 0.0, 0.0);
     var up = new Vector3(0.0, 1.0, 0.0);
-    var cameraMatrix = _makeLookAt(cameraPosition, targetPosition, up);
-    return cameraMatrix.inverse();
-  }
-
-  Matrix4 _makeLookAt(Vector3 cameraPosition, Vector3 target, Vector3 up) {
-    var zAxis = (cameraPosition - target).normalize();
-    var xAxis = up.cross(zAxis);
-    var yAxis = zAxis.cross(xAxis);
-    return new Matrix4.fromList([
-      xAxis.x, xAxis.y, xAxis.z, 0.0,
-      yAxis.x, yAxis.y, yAxis.z, 0.0,
-      zAxis.x, zAxis.y, zAxis.z, 0.0,
-      cameraPosition.x, cameraPosition.y, cameraPosition.z, 1.0
-    ]);
+    return new Matrix4.view(cameraPosition, targetPosition, up);
   }
 
   bool resize() {
