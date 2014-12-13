@@ -19,6 +19,7 @@ part 'src/game_view_test.dart';
 part 'src/gl_program_test.dart';
 part 'src/gl_test.dart';
 part 'src/main_menu_test.dart';
+part 'src/quaternion_test.dart';
 part 'src/ring_test.dart';
 part 'src/vector3_test.dart';
 
@@ -37,6 +38,7 @@ void test_main() {
   _gl_program_tests();
   _gl_tests();
   _main_menu_tests();
+  _quaternion_tests();
   _ring_tests();
   _vector3_tests();
 }

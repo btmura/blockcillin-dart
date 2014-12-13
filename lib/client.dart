@@ -19,6 +19,7 @@ part 'src/gl.dart';
 part 'src/gl_program.dart';
 part 'src/main_menu.dart';
 part 'src/matrix4.dart';
+part 'src/quaternion.dart';
 part 'src/ring.dart';
 part 'src/vector3.dart';
 
