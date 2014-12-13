@@ -66,11 +66,14 @@ class BoardRenderer {
       fbr, fbl, bbl, bbr,
     ];
 
+    var translation = new Vector3(0.0, 0.0, 1.0);
+
     var vertexData = [];
     for (var i = 0; i < vertices.length; i++) {
-      vertexData.add(vertices[i].x);
-      vertexData.add(vertices[i].y);
-      vertexData.add(vertices[i].z);
+      var v = translation + vertices[i];
+      vertexData.add(v.x);
+      vertexData.add(v.y);
+      vertexData.add(v.z);
     }
 
     var vertexBuffer = gl.createBuffer();

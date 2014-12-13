@@ -10,6 +10,10 @@ class Vector3 {
 
   bool operator ==(o) => o is Vector3 && o.x == x && o.y == y && o.z == z;
 
+  Vector3 operator +(Vector3 o) {
+    return new Vector3(x + o.x, y + o.y, z + o.z);
+  }
+
   Vector3 operator -(Vector3 o) {
     return new Vector3(x - o.x, y - o.y, z - o.z);
   }
