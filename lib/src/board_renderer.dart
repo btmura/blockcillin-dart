@@ -11,43 +11,67 @@ class BoardRenderer {
     var gl = glProgram.gl;
     var program = glProgram.program;
 
+    // front upper right
+    Vector3 fur = new Vector3(0.5, 0.5, 0.5);
+
+    // front upper left
+    Vector3 ful = new Vector3(-0.5, 0.5, 0.5);
+
+    // front bottom left
+    Vector3 fbl = new Vector3(-0.5, -0.5, 0.5);
+
+    // front bottom right
+    Vector3 fbr = new Vector3(0.5, -0.5, 0.5);
+
+    // back upper left
+    Vector3 bul = new Vector3(-0.5, 0.5, -0.5);
+
+    // back upper right
+    Vector3 bur = new Vector3(0.5, 0.5, -0.5);
+
+    // back bottom right
+    Vector3 bbr = new Vector3(0.5, -0.5, -0.5);
+
+    // back bottom left
+    Vector3 bbl = new Vector3(-0.5, -0.5, -0.5);
+
     // ur, ccw
     var vertexData = [
       // Front
-      0.5, 0.5, 0.5,
-      -0.5, 0.5, 0.5,
-      -0.5, -0.5, 0.5,
-      0.5, -0.5, 0.5,
+      fur.x, fur.y, fur.z,
+      ful.x, ful.y, ful.z,
+      fbl.x, fbl.y, fbl.z,
+      fbr.x, fbr.y, fbr.z,
 
       // Back
-      -0.5, 0.5, -0.5,
-      0.5, 0.5, -0.5,
-      0.5, -0.5, -0.5,
-      -0.5, -0.5, -0.5,
+      bul.x, bul.y, bul.z,
+      bur.x, bur.y, bur.z,
+      bbr.x, bbr.y, bbr.z,
+      bbl.x, bbl.y, bbl.z,
 
       // Left
-      -0.5, 0.5, 0.5,
-      -0.5, 0.5, -0.5,
-      -0.5, -0.5, -0.5,
-      -0.5, -0.5, 0.5,
+      ful.x, ful.y, ful.z,
+      bul.x, bul.y, bul.z,
+      bbl.x, bbl.y, bbl.z,
+      fbl.x, fbl.y, fbl.z,
 
       // Right
-      0.5, 0.5, -0.5,
-      0.5, 0.5, 0.5,
-      0.5, -0.5, 0.5,
-      0.5, -0.5, -0.5,
+      bur.x, bur.y, bur.z,
+      fur.x, fur.y, fur.z,
+      fbr.x, fbr.y, fbr.z,
+      bbr.x, bbr.y, bbr.z,
 
       // Top
-      0.5, 0.5, -0.5,
-      -0.5, 0.5, -0.5,
-      -0.5, 0.5, 0.5,
-      0.5, 0.5, 0.5,
+      bur.x, bur.y, bur.z,
+      bul.x, bul.y, bul.z,
+      ful.x, ful.y, ful.z,
+      fur.x, fur.y, fur.z,
 
       // Bottom
-      0.5, -0.5, 0.5,
-      -0.5, -0.5, 0.5,
-      -0.5, -0.5, -0.5,
-      0.5, -0.5, -0.5,
+      fbr.x, fbr.y, fbr.z,
+      fbl.x, fbl.y, fbl.z,
+      bbl.x, bbl.y, bbl.z,
+      bbr.x, bbr.y, bbr.z,
     ];
     var vertexBuffer = gl.createBuffer();
     gl
