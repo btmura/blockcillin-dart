@@ -46,43 +46,32 @@ class BoardRenderer {
     Vector3 bbl = new Vector3(-bw, -by, -bz);
 
     // ur, ccw
-    var vertexData = [
+    var vertices = [
       // Front
-      fur.x, fur.y, fur.z,
-      ful.x, ful.y, ful.z,
-      fbl.x, fbl.y, fbl.z,
-      fbr.x, fbr.y, fbr.z,
+      fur, ful, fbl, fbr,
 
       // Back
-      bul.x, bul.y, bul.z,
-      bur.x, bur.y, bur.z,
-      bbr.x, bbr.y, bbr.z,
-      bbl.x, bbl.y, bbl.z,
+      bul, bur, bbr, bbl,
 
       // Left
-      ful.x, ful.y, ful.z,
-      bul.x, bul.y, bul.z,
-      bbl.x, bbl.y, bbl.z,
-      fbl.x, fbl.y, fbl.z,
+      ful, bul, bbl, fbl,
 
       // Right
-      bur.x, bur.y, bur.z,
-      fur.x, fur.y, fur.z,
-      fbr.x, fbr.y, fbr.z,
-      bbr.x, bbr.y, bbr.z,
+      bur, fur, fbr, bbr,
 
       // Top
-      bur.x, bur.y, bur.z,
-      bul.x, bul.y, bul.z,
-      ful.x, ful.y, ful.z,
-      fur.x, fur.y, fur.z,
+      bur, bul, ful, fur,
 
       // Bottom
-      fbr.x, fbr.y, fbr.z,
-      fbl.x, fbl.y, fbl.z,
-      bbl.x, bbl.y, bbl.z,
-      bbr.x, bbr.y, bbr.z,
+      fbr, fbl, bbl, bbr,
     ];
+
+    var vertexData = [];
+    for (var i = 0; i < vertices.length; i++) {
+      vertexData.add(vertices[i].x);
+      vertexData.add(vertices[i].y);
+      vertexData.add(vertices[i].z);
+    }
 
     var vertexBuffer = gl.createBuffer();
     gl
