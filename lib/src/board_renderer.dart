@@ -11,29 +11,39 @@ class BoardRenderer {
     var gl = glProgram.gl;
     var program = glProgram.program;
 
+    // front dimensions
+    var fx = 0.5;
+    var fy = 0.5;
+    var fz = 0.5;
+
+    // back dimensions
+    var bw = 0.3;
+    var by = 0.5;
+    var bz = 0.5;
+
     // front upper right
-    Vector3 fur = new Vector3(0.5, 0.5, 0.5);
+    Vector3 fur = new Vector3(fx, fy, fz);
 
     // front upper left
-    Vector3 ful = new Vector3(-0.5, 0.5, 0.5);
+    Vector3 ful = new Vector3(-fx, fy, fz);
 
     // front bottom left
-    Vector3 fbl = new Vector3(-0.5, -0.5, 0.5);
+    Vector3 fbl = new Vector3(-fx, -fy, fz);
 
     // front bottom right
-    Vector3 fbr = new Vector3(0.5, -0.5, 0.5);
+    Vector3 fbr = new Vector3(fx, -fy, fz);
 
     // back upper left
-    Vector3 bul = new Vector3(-0.5, 0.5, -0.5);
+    Vector3 bul = new Vector3(-bw, by, -bz);
 
     // back upper right
-    Vector3 bur = new Vector3(0.5, 0.5, -0.5);
+    Vector3 bur = new Vector3(bw, by, -bz);
 
     // back bottom right
-    Vector3 bbr = new Vector3(0.5, -0.5, -0.5);
+    Vector3 bbr = new Vector3(bw, -by, -bz);
 
     // back bottom left
-    Vector3 bbl = new Vector3(-0.5, -0.5, -0.5);
+    Vector3 bbl = new Vector3(-bw, -by, -bz);
 
     // ur, ccw
     var vertexData = [
@@ -73,6 +83,7 @@ class BoardRenderer {
       bbl.x, bbl.y, bbl.z,
       bbr.x, bbr.y, bbr.z,
     ];
+
     var vertexBuffer = gl.createBuffer();
     gl
       ..bindBuffer(webgl.ARRAY_BUFFER, vertexBuffer)

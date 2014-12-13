@@ -16,8 +16,6 @@ class Board {
   }
 
   void update() {
-    rotation[0] += math.PI / 200;
     rotation[1] += math.PI / 400;
-    rotation[2] += math.PI / 600;
   }
 }
