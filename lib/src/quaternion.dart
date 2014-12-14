@@ -25,6 +25,14 @@ class Quaternion {
   double get z => storage[2];
   double get w => storage[3];
 
+  Quaternion operator *(Quaternion o) {
+    return new Quaternion(
+        w * o.x + x * o.w + y * o.z - z * o.y,
+        w * o.y + y * o.w + z * o.x - x * o.z,
+        w * o.z + z * o.w + x * o.y - y * o.x,
+        w * o.w - x * o.x - y * o.y - z * o.z);
+  }
+
   Quaternion conjugate() {
     return new Quaternion(-x, -y, -z, w);
   }

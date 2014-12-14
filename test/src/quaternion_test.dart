@@ -51,6 +51,16 @@ _quaternion_tests() {
       expect(q.w, inInclusiveRange(0.0, 0.0001), reason: "w");
     });
 
+    test("Quaternion *", () {
+      var q1 = new Quaternion.fromAxisAngle(new Vector3(0.0,  1.0, 0.0), math.PI / 2);
+      var q2 = new Quaternion.fromAxisAngle(new Vector3(1.0,  0.0, 0.0), math.PI / 4);
+      var q3 = q2 * q1;
+      expect(q3.x, inInclusiveRange(0.2705, 0.2706), reason: "x");
+      expect(q3.y, inInclusiveRange(0.6532, 0.6533), reason: "y");
+      expect(q3.z, inInclusiveRange(0.2705, 0.2706), reason: "z");
+      expect(q3.w, inInclusiveRange(0.6532, 0.6533), reason: "w");
+    });
+
     test("Quaternion.conjugate", () {
       var q = new Quaternion(1.0, 2.0, 3.0, 4.0).conjugate();
       expect(q.x, equals(-1.0));
