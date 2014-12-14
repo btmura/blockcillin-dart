@@ -2,17 +2,26 @@ part of client;
 
 class Quaternion {
 
-  final Float32List floatList;
+  final Float32List storage;
 
-  Quaternion(double x, double y, double z, double w) : floatList = new Float32List(4) {
-    floatList[0] = x;
-    floatList[1] = y;
-    floatList[2] = z;
-    floatList[3] = w;
+  Quaternion(double x, double y, double z, double w) : storage = new Float32List(4) {
+    storage[0] = x;
+    storage[1] = y;
+    storage[2] = z;
+    storage[3] = w;
   }
 
-  double get x => floatList[0];
-  double get y => floatList[1];
-  double get z => floatList[2];
-  double get w => floatList[3];
+  factory Quaternion.fromAxisAngle(Vector3 axis, double angleRadians) {
+    var halfSin = math.sin(angleRadians * 0.5) / axis.length;
+    var x = axis.x * halfSin;
+    var y = axis.y * halfSin;
+    var z = axis.z * halfSin;
+    var w = math.cos(angleRadians * 0.5);
+    return new Quaternion(x, y, z, w);
+  }
+
+  double get x => storage[0];
+  double get y => storage[1];
+  double get z => storage[2];
+  double get w => storage[3];
 }
