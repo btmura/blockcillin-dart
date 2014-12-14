@@ -2,11 +2,17 @@ part of client;
 
 class Vector3 {
 
-  final double x;
-  final double y;
-  final double z;
+  final Float32List storage;
 
-  Vector3(this.x, this.y, this.z);
+  Vector3(double x, double y, double z) : storage = new Float32List(3) {
+    storage[0] = x;
+    storage[1] = y;
+    storage[2] = z;
+  }
+
+  double get x => storage[0];
+  double get y => storage[1];
+  double get z => storage[2];
 
   double get length => math.sqrt(x * x + y * y + z * z);
 

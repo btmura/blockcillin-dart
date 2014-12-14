@@ -2,6 +2,14 @@ part of test;
 
 _vector3_tests() {
   group("vector3", () {
+    test("Vector3", () {
+      var v = new Vector3(1.0, 2.0, 3.0);
+      expect(v.x, equals(1.0));
+      expect(v.y, equals(2.0));
+      expect(v.z, equals(3.0));
+      expect(v.storage, equals(new Float32List.fromList([1.0, 2.0, 3.0])));
+    });
+
     test("Vector3.length", () {
       var v = new Vector3(1.0, 2.0, 3.0);
       expect(v.length, equals(math.sqrt(14)));
