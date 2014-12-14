@@ -11,6 +11,8 @@ class BoardRenderer {
     var gl = glProgram.gl;
     var program = glProgram.program;
 
+    var numCubes = 4;
+
     // front dimensions
     var fx = 0.5;
     var fy = 0.5;
@@ -67,13 +69,15 @@ class BoardRenderer {
     ];
 
     var translation = new Vector3(0.0, 0.0, 1.0);
-
     var vertexData = [];
-    for (var i = 0; i < vertices.length; i++) {
-      var v = translation + vertices[i];
-      vertexData.add(v.x);
-      vertexData.add(v.y);
-      vertexData.add(v.z);
+    for (var i = 0; i < numCubes; i++) {
+      var rotate = new Quaternion.fromAxisAngle(new Vector3(0.0, 1.0, 0.0), math.PI / 2 * i);
+      for (var j = 0; j < vertices.length; j++) {
+        var v = rotate.rotate(translation + vertices[j]);
+        vertexData.add(v.x);
+        vertexData.add(v.y);
+        vertexData.add(v.z);
+      }
     }
 
     var vertexBuffer = gl.createBuffer();
@@ -98,7 +102,7 @@ class BoardRenderer {
     });
 
     // ul = (0, 0), br = (1, 1)
-    var textureData = [
+    var texturePoints = [
       // Front
       1.0, 0.0,
       0.0, 0.0,
@@ -135,12 +139,19 @@ class BoardRenderer {
       0.0, 1.0,
       1.0, 1.0,
     ];
+    var textureData = [];
+    for (var i = 0; i < numCubes; i++) {
+      for (var j = 0; j < texturePoints.length; j++) {
+        textureData.add(texturePoints[j]);
+      }
+    }
+
     var textureBuffer = gl.createBuffer();
     gl
       ..bindBuffer(webgl.ARRAY_BUFFER, textureBuffer)
       ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(textureData), webgl.STATIC_DRAW);
 
-    var indexData = [
+    var indexPoints = [
       // Front
       0, 1, 2,
       2, 3, 0,
@@ -165,11 +176,18 @@ class BoardRenderer {
       20, 21, 22,
       22, 23, 20,
     ];
+
+    var indexData = [];
+    for (var i = 0; i < numCubes; i++) {
+      for (var j = 0; j < indexPoints.length; j++) {
+        indexData.add(indexPoints[j] + i * 24);
+      }
+    }
+
     var indexBuffer = gl.createBuffer();
     gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer)
       ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
-
 
     return new BoardRenderer._(glProgram, vertexBuffer, textureBuffer, indexBuffer);
   }
@@ -194,6 +212,6 @@ class BoardRenderer {
 
     _glProgram.gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
-      ..drawElements(webgl.TRIANGLES, 36, webgl.UNSIGNED_SHORT, 0);
+      ..drawElements(webgl.TRIANGLES, 36 * 4, webgl.UNSIGNED_SHORT, 0);
   }
 }
