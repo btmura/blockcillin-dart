@@ -51,6 +51,14 @@ _quaternion_tests() {
       expect(q.w, inInclusiveRange(0.0, 0.0001), reason: "w");
     });
 
+    test("Quaternion.fromVector", () {
+      var q = new Quaternion.fromVector(new Vector3(1.0, 2.0, 3.0));
+      expect(q.x, equals(1.0));
+      expect(q.y, equals(2.0));
+      expect(q.z, equals(3.0));
+      expect(q.w, isZero);
+    });
+
     test("Quaternion *", () {
       var q1 = new Quaternion.fromAxisAngle(new Vector3(0.0,  1.0, 0.0), math.PI / 2);
       var q2 = new Quaternion.fromAxisAngle(new Vector3(1.0,  0.0, 0.0), math.PI / 4);
@@ -67,6 +75,28 @@ _quaternion_tests() {
       expect(q.y, equals(-2.0));
       expect(q.z, equals(-3.0));
       expect(q.w, equals(4.0));
+    });
+
+    test("Quaternion.rotate", () {
+      var q1 = new Quaternion.fromAxisAngle(new Vector3(0.0,  1.0, 0.0), math.PI / 2);
+      var q2 = new Quaternion.fromAxisAngle(new Vector3(1.0,  0.0, 0.0), math.PI / 4);
+      var q3 = q2 * q1;
+
+      var v1 = new Vector3(1.0, 0.0, 0.0);
+      var v2 = q3.rotate(v1);
+      expect(v2.x, equals(0.0), reason: "x");
+      expect(v2.y, inInclusiveRange(0.7071, 0.7072), reason: "y");
+      expect(v2.z, inInclusiveRange(-0.7072, -0.7071), reason: "z");
+
+      var v3 = q1.rotate(v1);
+      expect(v3.x, equals(0.0), reason: "x");
+      expect(v3.y, equals(0.0), reason: "y");
+      expect(v3.z, inInclusiveRange(-1.0, -0.999), reason: "z");
+
+      var v4 = q2.rotate(v3);
+      expect(v4.x, equals(0.0), reason: "x");
+      expect(v4.y, inInclusiveRange(0.7071, 0.7072), reason: "y");
+      expect(v4.z, inInclusiveRange(-0.7072, -0.7071), reason: "z");
     });
   });
 }

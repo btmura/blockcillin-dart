@@ -20,6 +20,10 @@ class Quaternion {
     return new Quaternion(x, y, z, w);
   }
 
+  factory Quaternion.fromVector(Vector3 v) {
+    return new Quaternion(v.x, v.y, v.z, 0.0);
+  }
+
   double get x => storage[0];
   double get y => storage[1];
   double get z => storage[2];
@@ -35,5 +39,10 @@ class Quaternion {
 
   Quaternion conjugate() {
     return new Quaternion(-x, -y, -z, w);
+  }
+
+  Vector3 rotate(Vector3 v) {
+    var q = this * new Quaternion.fromVector(v) * conjugate();
+    return new Vector3(q.x, q.y, q.z);
   }
 }
