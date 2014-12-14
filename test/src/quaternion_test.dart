@@ -50,5 +50,13 @@ _quaternion_tests() {
       expect(q.z, equals(0.0), reason: "z");
       expect(q.w, inInclusiveRange(0.0, 0.0001), reason: "w");
     });
+
+    test("Quaternion.conjugate", () {
+      var q = new Quaternion(1.0, 2.0, 3.0, 4.0).conjugate();
+      expect(q.x, equals(-1.0));
+      expect(q.y, equals(-2.0));
+      expect(q.z, equals(-3.0));
+      expect(q.w, equals(4.0));
+    });
   });
 }

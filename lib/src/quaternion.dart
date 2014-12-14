@@ -24,4 +24,8 @@ class Quaternion {
   double get y => storage[1];
   double get z => storage[2];
   double get w => storage[3];
+
+  Quaternion conjugate() {
+    return new Quaternion(-x, -y, -z, w);
+  }
 }
