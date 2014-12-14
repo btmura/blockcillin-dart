@@ -2,13 +2,13 @@ part of test;
 
 _game_tests() {
   group("game", () {
-    test("Game(board)", () {
+    test("Game", () {
       var board = new Board.withRandomRings(2, 1);
       var game = new Game(board);
       expect(game.board, equals(board));
     });
 
-    test("Game.withRandomBoard(numRings, numCells)", () {
+    test("Game.withRandomBoard", () {
       var game = new Game.withRandomBoard(2, 1);
       expect(game.board.rings.length, equals(2));
       expect(game.board.rings[0].cells.length, equals(1));

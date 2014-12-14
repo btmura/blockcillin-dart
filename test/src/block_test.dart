@@ -2,17 +2,17 @@ part of test;
 
 _block_tests() {
   group("block", () {
-    test("Block(color)", () {
+    test("Block", () {
       var block = new Block(BlockColor.red);
       expect(block.color, equals(BlockColor.red));
     });
 
-    test("Block.withRandomColor()", () {
+    test("Block.withRandomColor", () {
       var block = new Block.withRandomColor(1337);
       expect(block.color, equals(BlockColor.red));
     });
 
-    test("Block.operator ==", () {
+    test("Block ==", () {
       var block = new Block(BlockColor.red);
       var same = new Block(BlockColor.red);
       expect(same, equals(block));
@@ -21,7 +21,7 @@ _block_tests() {
       expect(different, isNot(equals(block)));
     });
 
-    test("BlockColor.random()", () {
+    test("BlockColor.random", () {
       var color = BlockColor.random(3007);
       expect(color, equals(BlockColor.blue));
     });

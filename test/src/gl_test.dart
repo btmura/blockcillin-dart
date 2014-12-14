@@ -25,17 +25,17 @@ _gl_tests() {
       expect(gl, isNotNull);
     });
 
-    test("createProgram(gl, vertexShaderSource, fragmentShaderSource) - valid shaders", () {
+    test("createProgram - valid shaders", () {
       var program = createProgram(gl, vertexShaderSource, fragmentShaderSource);
       expect(program, isNotNull);
     });
 
-    test("createProgram(gl, vertexShaderSource, fragmentShaderSource) - invalid vertex shader", () {
+    test("createProgram - invalid vertex shader", () {
       var program = createProgram(gl, "bad vertex shader source", fragmentShaderSource);
       expect(program, isNull);
     });
 
-    test("createProgram(gl, vertexShaderSource, fragmentShaderSource) - invalid fragment shader", () {
+    test("createProgram - invalid fragment shader", () {
       var program = createProgram(gl, vertexShaderSource, "bad fragment shader source");
       expect(program, isNull);
     });

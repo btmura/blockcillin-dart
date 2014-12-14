@@ -9,13 +9,13 @@ _app_tests() {
       app = new App();
     });
 
-    test("App()", () {
+    test("App", () {
       expect(app.gameStarted, isFalse);
       expect(app.gamePaused, isFalse);
       expect(app.game, isNull);
     });
 
-    test("App.startGame(game)", () {
+    test("App.startGame", () {
       var game = new Game.withRandomBoard(3, 3);
       app.startGame(game);
       expect(app.gameStarted, isTrue);
