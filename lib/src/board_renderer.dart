@@ -7,21 +7,29 @@ class BoardRenderer {
   final webgl.Buffer _textureBuffer;
   final webgl.Buffer _indexBuffer;
 
+  static final int numCells = 10;
+
   factory BoardRenderer(GLProgram glProgram) {
     var gl = glProgram.gl;
     var program = glProgram.program;
 
-    var numCubes = 4;
+    // front and back radii
+    var fr = 1.0;
+    var br = 0.5;
+
+    // front and back circumference
+    var fc = 2 * math.PI * fr;
+    var bc = 2 * math.PI * br;
 
     // front dimensions
-    var fx = 0.5;
-    var fy = 0.5;
-    var fz = 0.5;
+    var fx = fc / numCells;
+    var fy = fx;
+    var fz = fx;
 
     // back dimensions
-    var bw = 0.3;
-    var by = 0.5;
-    var bz = 0.5;
+    var bx = bc / numCells;
+    var by = bx;
+    var bz = bx;
 
     // front upper right
     Vector3 fur = new Vector3(fx, fy, fz);
@@ -36,16 +44,16 @@ class BoardRenderer {
     Vector3 fbr = new Vector3(fx, -fy, fz);
 
     // back upper left
-    Vector3 bul = new Vector3(-bw, by, -bz);
+    Vector3 bul = new Vector3(-bx, by, -bz);
 
     // back upper right
-    Vector3 bur = new Vector3(bw, by, -bz);
+    Vector3 bur = new Vector3(bx, by, -bz);
 
     // back bottom right
-    Vector3 bbr = new Vector3(bw, -by, -bz);
+    Vector3 bbr = new Vector3(bx, -by, -bz);
 
     // back bottom left
-    Vector3 bbl = new Vector3(-bw, -by, -bz);
+    Vector3 bbl = new Vector3(-bx, -by, -bz);
 
     // ur, ccw
     var vertices = [
@@ -68,12 +76,17 @@ class BoardRenderer {
       fbr, fbl, bbl, bbr,
     ];
 
-    var translation = new Vector3(0.0, 0.0, 1.0);
+    var translation = new Vector3(0.0, 0.0, 1.0 + (fr - br) * 0.5);
+
+    var yAxis = new Vector3(0.0, 1.0, 0.0);
+    var ir = new Quaternion.fromAxisAngle(yAxis, 2 * math.PI / numCells);
+    var tr = new Quaternion.fromAxisAngle(yAxis, 0.0);
+
     var vertexData = [];
-    for (var i = 0; i < numCubes; i++) {
-      var rotate = new Quaternion.fromAxisAngle(new Vector3(0.0, 1.0, 0.0), math.PI / 2 * i);
+    for (var i = 0; i < numCells; i++) {
+      tr *= ir;
       for (var j = 0; j < vertices.length; j++) {
-        var v = rotate.rotate(translation + vertices[j]);
+        var v = tr.rotate(translation + vertices[j]);
         vertexData.add(v.x);
         vertexData.add(v.y);
         vertexData.add(v.z);
@@ -140,7 +153,7 @@ class BoardRenderer {
       1.0, 1.0,
     ];
     var textureData = [];
-    for (var i = 0; i < numCubes; i++) {
+    for (var i = 0; i < numCells; i++) {
       for (var j = 0; j < texturePoints.length; j++) {
         textureData.add(texturePoints[j]);
       }
@@ -178,7 +191,7 @@ class BoardRenderer {
     ];
 
     var indexData = [];
-    for (var i = 0; i < numCubes; i++) {
+    for (var i = 0; i < numCells; i++) {
       for (var j = 0; j < indexPoints.length; j++) {
         indexData.add(indexPoints[j] + i * 24);
       }
@@ -212,6 +225,6 @@ class BoardRenderer {
 
     _glProgram.gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
-      ..drawElements(webgl.TRIANGLES, 36 * 4, webgl.UNSIGNED_SHORT, 0);
+      ..drawElements(webgl.TRIANGLES, 36 * numCells, webgl.UNSIGNED_SHORT, 0);
   }
 }
