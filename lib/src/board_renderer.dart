@@ -7,90 +7,76 @@ class BoardRenderer {
   final webgl.Buffer _textureBuffer;
   final webgl.Buffer _indexBuffer;
 
-  static final int numCells = 10;
+  static final int numCells = 24;
 
   factory BoardRenderer(GLProgram glProgram) {
     var gl = glProgram.gl;
     var program = glProgram.program;
 
-    // front and back radii
-    var fr = 1.0;
-    var br = 0.5;
+    var innerRadius = 0.75;
+    var outerRadius = 1.0;
 
-    // front and back circumference
-    var fc = 2 * math.PI * fr;
-    var bc = 2 * math.PI * br;
+    var innerVector = new Vector3(0.0, 0.0, innerRadius);
+    var outerVector = new Vector3(0.0, 0.0, outerRadius);
 
-    // front dimensions
-    var fx = fc / numCells;
-    var fy = fx;
-    var fz = fx;
+    var yAxis = new Vector3(0.0, 1.0, 0.0);
+    var halfSwing = new Quaternion.fromAxisAngle(yAxis, math.PI / numCells);
+    var fullSwing = new Quaternion.fromAxisAngle(yAxis, 2 * math.PI / numCells);
 
-    // back dimensions
-    var bx = bc / numCells;
-    var by = bx;
-    var bz = bx;
+    var innerSwingVector = halfSwing.rotate(innerVector);
+    var outerSwingVector = halfSwing.rotate(outerVector);
 
-    // front upper right
-    Vector3 fur = new Vector3(fx, fy, fz);
+    var innerX = innerSwingVector.x;
+    var innerY = innerX;
+    var innerZ = innerSwingVector.z;
 
-    // front upper left
-    Vector3 ful = new Vector3(-fx, fy, fz);
+    var outerX = outerSwingVector.x;
+    var outerY = outerX;
+    var outerZ = outerSwingVector.z;
 
-    // front bottom left
-    Vector3 fbl = new Vector3(-fx, -fy, fz);
+    Vector3 outerUpperRight = new Vector3(outerX, outerY, outerZ);
+    Vector3 outerUpperLeft = new Vector3(-outerX, outerY, outerZ);
 
-    // front bottom right
-    Vector3 fbr = new Vector3(fx, -fy, fz);
+    Vector3 outerBottomLeft = new Vector3(-outerX, -outerY, outerZ);
+    Vector3 outerBottomRight = new Vector3(outerX, -outerY, outerZ);
 
-    // back upper left
-    Vector3 bul = new Vector3(-bx, by, -bz);
+    Vector3 innerUpperLeft = new Vector3(-innerX, innerY, innerZ);
+    Vector3 innerUpperRight = new Vector3(innerX, innerY, innerZ);
 
-    // back upper right
-    Vector3 bur = new Vector3(bx, by, -bz);
-
-    // back bottom right
-    Vector3 bbr = new Vector3(bx, -by, -bz);
-
-    // back bottom left
-    Vector3 bbl = new Vector3(-bx, -by, -bz);
+    Vector3 innerBottomRight = new Vector3(innerX, -innerY, innerZ);
+    Vector3 innerBottomLeft = new Vector3(-innerX, -innerY, innerZ);
 
     // ur, ccw
     var vertices = [
       // Front
-      fur, ful, fbl, fbr,
+      outerUpperRight, outerUpperLeft, outerBottomLeft, outerBottomRight,
 
       // Back
-      bul, bur, bbr, bbl,
+      innerUpperLeft, innerUpperRight, innerBottomRight, innerBottomLeft,
 
       // Left
-      ful, bul, bbl, fbl,
+      outerUpperLeft, innerUpperLeft, innerBottomLeft, outerBottomLeft,
 
       // Right
-      bur, fur, fbr, bbr,
+      innerUpperRight, outerUpperRight, outerBottomRight, innerBottomRight,
 
       // Top
-      bur, bul, ful, fur,
+      innerUpperRight, innerUpperLeft, outerUpperLeft, outerUpperRight,
 
       // Bottom
-      fbr, fbl, bbl, bbr,
+      outerBottomRight, outerBottomLeft, innerBottomLeft, innerBottomRight,
     ];
 
-    var translation = new Vector3(0.0, 0.0, 1.0 + (fr - br) * 0.5);
-
-    var yAxis = new Vector3(0.0, 1.0, 0.0);
-    var ir = new Quaternion.fromAxisAngle(yAxis, 2 * math.PI / numCells);
-    var tr = new Quaternion.fromAxisAngle(yAxis, 0.0);
-
+    var cumulativeSwing = new Quaternion.fromAxisAngle(yAxis, 0.0);
     var vertexData = [];
     for (var i = 0; i < numCells; i++) {
-      tr *= ir;
       for (var j = 0; j < vertices.length; j++) {
-        var v = tr.rotate(translation + vertices[j]);
-        vertexData.add(v.x);
-        vertexData.add(v.y);
-        vertexData.add(v.z);
+        var vertex = cumulativeSwing.rotate(vertices[j]);
+        vertexData.add(vertex.x);
+        vertexData.add(vertex.y);
+        vertexData.add(vertex.z);
       }
+      cumulativeSwing *= fullSwing;
     }
 
     var vertexBuffer = gl.createBuffer();
