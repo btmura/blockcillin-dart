@@ -7,32 +7,35 @@ class BoardRenderer {
   final webgl.Buffer _textureBuffer;
   final webgl.Buffer _indexBuffer;
 
+  static final int numRings = 10;
   static final int numCells = 24;
 
   factory BoardRenderer(GLProgram glProgram) {
     var gl = glProgram.gl;
     var program = glProgram.program;
 
-    var innerRadius = 0.75;
     var outerRadius = 1.0;
+    var innerRadius = 0.75;
 
-    var innerVector = new Vector3(0.0, 0.0, innerRadius);
     var outerVector = new Vector3(0.0, 0.0, outerRadius);
+    var innerVector = new Vector3(0.0, 0.0, innerRadius);
 
     var yAxis = new Vector3(0.0, 1.0, 0.0);
     var halfSwing = new Quaternion.fromAxisAngle(yAxis, math.PI / numCells);
-    var fullSwing = new Quaternion.fromAxisAngle(yAxis, 2 * math.PI / numCells);
+    var cellRotation = new Quaternion.fromAxisAngle(yAxis, 2 * math.PI / numCells);
 
-    var innerSwingVector = halfSwing.rotate(innerVector);
     var outerSwingVector = halfSwing.rotate(outerVector);
-
-    var innerX = innerSwingVector.x;
-    var innerY = innerX;
-    var innerZ = innerSwingVector.z;
+    var innerSwingVector = halfSwing.rotate(innerVector);
 
     var outerX = outerSwingVector.x;
     var outerY = outerX;
     var outerZ = outerSwingVector.z;
+
+    var innerX = innerSwingVector.x;
+    var innerY = outerX;
+    var innerZ = innerSwingVector.z;
+
+    var ringTranslation = new Vector3(0.0, -outerX * 2, 0.0);
 
     Vector3 outerUpperRight = new Vector3(outerX, outerY, outerZ);
     Vector3 outerUpperLeft = new Vector3(-outerX, outerY, outerZ);
@@ -67,16 +70,20 @@ class BoardRenderer {
       outerBottomRight, outerBottomLeft, innerBottomLeft, innerBottomRight,
     ];
 
-    var cumulativeSwing = new Quaternion.fromAxisAngle(yAxis, 0.0);
     var vertexData = [];
-    for (var i = 0; i < numCells; i++) {
-      for (var j = 0; j < vertices.length; j++) {
-        var vertex = cumulativeSwing.rotate(vertices[j]);
-        vertexData.add(vertex.x);
-        vertexData.add(vertex.y);
-        vertexData.add(vertex.z);
+    var totalRingTranslation = new Vector3(0.0, 0.0, 0.0);
+    for (var i = 0; i < numRings; i++) {
+      var totalCellRotation = new Quaternion.fromAxisAngle(yAxis, 0.0);
+      for (var j = 0; j < numCells; j++) {
+        for (var k = 0; k < vertices.length; k++) {
+          var rotatedVertex = totalCellRotation.rotate(totalRingTranslation + vertices[k]);
+          vertexData.add(rotatedVertex.x);
+          vertexData.add(rotatedVertex.y);
+          vertexData.add(rotatedVertex.z);
+        }
+        totalCellRotation *= cellRotation;
       }
-      cumulativeSwing *= fullSwing;
+      totalRingTranslation += ringTranslation;
     }
 
     var vertexBuffer = gl.createBuffer();
@@ -138,10 +145,13 @@ class BoardRenderer {
       0.0, 1.0,
       1.0, 1.0,
     ];
+
     var textureData = [];
-    for (var i = 0; i < numCells; i++) {
-      for (var j = 0; j < texturePoints.length; j++) {
-        textureData.add(texturePoints[j]);
+    for (var i = 0; i < numRings; i++) {
+      for (var j = 0; j < numCells; j++) {
+        for (var k = 0; k < texturePoints.length; k++) {
+          textureData.add(texturePoints[k]);
+        }
       }
     }
 
@@ -177,9 +187,11 @@ class BoardRenderer {
     ];
 
     var indexData = [];
-    for (var i = 0; i < numCells; i++) {
-      for (var j = 0; j < indexPoints.length; j++) {
-        indexData.add(indexPoints[j] + i * 24);
+    for (var i = 0; i < numRings; i++) {
+      for (var j = 0; j < numCells; j++) {
+        for (var k = 0; k < indexPoints.length; k++) {
+          indexData.add((i * 24 * numCells) + (j * 24) + indexPoints[k]);
+        }
       }
     }
 
@@ -211,6 +223,6 @@ class BoardRenderer {
 
     _glProgram.gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
-      ..drawElements(webgl.TRIANGLES, 36 * numCells, webgl.UNSIGNED_SHORT, 0);
+      ..drawElements(webgl.TRIANGLES, 36 * numRings * numCells, webgl.UNSIGNED_SHORT, 0);
   }
 }
