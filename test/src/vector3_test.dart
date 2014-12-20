@@ -27,6 +27,11 @@ _vector3_tests() {
       expect(a - b, equals(new Vector3(3.0, 9.0, -3.5)));
     });
 
+    test("Vector3 *", () {
+      var a = new Vector3(1.0, 2.0, 3.0);
+      expect(a * 3.0, equals(new Vector3(3.0, 6.0, 9.0)));
+    });
+
     test("Vector3 == - equal vectors", () {
       var a = new Vector3(3.0, 4.0, 5.0);
       var b = new Vector3(3.0, 4.0, 5.0);

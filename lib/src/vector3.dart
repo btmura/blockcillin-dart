@@ -14,6 +14,18 @@ class Vector3 {
   double get y => storage[1];
   double get z => storage[2];
 
+  void set x(x) {
+    storage[0] = x;
+  }
+
+  void set y(y) {
+    storage[1] = y;
+  }
+
+  void set z(z) {
+    storage[2] = z;
+  }
+
   double get length => math.sqrt(x * x + y * y + z * z);
 
   Vector3 operator +(Vector3 o) {
@@ -22,6 +34,10 @@ class Vector3 {
 
   Vector3 operator -(Vector3 o) {
     return new Vector3(x - o.x, y - o.y, z - o.z);
+  }
+
+  Vector3 operator *(double scalar) {
+    return new Vector3(x * scalar, y * scalar, z * scalar);
   }
 
   bool operator ==(o) => o is Vector3 && o.x == x && o.y == y && o.z == z;

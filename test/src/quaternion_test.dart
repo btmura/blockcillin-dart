@@ -60,8 +60,8 @@ _quaternion_tests() {
     });
 
     test("Quaternion *", () {
-      var q1 = new Quaternion.fromAxisAngle(new Vector3(0.0,  1.0, 0.0), math.PI / 2);
-      var q2 = new Quaternion.fromAxisAngle(new Vector3(1.0,  0.0, 0.0), math.PI / 4);
+      var q1 = new Quaternion.fromAxisAngle(new Vector3(0.0, 1.0, 0.0), math.PI / 2);
+      var q2 = new Quaternion.fromAxisAngle(new Vector3(1.0, 0.0, 0.0), math.PI / 4);
       var q3 = q2 * q1;
       expect(q3.x, inInclusiveRange(0.2705, 0.2706), reason: "x");
       expect(q3.y, inInclusiveRange(0.6532, 0.6533), reason: "y");
@@ -78,8 +78,8 @@ _quaternion_tests() {
     });
 
     test("Quaternion.rotate", () {
-      var q1 = new Quaternion.fromAxisAngle(new Vector3(0.0,  1.0, 0.0), math.PI / 2);
-      var q2 = new Quaternion.fromAxisAngle(new Vector3(1.0,  0.0, 0.0), math.PI / 4);
+      var q1 = new Quaternion.fromAxisAngle(new Vector3(0.0, 1.0, 0.0), math.PI / 2);
+      var q2 = new Quaternion.fromAxisAngle(new Vector3(1.0, 0.0, 0.0), math.PI / 4);
       var q3 = q2 * q1;
 
       var v1 = new Vector3(1.0, 0.0, 0.0);

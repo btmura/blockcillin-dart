@@ -9,6 +9,7 @@ class BoardRenderer {
 
   static final int numRings = 10;
   static final int numCells = 24;
+  static final int numTiles = 8;
 
   factory BoardRenderer(GLProgram glProgram) {
     var gl = glProgram.gl;
@@ -110,47 +111,55 @@ class BoardRenderer {
     // ul = (0, 0), br = (1, 1)
     var texturePoints = [
       // Front
-      1.0, 0.0,
-      0.0, 0.0,
-      0.0, 1.0,
-      1.0, 1.0,
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
 
       // Back
-      1.0, 0.0,
-      0.0, 0.0,
-      0.0, 1.0,
-      1.0, 1.0,
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
 
       // Left
-      1.0, 0.0,
-      0.0, 0.0,
-      0.0, 1.0,
-      1.0, 1.0,
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
 
       // Right
-      1.0, 0.0,
-      0.0, 0.0,
-      0.0, 1.0,
-      1.0, 1.0,
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
 
       // Top
-      1.0, 0.0,
-      0.0, 0.0,
-      0.0, 1.0,
-      1.0, 1.0,
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
 
       // Bottom
-      1.0, 0.0,
-      0.0, 0.0,
-      0.0, 1.0,
-      1.0, 1.0,
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
     ];
+
+
+    var random = new math.Random();
+    var tileWidth = 1.0 / numTiles;
 
     var textureData = [];
     for (var i = 0; i < numRings; i++) {
       for (var j = 0; j < numCells; j++) {
+        var r = random.nextInt(numTiles - 2);
         for (var k = 0; k < texturePoints.length; k++) {
-          textureData.add(texturePoints[k]);
+          var p = texturePoints[k] * tileWidth;
+          p.x += tileWidth * r;
+          textureData.add(p.x);
+          textureData.add(p.y);
         }
       }
     }
