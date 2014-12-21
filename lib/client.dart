@@ -27,7 +27,8 @@ void client_main() {
   // Construct the button bar's DOM tree and add it to the body.
 
   ButtonElement pauseButton = new ButtonElement()
-      ..text = "Pause";
+      ..text = "Pause"
+      ..className = "game-menu-button";
 
   DivElement buttonBarElement = new DivElement()
       ..className = "button-bar"
@@ -68,15 +69,23 @@ void client_main() {
 }
 
 MainMenu _createMainMenu() {
+  var title = new HeadingElement.h1()
+    ..text = "blockcillin"
+    ..className = "title";
+
   var continueGameButton = new ButtonElement()
-    ..text = "Continue Game";
+    ..text = "Continue Game"
+    ..className = "main-menu-button";
 
   var newGameButton = new ButtonElement()
-    ..text = "New Game";
+    ..text = "New Game"
+    ..className = "main-menu-button";
 
   var menu = new DivElement()
     ..className = "menu"
+    ..append(title)
     ..append(continueGameButton)
+    ..append(new BRElement())
     ..append(newGameButton);
 
   return new MainMenu(menu, continueGameButton, newGameButton);

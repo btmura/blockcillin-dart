@@ -14,7 +14,7 @@ class MainMenu {
 
   void set continueGameButtonVisible(bool visible) {
     if (visible) {
-      _continueGameButton.style.display = "block";
+      _continueGameButton.style.display = "inline-block";
     } else {
       _continueGameButton.style.display = "none";
     }
