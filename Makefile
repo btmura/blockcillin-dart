@@ -1,6 +1,6 @@
 .PHONY: pub_serve
 pub_serve:
-	pub serve --port 9090
+	pub serve --hostname 0.0.0.0 --port 9090
 
 .PHONY: serve
 serve:
