@@ -11,6 +11,7 @@ class GameView {
 
   Matrix4 _projectionMatrix;
   Matrix4 _viewMatrix;
+  Matrix4 _normalMatrix;
 
   GameView(this.buttonBar, this.canvas, this._gl, this._program, this._boardRenderer) {
     _gl
@@ -19,6 +20,7 @@ class GameView {
 
     _projectionMatrix = _makeProjectionMatrix();
     _viewMatrix = _makeViewMatrix();
+    _normalMatrix = _viewMatrix.inverse().transpose();
   }
 
   void draw(Game game) {
@@ -28,6 +30,7 @@ class GameView {
     _gl.useProgram(_program.program);
     _gl.uniformMatrix4fv(_program.projectionMatrixLocation, false, _projectionMatrix.floatList);
     _gl.uniformMatrix4fv(_program.viewMatrixLocation, false, _viewMatrix.floatList);
+    _gl.uniformMatrix4fv(_program.normalMatrixLocation, false, _normalMatrix.floatList);
 
     _boardRenderer.render(game.board);
   }

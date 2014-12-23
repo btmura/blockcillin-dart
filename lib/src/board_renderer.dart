@@ -4,6 +4,7 @@ class BoardRenderer {
 
   final GLProgram _glProgram;
   final webgl.Buffer _vertexBuffer;
+  final webgl.Buffer _normalBuffer;
   final webgl.Buffer _textureBuffer;
   final webgl.Buffer _indexBuffer;
 
@@ -53,25 +54,90 @@ class BoardRenderer {
     // ur, ccw
     var vertices = [
       // Front
-      outerUpperRight, outerUpperLeft, outerBottomLeft, outerBottomRight,
+      outerUpperRight,
+      outerUpperLeft,
+      outerBottomLeft,
+      outerBottomRight,
 
       // Back
-      innerUpperLeft, innerUpperRight, innerBottomRight, innerBottomLeft,
+      innerUpperLeft,
+      innerUpperRight,
+      innerBottomRight,
+      innerBottomLeft,
 
       // Left
-      outerUpperLeft, innerUpperLeft, innerBottomLeft, outerBottomLeft,
+      outerUpperLeft,
+      innerUpperLeft,
+      innerBottomLeft,
+      outerBottomLeft,
 
       // Right
-      innerUpperRight, outerUpperRight, outerBottomRight, innerBottomRight,
+      innerUpperRight,
+      outerUpperRight,
+      outerBottomRight,
+      innerBottomRight,
 
       // Top
-      innerUpperRight, innerUpperLeft, outerUpperLeft, outerUpperRight,
+      innerUpperRight,
+      innerUpperLeft,
+      outerUpperLeft,
+      outerUpperRight,
 
       // Bottom
-      outerBottomRight, outerBottomLeft, innerBottomLeft, innerBottomRight,
+      outerBottomRight,
+      outerBottomLeft,
+      innerBottomLeft,
+      innerBottomRight,
+    ];
+
+    var frontNormal = new Vector3(0.0, 0.0, 1.0);
+    var backNormal = new Vector3(0.0, 0.0, -1.0);
+    var leftNormal = new Vector3(-1.0, 0.0, 0.0);
+    var rightNormal = new Vector3(1.0, 0.0, 0.0);
+    var topNormal = new Vector3(0.0, 1.0, 0.0);
+    var bottomNormal = new Vector3(0.0, -1.0, 0.0);
+
+    var normals = [
+      // Front
+      frontNormal,
+      frontNormal,
+      frontNormal,
+      frontNormal,
+
+      // Back
+      backNormal,
+      backNormal,
+      backNormal,
+      backNormal,
+
+      // Left
+      leftNormal,
+      leftNormal,
+      leftNormal,
+      leftNormal,
+
+      // Right
+      rightNormal,
+      rightNormal,
+      rightNormal,
+      rightNormal,
+
+      // Top
+      topNormal,
+      topNormal,
+      topNormal,
+      topNormal,
+
+      // Bottom
+      bottomNormal,
+      bottomNormal,
+      bottomNormal,
+      bottomNormal,
     ];
 
     var vertexData = [];
+    var normalData = [];
+
     var totalRingTranslation = new Vector3(0.0, 0.0, 0.0);
     for (var i = 0; i < numRings; i++) {
       var totalCellRotation = new Quaternion.fromAxisAngle(yAxis, 0.0);
@@ -81,6 +147,11 @@ class BoardRenderer {
           vertexData.add(rotatedVertex.x);
           vertexData.add(rotatedVertex.y);
           vertexData.add(rotatedVertex.z);
+
+          var rotatedNormal = totalCellRotation.rotate(normals[k]);
+          normalData.add(rotatedNormal.x);
+          normalData.add(rotatedNormal.y);
+          normalData.add(rotatedNormal.z);
         }
         totalCellRotation *= cellRotation;
       }
@@ -91,6 +162,11 @@ class BoardRenderer {
     gl
       ..bindBuffer(webgl.ARRAY_BUFFER, vertexBuffer)
       ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(vertexData), webgl.STATIC_DRAW);
+
+    var normalBuffer = gl.createBuffer();
+    gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, normalBuffer)
+      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(normalData), webgl.STATIC_DRAW);
 
     var texture = gl.createTexture();
     var green = [0, 255, 0, 255];
@@ -146,7 +222,6 @@ class BoardRenderer {
       new Vector3(0.0, 1.0, 0.0),
       new Vector3(1.0, 1.0, 0.0),
     ];
-
 
     var random = new math.Random();
     var tileWidth = 1.0 / numTiles;
@@ -209,10 +284,10 @@ class BoardRenderer {
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer)
       ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
 
-    return new BoardRenderer._(glProgram, vertexBuffer, textureBuffer, indexBuffer);
+    return new BoardRenderer._(glProgram, vertexBuffer, normalBuffer, textureBuffer, indexBuffer);
   }
 
-  BoardRenderer._(this._glProgram, this._vertexBuffer, this._textureBuffer, this._indexBuffer);
+  BoardRenderer._(this._glProgram, this._vertexBuffer, this._normalBuffer, this._textureBuffer, this._indexBuffer);
 
   void render(Board board) {
     var boardRotationMatrix = new Matrix4.rotation(board.rotation[0], board.rotation[1], board.rotation[2]);
@@ -224,6 +299,11 @@ class BoardRenderer {
       ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
       ..enableVertexAttribArray(_glProgram.positionLocation)
       ..vertexAttribPointer(_glProgram.positionLocation, 3, webgl.FLOAT, false, 0, 0);
+
+    _glProgram.gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, _normalBuffer)
+      ..enableVertexAttribArray(_glProgram.normalLocation)
+      ..vertexAttribPointer(_glProgram.normalLocation, 3, webgl.FLOAT, false, 0, 0);
 
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _textureBuffer)
