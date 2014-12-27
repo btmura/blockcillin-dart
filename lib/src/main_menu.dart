@@ -29,7 +29,14 @@ class MainMenu {
   }
 
   void _show() {
+    // Add menu first to calculate it's height before centering it.
     document.body.children.add(_mainMenu);
+    _centerVertically();
+  }
+
+  void _centerVertically() {
+    var top = math.max(document.body.clientHeight - _mainMenu.clientHeight, 0.0) / 2.0;
+    _mainMenu.style.top = "${top}px";
   }
 
   void _hide() {
