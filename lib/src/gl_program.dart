@@ -14,6 +14,11 @@ class GLProgram {
 
   factory GLProgram(webgl.RenderingContext gl) {
     var vertexShaderSource = '''
+      // TODO(btmura): use uniforms to make these configurable
+      const vec3 ambientLight = vec3(0.7, 0.7, 0.7);
+      const vec3 directionalLightColor = vec3(0.8, 0.8, 0.8);
+      const vec3 directionalVector = vec3(0.0, 1.0, 3.0);
+
       uniform mat4 u_projectionMatrix;
       uniform mat4 u_viewMatrix;
       uniform mat4 u_normalMatrix;
@@ -24,18 +29,17 @@ class GLProgram {
       attribute vec2 a_textureCoord;
 
       varying vec2 v_textureCoord;
+      varying float v_blackAmount;
       varying vec3 v_lighting;
 
       void main(void) {
         gl_Position = u_projectionMatrix * u_viewMatrix * u_boardRotationMatrix * a_position;
         v_textureCoord = a_textureCoord;
 
-        vec3 ambientLight = vec3(0.6, 0.6, 0.6);
-        vec3 directionalLightColor = vec3(0.7, 0.7, 0.7);
-        vec3 directionalVector = vec3(0.0, 1, 3);
+        // TODO(btmura): use inform to specify step thresholds
+        v_blackAmount = 1.0 - smoothstep(-2.0, 0.0, a_position.y);
 
         vec4 transformedNormal = u_normalMatrix * u_boardRotationMatrix * vec4(a_normal, 1.0);
-
         float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
         v_lighting = ambientLight * (directionalLightColor * directional);
       }
@@ -44,14 +48,19 @@ class GLProgram {
     var fragmentShaderSource = '''
       precision mediump float;
 
-      varying vec2 v_textureCoord;
-      varying vec3 v_lighting;
-      
+      const vec3 black = vec3(0.0, 0.0, 0.0);
+
       uniform sampler2D u_texture;
 
+      varying vec2 v_textureCoord;
+      varying float v_blackAmount;
+      varying vec3 v_lighting;
+      
       void main(void) {
-        vec4 texelColor = texture2D(u_texture, v_textureCoord);
-        gl_FragColor = vec4(texelColor.rgb * v_lighting, texelColor.a);
+        vec4 color = texture2D(u_texture, v_textureCoord);
+        color = vec4(mix(color.rgb, black, v_blackAmount), color.a); 
+        color = vec4(color.rgb * v_lighting, color.a);
+        gl_FragColor = color;
       }
     ''';
 
