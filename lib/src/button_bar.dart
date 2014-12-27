@@ -2,22 +2,24 @@ part of client;
 
 class ButtonBar {
 
+  // TODO(btmura): fix ButtonBar tests
+
   final DivElement _buttonBar;
   final ButtonElement _pauseButton;
+  final Fader _fader;
 
-  ButtonBar(this._buttonBar, this._pauseButton);
+  factory ButtonBar(DivElement buttonBar, ButtonElement pauseButton) {
+    Fader fader = new Fader(buttonBar);
+    return new ButtonBar._(buttonBar, pauseButton, fader);
+  }
+
+  ButtonBar._(this._buttonBar, this._pauseButton, this._fader);
 
   int get height => _buttonBar.clientHeight;
 
   ElementStream<MouseEvent> get onPauseButtonClick => _pauseButton.onClick;
 
-  bool get visible => _buttonBar.style.visibility != "hidden";
-
   void set visible(bool visible) {
-    _buttonBar.style.visibility = visible ? "visible" : "hidden";
-  }
-
-  void detach() {
-    _buttonBar.remove();
+    _fader.fade = visible;
   }
 }
