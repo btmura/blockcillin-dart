@@ -20,7 +20,7 @@ class MainMenu {
   }
 
   void set continueGameButtonVisible(bool visible) {
-    _continueGameButton.style.display = visible ? "inline-block" : "none";
+    _continueGameButton.style.display = visible ? "block" : "none";
   }
 
   void _show() {

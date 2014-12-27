@@ -17,7 +17,7 @@ html, body {
   z-index: 0;
 }
 
-.menu {
+.main-menu {
   position: absolute;
   text-align: center;
   width: 100%;
@@ -58,11 +58,16 @@ html, body {
 }
 
 .main-menu-button {
-  margin: 0.5em;
+  display: block;
+  margin: 0.5em auto;
   min-width: 20em;
 }
 
-.title {
+.main-menu-title {
   letter-spacing: 0.5em;
-  margin: 0 0 0.5em 0.5em;
+  margin: 0 0 20px 0.5em;
+}
+
+.main-menu-footer {
+  margin: 20px 0 0 0;
 }

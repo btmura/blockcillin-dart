@@ -71,7 +71,7 @@ void client_main() {
 MainMenu _createMainMenu() {
   var title = new HeadingElement.h1()
     ..text = "blockcillin"
-    ..className = "title";
+    ..className = "main-menu-title";
 
   var continueGameButton = new ButtonElement()
     ..text = "Continue Game"
@@ -81,12 +81,16 @@ MainMenu _createMainMenu() {
     ..text = "New Game"
     ..className = "main-menu-button";
 
+  var footer = new ParagraphElement()
+    ..text = "© 2014 BM Software v0.1"
+    ..className = "main-menu-footer";
+
   var menu = new DivElement()
-    ..className = "menu"
+    ..className = "main-menu"
     ..append(title)
     ..append(continueGameButton)
-    ..append(new BRElement())
-    ..append(newGameButton);
+    ..append(newGameButton)
+    ..append(footer);
 
   return new MainMenu(menu, continueGameButton, newGameButton);
 }
