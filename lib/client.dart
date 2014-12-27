@@ -1,5 +1,6 @@
 library client;
 
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:html';
 import 'dart:typed_data';

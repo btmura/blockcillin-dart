@@ -71,3 +71,15 @@ html, body {
 .main-menu-footer {
   margin: 20px 0 0 0;
 }
+
+.fade-in, .fade-out {
+  transition: opacity 0.5s ease;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
