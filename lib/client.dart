@@ -14,6 +14,7 @@ part 'src/board.dart';
 part 'src/board_renderer.dart';
 part 'src/button_bar.dart';
 part 'src/cell.dart';
+part 'src/fader.dart';
 part 'src/game.dart';
 part 'src/game_view.dart';
 part 'src/gl.dart';

@@ -5,63 +5,41 @@ class MainMenu {
   final DivElement _mainMenu;
   final ButtonElement _continueGameButton;
   final ButtonElement _newGameButton;
+  final Fader _fader;
 
-  // TODO(btmura): extract fade-in and fade-out code to mixin or helper
-  StreamSubscription<TransitionEvent> _fadeInSubscription;
-  StreamSubscription<TransitionEvent> _fadeOutSubscription;
+  bool _continueGameButtonVisible;
 
-  bool _continueGameButtonVisible = false;
+  factory MainMenu(DivElement mainMenu, ButtonElement continueGameButton, ButtonElement newGameButton) {
+    Fader fader = new Fader(mainMenu);
+    return new MainMenu._(mainMenu, continueGameButton, newGameButton, fader);
+  }
 
-  MainMenu(this._mainMenu, this._continueGameButton, this._newGameButton);
+  MainMenu._(this._mainMenu, this._continueGameButton, this._newGameButton, this._fader) {
+    this._fader
+        ..fadeInStartCallback = _onFadeInStart
+        ..fadeOutEndCallback = _onFadeOutEnd;
+  }
 
   ElementStream<MouseEvent> get onContinueGameButtonClick => _continueGameButton.onClick;
   ElementStream<MouseEvent> get onNewGameButtonClick => _newGameButton.onClick;
-
-  void set visible(bool visible) {
-    if (visible) {
-      _show();
-    } else {
-      _hide();
-    }
-  }
 
   void set continueGameButtonVisible(bool visible) {
     _continueGameButtonVisible = visible;
   }
 
-  void _show() {
-    if (_fadeInSubscription == null) {
-      // Add menu first to calculate it's height before centering it.
-      _continueGameButton.style.display = _continueGameButtonVisible ? "block" : "none";
-      document.body.children.add(_mainMenu);
-      _centerVertically();
-
-      _fadeInSubscription = _mainMenu.onTransitionEnd.listen((_) {});
-
-      if (_fadeOutSubscription != null) {
-        _fadeOutSubscription.cancel();
-        _fadeOutSubscription = null;
-      }
-
-      _mainMenu.classes.add("fade-in");
-      _mainMenu.classes.remove("fade-out");
-    }
+  void set visible(bool visible) {
+    _fader.fade = visible;
   }
 
-  void _hide() {
-    if (_fadeOutSubscription == null) {
-      if (_fadeInSubscription != null) {
-        _fadeInSubscription.cancel();
-        _fadeInSubscription = null;
-      }
+  void _onFadeInStart() {
+    // Add menu first to calculate it's height before centering it.
+    _continueGameButton.style.display = _continueGameButtonVisible ? "block" : "none";
+    document.body.children.add(_mainMenu);
+    _centerVertically();
+  }
 
-      _fadeOutSubscription = _mainMenu.onTransitionEnd.listen((_) {
-        _mainMenu.remove();
-      });
-
-      _mainMenu.classes.remove("fade-in");
-      _mainMenu.classes.add("fade-out");
-    }
+  void _onFadeOutEnd() {
+    _mainMenu.remove();
   }
 
   void _centerVertically() {
