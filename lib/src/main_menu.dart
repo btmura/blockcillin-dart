@@ -7,7 +7,8 @@ class MainMenu {
   final ButtonElement _continueGameButton;
   final ButtonElement _newGameButton;
 
-  bool _continueGameButtonVisible;
+  /// Whether the continue button is visible in the menu.
+  bool continueGameButtonVisible;
 
   /// Creates the menu with the production DOM tree and content.
   factory MainMenu.withElements() {
@@ -49,10 +50,6 @@ class MainMenu {
   ElementStream<MouseEvent> get onContinueGameButtonClick => _continueGameButton.onClick;
   ElementStream<MouseEvent> get onNewGameButtonClick => _newGameButton.onClick;
 
-  void set continueGameButtonVisible(bool visible) {
-    _continueGameButtonVisible = visible;
-  }
-
   // TODO(btmura): replace with function since this isn't a quick immediate operation
   void set visible(bool visible) {
     if (visible) {
@@ -73,9 +70,12 @@ class MainMenu {
   }
 
   void _onMenuFadeInStart() {
+    // TODO(btmura): extract toggling of display style to utility class
+    _continueGameButton.style.display = continueGameButtonVisible ? "block" : "none";
+
     // Add menu first to calculate it's height before centering it.
-    _continueGameButton.style.display = _continueGameButtonVisible ? "block" : "none";
     document.body.children.add(_menu);
+
     _centerVertically();
   }
 
