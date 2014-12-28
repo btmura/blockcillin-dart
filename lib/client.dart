@@ -94,5 +94,7 @@ MainMenu _createMainMenu() {
     ..append(newGameButton)
     ..append(footer);
 
-  return new MainMenu(menu, continueGameButton, newGameButton);
+  var menuFader = new Fader(menu);
+
+  return new MainMenu(menu, menuFader, continueGameButton, newGameButton);
 }

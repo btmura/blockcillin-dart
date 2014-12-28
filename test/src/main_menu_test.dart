@@ -3,6 +3,7 @@ part of test;
 _main_menu_tests() {
 
   var menu;
+  var menuFader;
   var continueGameButton;
   var newGameButton;
   var mainMenu;
@@ -12,13 +13,15 @@ _main_menu_tests() {
       menu = new DivElement()
         ..id = "main-menu";
 
+      menuFader = new Fader(menu);
+
       continueGameButton = new ButtonElement()
         ..id = "continue-game-button";
 
       newGameButton = new ButtonElement()
         ..id = "new-game-button";
 
-      mainMenu = new MainMenu(menu, continueGameButton, newGameButton);
+      mainMenu = new MainMenu(menu, menuFader, continueGameButton, newGameButton);
     });
 
     test("MainMenu.onContinueGameButtonClick", () {

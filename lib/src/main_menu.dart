@@ -2,22 +2,17 @@ part of client;
 
 class MainMenu {
 
-  final DivElement _mainMenu;
+  final DivElement _menu;
+  final Fader _menuFader;
   final ButtonElement _continueGameButton;
   final ButtonElement _newGameButton;
-  final Fader _fader;
 
   bool _continueGameButtonVisible;
 
-  factory MainMenu(DivElement mainMenu, ButtonElement continueGameButton, ButtonElement newGameButton) {
-    Fader fader = new Fader(mainMenu);
-    return new MainMenu._(mainMenu, continueGameButton, newGameButton, fader);
-  }
-
-  MainMenu._(this._mainMenu, this._continueGameButton, this._newGameButton, this._fader) {
-    this._fader
-        ..onFadeInStartCallback = _onFadeInStart
-        ..onFadeOutEndCallback = _onFadeOutEnd;
+  MainMenu(this._menu, this._menuFader, this._continueGameButton, this._newGameButton) {
+    _menuFader
+        ..onFadeInStartCallback = _onMenuFadeInStart
+        ..onFadeOutEndCallback = _onMenuFadeOutEnd;
   }
 
   ElementStream<MouseEvent> get onContinueGameButtonClick => _continueGameButton.onClick;
@@ -30,9 +25,9 @@ class MainMenu {
   // TODO(btmura): replace with function since this isn't a quick immediate operation
   void set visible(bool visible) {
     if (visible) {
-      _fader.fadeIn();
+      _menuFader.fadeIn();
     } else {
-      _fader.fadeOut();
+      _menuFader.fadeOut();
     }
   }
 
@@ -41,19 +36,19 @@ class MainMenu {
     _centerVertically();
   }
 
-  void _onFadeInStart() {
+  void _centerVertically() {
+    var top = math.max(document.body.clientHeight - _menu.clientHeight, 0.0) / 2.0;
+    _menu.style.top = "${top}px";
+  }
+
+  void _onMenuFadeInStart() {
     // Add menu first to calculate it's height before centering it.
     _continueGameButton.style.display = _continueGameButtonVisible ? "block" : "none";
-    document.body.children.add(_mainMenu);
+    document.body.children.add(_menu);
     _centerVertically();
   }
 
-  void _onFadeOutEnd() {
-    _mainMenu.remove();
-  }
-
-  void _centerVertically() {
-    var top = math.max(document.body.clientHeight - _mainMenu.clientHeight, 0.0) / 2.0;
-    _mainMenu.style.top = "${top}px";
+  void _onMenuFadeOutEnd() {
+    _menu.remove();
   }
 }

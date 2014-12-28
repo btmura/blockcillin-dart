@@ -19,7 +19,6 @@ class ButtonBar {
 
   ElementStream<MouseEvent> get onPauseButtonClick => _pauseButton.onClick;
 
-  // TODO(btmura): replace with function since this isn't a quick immediate operation
   void set visible(bool visible) {
     if (visible) {
       _fader.fadeIn();
