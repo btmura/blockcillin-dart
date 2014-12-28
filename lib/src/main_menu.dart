@@ -16,8 +16,8 @@ class MainMenu {
 
   MainMenu._(this._mainMenu, this._continueGameButton, this._newGameButton, this._fader) {
     this._fader
-        ..fadeInStartCallback = _onFadeInStart
-        ..fadeOutEndCallback = _onFadeOutEnd;
+        ..onFadeInStartCallback = _onFadeInStart
+        ..onFadeOutEndCallback = _onFadeOutEnd;
   }
 
   ElementStream<MouseEvent> get onContinueGameButtonClick => _continueGameButton.onClick;
@@ -29,7 +29,11 @@ class MainMenu {
 
   // TODO(btmura): replace with function since this isn't a quick immediate operation
   void set visible(bool visible) {
-    _fader.fade = visible;
+    if (visible) {
+      _fader.fadeIn();
+    } else {
+      _fader.fadeOut();
+    }
   }
 
   /// Centers the main menu. Call this when the window is resized.
