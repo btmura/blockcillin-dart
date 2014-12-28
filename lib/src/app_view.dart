@@ -12,7 +12,7 @@ class AppView {
     return gameView.resize();
   }
 
-  ElementStream<MouseEvent> get onContinueGameButtonClick => mainMenu.onContinueGameButtonClick;
+  ElementStream<MouseEvent> get onContinueGameButtonClick => mainMenu.onContinueButtonClick;
 
   ElementStream<MouseEvent> get onNewGameButtonClick => mainMenu.onNewGameButtonClick;
 

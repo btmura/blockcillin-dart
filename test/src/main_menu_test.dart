@@ -25,7 +25,7 @@ _main_menu_tests() {
     });
 
     test("MainMenu.onContinueGameButtonClick", () {
-      expect(mainMenu.onContinueGameButtonClick, isNotNull);
+      expect(mainMenu.onContinueButtonClick, isNotNull);
     });
 
     test("MainMenu.onNewGameButtonClick", () {

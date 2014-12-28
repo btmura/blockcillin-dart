@@ -51,7 +51,7 @@ class AppController {
   void _update([num delta]) {
     app.update();
 
-    appView.mainMenu.continueGameButtonVisible = app.gameStarted && app.gamePaused;
+    appView.mainMenu.continueButtonVisible = app.gameStarted && app.gamePaused;
     appView.mainMenu.visible = !app.gameStarted || app.gamePaused;
     appView.gameView.buttonBar.visible = app.gameStarted && !app.gamePaused;
     if (app.game != null) {
