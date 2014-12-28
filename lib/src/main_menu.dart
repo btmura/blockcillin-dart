@@ -27,8 +27,14 @@ class MainMenu {
     _continueGameButtonVisible = visible;
   }
 
+  // TODO(btmura): replace with function since this isn't a quick immediate operation
   void set visible(bool visible) {
     _fader.fade = visible;
+  }
+
+  /// Centers the main menu. Call this when the window is resized.
+  void center() {
+    _centerVertically();
   }
 
   void _onFadeInStart() {
