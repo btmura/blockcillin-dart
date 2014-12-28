@@ -53,7 +53,7 @@ void client_main() {
 
   var app = new App();
 
-  var mainMenu = _createMainMenu();
+  var mainMenu = new MainMenu.withElements();
 
   var buttonBar = new ButtonBar(buttonBarElement, pauseButton);
 
@@ -68,33 +68,4 @@ void client_main() {
   var appController = new AppController(app, appView);
 
   appController.run();
-}
-
-MainMenu _createMainMenu() {
-  var title = new HeadingElement.h1()
-    ..text = "blockcillin"
-    ..className = "main-menu-title";
-
-  var continueGameButton = new ButtonElement()
-    ..text = "Continue Game"
-    ..className = "main-menu-button";
-
-  var newGameButton = new ButtonElement()
-    ..text = "New Game"
-    ..className = "main-menu-button";
-
-  var footer = new ParagraphElement()
-    ..text = "© 2014 BM Software v0.1"
-    ..className = "main-menu-footer";
-
-  var menu = new DivElement()
-    ..className = "main-menu"
-    ..append(title)
-    ..append(continueGameButton)
-    ..append(newGameButton)
-    ..append(footer);
-
-  var menuFader = new Fader(menu);
-
-  return new MainMenu(menu, menuFader, continueGameButton, newGameButton);
 }

@@ -2,6 +2,8 @@ part of client;
 
 class ButtonBar {
 
+  // TODO(btmura): refactor ButtonBar to be like MainMenu class
+
   // TODO(btmura): fix ButtonBar tests
 
   final DivElement _buttonBar;
