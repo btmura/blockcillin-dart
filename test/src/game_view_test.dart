@@ -6,7 +6,11 @@ _game_view_tests() {
 
   group("game_view", () {
     setUp(() {
-      var buttonBar = new ButtonBar(new DivElement(), new ButtonElement());
+      var buttonBarElement = new DivElement();
+      var pauseButton = new ButtonElement();
+      var fader = new Fader(buttonBarElement);
+      var buttonBar = new ButtonBar(buttonBarElement, pauseButton, fader);
+
       var canvas = new CanvasElement();
       var gl = getWebGL(canvas);
       var program = new GLProgram(gl);

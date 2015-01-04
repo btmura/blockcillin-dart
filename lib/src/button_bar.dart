@@ -1,31 +1,46 @@
 part of client;
 
+/// The button bar above the game used to pause the game.
 class ButtonBar {
-
-  // TODO(btmura): refactor ButtonBar to be like MainMenu class
-
-  // TODO(btmura): fix ButtonBar tests
 
   final DivElement _buttonBar;
   final ButtonElement _pauseButton;
   final Fader _fader;
 
-  factory ButtonBar(DivElement buttonBar, ButtonElement pauseButton) {
-    Fader fader = new Fader(buttonBar);
-    return new ButtonBar._(buttonBar, pauseButton, fader);
+  /// Creates the button bar with the production DOM tree and content.
+  factory ButtonBar.withElements() {
+    var pauseButton = new ButtonElement()
+        ..text = "Pause"
+        ..className = "game-menu-button";
+
+    var buttonBar = new DivElement()
+        ..className = "button-bar"
+        ..append(pauseButton);
+
+    var fader = new Fader(buttonBar);
+
+    return new ButtonBar(buttonBar, pauseButton, fader);
   }
 
-  ButtonBar._(this._buttonBar, this._pauseButton, this._fader);
+  /// Creates the button bar out of individual components for testing.
+  ButtonBar(this._buttonBar, this._pauseButton, this._fader);
 
+  /// DOM Element of the button bar. Add it to the DOM to show the bar.
+  Element get element => _buttonBar;
+
+  /// Height of the button bar. Use this when reacting to window sive changes.
   int get height => _buttonBar.clientHeight;
 
+  /// Pause button click stream. Listen to this to pause the game.
   ElementStream<MouseEvent> get onPauseButtonClick => _pauseButton.onClick;
 
-  void set visible(bool visible) {
-    if (visible) {
-      _fader.fadeIn();
-    } else {
-      _fader.fadeOut();
-    }
+  /// Shows the menu gradually.
+  void show() {
+    _fader.fadeIn();
+  }
+
+  /// Hides the menu gradually.
+  void hide() {
+    _fader.fadeOut();
   }
 }

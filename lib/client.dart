@@ -26,17 +26,9 @@ part 'src/ring.dart';
 part 'src/vector3.dart';
 
 void client_main() {
-  // Construct the button bar's DOM tree and add it to the body.
-
-  ButtonElement pauseButton = new ButtonElement()
-      ..text = "Pause"
-      ..className = "game-menu-button";
-
-  DivElement buttonBarElement = new DivElement()
-      ..className = "button-bar"
-      ..append(pauseButton);
-
-  document.body.children.add(buttonBarElement);
+  // Create the button bar for pausing the game and add it first to put it at the top.
+  var buttonBar = new ButtonBar.withElements();
+  document.body.children.add(buttonBar.element);
 
   // Add canvas after button bar. Some code relies on this order.
 
@@ -54,8 +46,6 @@ void client_main() {
   var app = new App();
 
   var mainMenu = new MainMenu.withElements();
-
-  var buttonBar = new ButtonBar(buttonBarElement, pauseButton);
 
   var program = new GLProgram(gl);
 

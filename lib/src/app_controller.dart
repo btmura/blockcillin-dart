@@ -51,15 +51,18 @@ class AppController {
   void _update([num delta]) {
     app.update();
 
+    // TODO(btmura): don't call setters on every frame unless something changes
+
     appView.mainMenu.continueButtonVisible = app.gameStarted && app.gamePaused;
 
     if (!app.gameStarted || app.gamePaused) {
       appView.mainMenu.show();
+      appView.gameView.buttonBar.hide();
     } else {
       appView.mainMenu.hide();
+      appView.gameView.buttonBar.show();
     }
 
-    appView.gameView.buttonBar.visible = app.gameStarted && !app.gamePaused;
     if (app.game != null) {
       appView.gameView.draw(app.game);
     }

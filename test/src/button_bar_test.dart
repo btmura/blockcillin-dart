@@ -5,7 +5,10 @@ _button_bar_tests() {
 
   group("button_bar", () {
     setUp(() {
-      buttonBar = new ButtonBar(new DivElement(), new ButtonElement());
+      var buttonBarElement = new DivElement();
+      var pauseButton = new ButtonElement();
+      var fader = new Fader(buttonBarElement);
+      buttonBar = new ButtonBar(buttonBarElement, pauseButton, fader);
     });
 
     test("ButtonBar.height", () {
@@ -14,16 +17,6 @@ _button_bar_tests() {
 
     test("ButtonBar.onPauseButtonClick", () {
       expect(buttonBar.onPauseButtonClick, isNotNull);
-    });
-
-    test("ButtonBar.visible", () {
-      expect(buttonBar.visible, isTrue);
-
-      buttonBar.visible = false;
-      expect(buttonBar.visible, isFalse);
-
-      buttonBar.visible = true;
-      expect(buttonBar.visible, isTrue);
     });
   });
 }
