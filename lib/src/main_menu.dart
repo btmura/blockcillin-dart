@@ -4,9 +4,9 @@ part of client;
 class MainMenu {
 
   final DivElement _menu;
-  final Fader _menuFader;
   final ButtonElement _continueButton;
   final ButtonElement _newGameButton;
+  final Fader _fader;
 
   /// Whether the continue button is visible in the menu.
   bool continueButtonVisible = false;
@@ -35,14 +35,14 @@ class MainMenu {
       ..append(newGameButton)
       ..append(footer);
 
-    var menuFader = new Fader(menu);
+    var fader = new Fader(menu);
 
-    return new MainMenu(menu, menuFader, continueButton, newGameButton);
+    return new MainMenu(menu, continueButton, newGameButton, fader);
   }
 
   /// Creates the menu out of individual components for testing.
-  MainMenu(this._menu, this._menuFader, this._continueButton, this._newGameButton) {
-    _menuFader
+  MainMenu(this._menu, this._continueButton, this._newGameButton, this._fader) {
+    _fader
         ..onFadeInStartCallback = _onMenuFadeInStart
         ..onFadeOutEndCallback = _onMenuFadeOutEnd;
   }
@@ -55,12 +55,12 @@ class MainMenu {
 
   /// Shows the menu gradually.
   void show() {
-    _menuFader.fadeIn();
+    _fader.fadeIn();
   }
 
   /// Hides the menu gradually.
   void hide() {
-    _menuFader.fadeOut();
+    _fader.fadeOut();
   }
 
   /// Centers the main menu instantly. Call this when the window is resized.

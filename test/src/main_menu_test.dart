@@ -8,15 +8,15 @@ _main_menu_tests() {
       var menu = new DivElement()
         ..id = "main-menu";
 
-      var menuFader = new Fader(menu);
-
       var continueButton = new ButtonElement()
         ..id = "continue-button";
 
       var newGameButton = new ButtonElement()
         ..id = "new-game-button";
 
-      mainMenu = new MainMenu(menu, menuFader, continueButton, newGameButton);
+      var fader = new Fader(menu);
+
+      mainMenu = new MainMenu(menu, continueButton, newGameButton, fader);
     });
 
     test("MainMenu.onContinueGameButtonClick", () {
