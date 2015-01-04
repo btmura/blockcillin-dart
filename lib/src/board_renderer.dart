@@ -6,21 +6,11 @@ class BoardRenderer {
   static final int _numCells = 24;
   static final int _numTiles = 8;
 
-  static final double _startRotationY = 0.0;
-  static final double _incrementalRotationY = math.PI / 150;
-
-  static final double _startTranslationY = -1.0;
-  static final double _incrementalTranslationY = 0.02;
-
-  static final int _numSteps = (1.0 / _incrementalTranslationY).round();
-
   final GLProgram _glProgram;
   final webgl.Buffer _vertexBuffer;
   final webgl.Buffer _normalBuffer;
   final webgl.Buffer _textureBuffer;
   final webgl.Buffer _indexBuffer;
-
-  int _step = 0;
 
   factory BoardRenderer(GLProgram glProgram) {
     var gl = glProgram.gl;
@@ -299,20 +289,9 @@ class BoardRenderer {
 
   BoardRenderer._(this._glProgram, this._vertexBuffer, this._normalBuffer, this._textureBuffer, this._indexBuffer);
 
-  void init() {
-    _step = 0;
-  }
-
   void render(Board board) {
-    var rotationY = _startRotationY + _incrementalRotationY * _step;
-    var translationY = _startTranslationY + _incrementalTranslationY * _step;
-
-    var boardRotationMatrix = new Matrix4.rotation(0.0, rotationY, 0.0);
-    var boardTranslationMatrix = new Matrix4.translation(0.0, translationY, 0.0);
-
-    if (_step < _numSteps) {
-      _step++;
-    }
+    var boardRotationMatrix = new Matrix4.rotation(0.0, board.rotationY, 0.0);
+    var boardTranslationMatrix = new Matrix4.translation(0.0, board.translationY, 0.0);
 
     _glProgram.gl
       ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, boardRotationMatrix.floatList)

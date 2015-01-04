@@ -2,7 +2,17 @@ part of client;
 
 class Board {
 
+  static final double _startRotationY = 0.0;
+  static final double _incrementalRotationY = math.PI / 150;
+
+  static final double _startTranslationY = -1.0;
+  static final double _incrementalTranslationY = 0.02;
+
+  static final int _numSteps = (1.0 / _incrementalTranslationY).round();
+
   final List<Ring> rings;
+
+  int _step = 0;
 
   Board(this.rings);
 
@@ -14,5 +24,13 @@ class Board {
     return new Board(rings);
   }
 
-  void update() {}
+  double get rotationY => _startRotationY + _incrementalRotationY * _step;
+
+  double get translationY => _startTranslationY + _incrementalTranslationY * _step;
+
+  void update() {
+    if (_step < _numSteps) {
+      _step++;
+    }
+  }
 }
