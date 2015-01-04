@@ -25,7 +25,7 @@ part 'src/quaternion.dart';
 part 'src/ring.dart';
 part 'src/vector3.dart';
 
-void client_main() {
+void run_client() {
   // Create the button bar for pausing the game and add it first to put it at the top.
   var buttonBar = new ButtonBar.withElements();
   document.body.children.add(buttonBar.element);
