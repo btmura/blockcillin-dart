@@ -21,11 +21,3 @@ _app_controller_tests() {
     });
   });
 }
-
-class MockApp extends Mock implements App {
-  noSuchMethod(Invocation invocation) {}
-}
-
-class MockAppView extends Mock implements AppView {
-  noSuchMethod(Invocation invocation) {}
-}

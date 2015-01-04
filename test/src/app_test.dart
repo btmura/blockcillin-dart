@@ -29,7 +29,3 @@ _app_tests() {
     });
   });
 }
-
-class MockGame extends Mock implements Game {
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
