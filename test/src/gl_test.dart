@@ -1,26 +1,25 @@
 part of test;
 
 _gl_tests() {
-  const vertexShaderSource = '''
-    void main(void) {
-      gl_Position = vec4(0.0, 0.0, 0.0, 0.0);    
-    }
-  ''';
-
-  const fragmentShaderSource = '''
-    precision mediump float;
-  
-    void main(void) {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
-  ''';
-
-  var canvas;
-  var gl;
-
   group("gl", () {
+    const vertexShaderSource = '''
+      void main(void) {
+        gl_Position = vec4(0.0, 0.0, 0.0, 0.0);    
+      }
+    ''';
+
+    const fragmentShaderSource = '''
+      precision mediump float;
+    
+      void main(void) {
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+      }
+    ''';
+
+    webgl.RenderingContext gl;
+
     setUp(() {
-      canvas = new CanvasElement();
+      var canvas = new CanvasElement();
       gl = getWebGL(canvas);
       expect(gl, isNotNull);
     });

@@ -1,10 +1,9 @@
 part of test;
 
 _app_view_tests() {
-
-  var appView;
-
   group("app_view", () {
+    AppView appView;
+
     setUp(() {
       var mockMainMenu = new MockMainMenu();
       var mockGameView = new MockGameView();

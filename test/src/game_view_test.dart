@@ -1,10 +1,9 @@
 part of test;
 
 _game_view_tests() {
-
-  var gameView;
-
   group("game_view", () {
+    GameView gameView;
+
     setUp(() {
       var buttonBarElement = new DivElement();
       var pauseButton = new ButtonElement();

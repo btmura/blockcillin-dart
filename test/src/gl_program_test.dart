@@ -1,11 +1,9 @@
 part of test;
 
 _gl_program_tests() {
-
-  var glCanvas;
-  var glProgram;
-
   group("gl_program", () {
+    GLProgram glProgram;
+
     setUp(() {
       var canvas = new CanvasElement();
       var gl = getWebGL(canvas);

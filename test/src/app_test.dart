@@ -1,11 +1,10 @@
 part of test;
 
 _app_tests() {
-
-  MockGame mockGame;
-  App app;
-
   group("app", () {
+    MockGame mockGame;
+    App app;
+
     setUp(() {
       mockGame = new MockGame();
       app = new App();

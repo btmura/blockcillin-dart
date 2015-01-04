@@ -1,24 +1,19 @@
 part of test;
 
 _main_menu_tests() {
-
-  var menu;
-  var menuFader;
-  var continueButton;
-  var newGameButton;
-  var mainMenu;
-
   group("main_menu", () {
+    MainMenu mainMenu;
+
     setUp(() {
-      menu = new DivElement()
+      var menu = new DivElement()
         ..id = "main-menu";
 
-      menuFader = new Fader(menu);
+      var menuFader = new Fader(menu);
 
-      continueButton = new ButtonElement()
+      var continueButton = new ButtonElement()
         ..id = "continue-button";
 
-      newGameButton = new ButtonElement()
+      var newGameButton = new ButtonElement()
         ..id = "new-game-button";
 
       mainMenu = new MainMenu(menu, menuFader, continueButton, newGameButton);

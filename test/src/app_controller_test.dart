@@ -1,12 +1,11 @@
 part of test;
 
 _app_controller_tests() {
-
-  var mockApp;
-  var mockAppView;
-  var appController;
-
   group("app_controller", () {
+    MockApp mockApp;
+    MockAppView mockAppView;
+    AppController appController;
+
     setUp(() {
       mockApp = new MockApp();
       mockAppView = new MockAppView();

@@ -1,9 +1,9 @@
 part of test;
 
 _button_bar_tests() {
-  var buttonBar;
-
   group("button_bar", () {
+    ButtonBar buttonBar;
+
     setUp(() {
       var buttonBarElement = new DivElement();
       var pauseButton = new ButtonElement();
