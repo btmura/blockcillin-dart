@@ -5,7 +5,6 @@ class GameView {
   final ButtonBar buttonBar;
   final CanvasElement canvas;
 
-  final webgl.RenderingContext _gl;
   final GLProgram _program;
   final BoardRenderer _boardRenderer;
 
@@ -13,8 +12,8 @@ class GameView {
   Matrix4 _viewMatrix;
   Matrix4 _normalMatrix;
 
-  GameView(this.buttonBar, this.canvas, this._gl, this._program, this._boardRenderer) {
-    _gl
+  GameView(this.buttonBar, this.canvas, this._program, this._boardRenderer) {
+    _program.gl
       ..clearColor(0.0, 0.0, 0.0, 1.0)
       ..enable(webgl.DEPTH_TEST);
 
@@ -24,13 +23,15 @@ class GameView {
   }
 
   void draw(Game game) {
-    _gl.clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT);
-    _gl.viewport(0, 0, canvas.width, canvas.height);
+    _program.gl
+      ..clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT)
+      ..viewport(0, 0, canvas.width, canvas.height);
 
-    _gl.useProgram(_program.program);
-    _gl.uniformMatrix4fv(_program.projectionMatrixLocation, false, _projectionMatrix.floatList);
-    _gl.uniformMatrix4fv(_program.viewMatrixLocation, false, _viewMatrix.floatList);
-    _gl.uniformMatrix4fv(_program.normalMatrixLocation, false, _normalMatrix.floatList);
+    _program.gl
+      ..useProgram(_program.program)
+      ..uniformMatrix4fv(_program.projectionMatrixLocation, false, _projectionMatrix.floatList)
+      ..uniformMatrix4fv(_program.viewMatrixLocation, false, _viewMatrix.floatList)
+      ..uniformMatrix4fv(_program.normalMatrixLocation, false, _normalMatrix.floatList);
 
     _boardRenderer.render(game.board);
   }

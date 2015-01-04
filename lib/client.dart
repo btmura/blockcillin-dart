@@ -42,18 +42,14 @@ void client_main() {
     return;
   }
 
-  var app = new App();
+  var glProgram = new GLProgram(gl);
+  var boardRenderer = new BoardRenderer(glProgram);
+  var gameView = new GameView(buttonBar, canvas, glProgram, boardRenderer);
 
   var mainMenu = new MainMenu.withElements();
-
-  var program = new GLProgram(gl);
-
-  var boardRenderer = new BoardRenderer(program);
-
-  var gameView = new GameView(buttonBar, canvas, gl, program, boardRenderer);
-
   var appView = new AppView(mainMenu, gameView);
 
+  var app = new App();
   var appController = new AppController(app, appView);
 
   appController.run();

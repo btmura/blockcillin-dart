@@ -12,9 +12,9 @@ _game_view_tests() {
 
       var canvas = new CanvasElement();
       var gl = getWebGL(canvas);
-      var program = new GLProgram(gl);
-      var boardRenderer = new BoardRenderer(program);
-      gameView = new GameView(buttonBar, canvas, gl, program, boardRenderer);
+      var glProgram = new GLProgram(gl);
+      var boardRenderer = new BoardRenderer(glProgram);
+      gameView = new GameView(buttonBar, canvas, glProgram, boardRenderer);
     });
 
     test("GameView.buttonBar", () {
