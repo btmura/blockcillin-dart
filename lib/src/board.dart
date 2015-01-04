@@ -10,6 +10,10 @@ class Board {
 
   static final int _numSteps = (1.0 / _incrementalTranslationY).round();
 
+  final int numRings = 10;
+  final int numCells = 24;
+  final int numBlockColors = 8;
+
   final List<Ring> rings;
 
   int _step = 0;

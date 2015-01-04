@@ -7,6 +7,10 @@ class AppView {
 
   AppView(this.mainMenu, this.gameView);
 
+  void init(Game game) {
+    gameView.init(game);
+  }
+
   bool resize() {
     mainMenu.center();
     return gameView.resize();

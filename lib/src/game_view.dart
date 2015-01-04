@@ -22,6 +22,10 @@ class GameView {
     _normalMatrix = _viewMatrix.inverse().transpose();
   }
 
+  void init(Game game) {
+    _boardRenderer.init(game.board);
+  }
+
   void draw(Game game) {
     _program.gl
       ..clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT)
