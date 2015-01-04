@@ -52,7 +52,13 @@ class AppController {
     app.update();
 
     appView.mainMenu.continueButtonVisible = app.gameStarted && app.gamePaused;
-    appView.mainMenu.visible = !app.gameStarted || app.gamePaused;
+
+    if (!app.gameStarted || app.gamePaused) {
+      appView.mainMenu.show();
+    } else {
+      appView.mainMenu.hide();
+    }
+
     appView.gameView.buttonBar.visible = app.gameStarted && !app.gamePaused;
     if (app.game != null) {
       appView.gameView.draw(app.game);

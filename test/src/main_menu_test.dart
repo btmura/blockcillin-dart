@@ -4,7 +4,7 @@ _main_menu_tests() {
 
   var menu;
   var menuFader;
-  var continueGameButton;
+  var continueButton;
   var newGameButton;
   var mainMenu;
 
@@ -15,13 +15,13 @@ _main_menu_tests() {
 
       menuFader = new Fader(menu);
 
-      continueGameButton = new ButtonElement()
-        ..id = "continue-game-button";
+      continueButton = new ButtonElement()
+        ..id = "continue-button";
 
       newGameButton = new ButtonElement()
         ..id = "new-game-button";
 
-      mainMenu = new MainMenu(menu, menuFader, continueGameButton, newGameButton);
+      mainMenu = new MainMenu(menu, menuFader, continueButton, newGameButton);
     });
 
     test("MainMenu.onContinueGameButtonClick", () {
@@ -32,27 +32,27 @@ _main_menu_tests() {
       expect(mainMenu.onNewGameButtonClick, isNotNull);
     });
 
-    test("MainMenu.visible = true", () {
+    test("MainMenu.show", () {
       expect(querySelector("#main-menu"), isNull);
 
-      mainMenu.visible = true;
+      mainMenu.show();
       expect(querySelector("#main-menu"), isNotNull);
 
-      mainMenu.visible = true;
+      mainMenu.show();
       expect(querySelector("#main-menu"), isNotNull);
     });
 
-    test("MainMenu.visible = false", () {
-      mainMenu.visible = true;
+    test("MainMenu.hide", () {
+      mainMenu.show();
       expect(querySelector("#main-menu"), isNotNull);
 
-      mainMenu.visible = false;
+      mainMenu.hide();
       // TODO(btmura): check that menu is hidden
       // expect(querySelector("#main-menu"), isNull);
     });
 
     tearDown(() {
-      mainMenu.visible = false;
+      mainMenu.hide();
     });
   });
 }
