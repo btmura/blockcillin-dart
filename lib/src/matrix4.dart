@@ -46,6 +46,15 @@ class Matrix4 {
     ]);
   }
 
+  factory Matrix4.translation(double x, double y, double z) {
+    return new Matrix4.fromList([
+      1.0, 0.0, 0.0, 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      x, y, z, 1.0,
+    ]);
+  }
+
   factory Matrix4.perspective(double fovRadians, double aspect, double near, double far) {
     var f = math.tan(math.PI * 0.5 - 0.5 * fovRadians);
     var rangeInv = 1.0 / (near - far);

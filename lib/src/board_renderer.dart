@@ -2,15 +2,25 @@ part of client;
 
 class BoardRenderer {
 
+  static final int _numRings = 10;
+  static final int _numCells = 24;
+  static final int _numTiles = 8;
+
+  static final double _startRotationY = 0.0;
+  static final double _incrementalRotationY = math.PI / 150;
+
+  static final double _startTranslationY = -1.0;
+  static final double _incrementalTranslationY = 0.02;
+
+  static final int _numSteps = (1.0 / _incrementalTranslationY).round();
+
   final GLProgram _glProgram;
   final webgl.Buffer _vertexBuffer;
   final webgl.Buffer _normalBuffer;
   final webgl.Buffer _textureBuffer;
   final webgl.Buffer _indexBuffer;
 
-  static final int numRings = 10;
-  static final int numCells = 24;
-  static final int numTiles = 8;
+  int _step = 0;
 
   factory BoardRenderer(GLProgram glProgram) {
     var gl = glProgram.gl;
@@ -23,8 +33,8 @@ class BoardRenderer {
     var innerVector = new Vector3(0.0, 0.0, innerRadius);
 
     var yAxis = new Vector3(0.0, 1.0, 0.0);
-    var halfSwing = new Quaternion.fromAxisAngle(yAxis, math.PI / numCells);
-    var cellRotation = new Quaternion.fromAxisAngle(yAxis, 2 * math.PI / numCells);
+    var halfSwing = new Quaternion.fromAxisAngle(yAxis, math.PI / _numCells);
+    var cellRotation = new Quaternion.fromAxisAngle(yAxis, 2 * math.PI / _numCells);
 
     var outerSwingVector = halfSwing.rotate(outerVector);
     var innerSwingVector = halfSwing.rotate(innerVector);
@@ -139,9 +149,9 @@ class BoardRenderer {
     var normalData = [];
 
     var totalRingTranslation = new Vector3(0.0, 0.0, 0.0);
-    for (var i = 0; i < numRings; i++) {
+    for (var i = 0; i < _numRings; i++) {
       var totalCellRotation = new Quaternion.fromAxisAngle(yAxis, 0.0);
-      for (var j = 0; j < numCells; j++) {
+      for (var j = 0; j < _numCells; j++) {
         for (var k = 0; k < vertices.length; k++) {
           var rotatedVertex = totalCellRotation.rotate(totalRingTranslation + vertices[k]);
           vertexData.add(rotatedVertex.x);
@@ -224,12 +234,12 @@ class BoardRenderer {
     ];
 
     var random = new math.Random();
-    var tileWidth = 1.0 / numTiles;
+    var tileWidth = 1.0 / _numTiles;
 
     var textureData = [];
-    for (var i = 0; i < numRings; i++) {
-      for (var j = 0; j < numCells; j++) {
-        var r = random.nextInt(numTiles - 2);
+    for (var i = 0; i < _numRings; i++) {
+      for (var j = 0; j < _numCells; j++) {
+        var r = random.nextInt(_numTiles - 2);
         for (var k = 0; k < texturePoints.length; k++) {
           var p = texturePoints[k] * tileWidth;
           p.x += tileWidth * r;
@@ -271,10 +281,10 @@ class BoardRenderer {
     ];
 
     var indexData = [];
-    for (var i = 0; i < numRings; i++) {
-      for (var j = 0; j < numCells; j++) {
+    for (var i = 0; i < _numRings; i++) {
+      for (var j = 0; j < _numCells; j++) {
         for (var k = 0; k < indexPoints.length; k++) {
-          indexData.add((i * 24 * numCells) + (j * 24) + indexPoints[k]);
+          indexData.add((i * 24 * _numCells) + (j * 24) + indexPoints[k]);
         }
       }
     }
@@ -289,11 +299,24 @@ class BoardRenderer {
 
   BoardRenderer._(this._glProgram, this._vertexBuffer, this._normalBuffer, this._textureBuffer, this._indexBuffer);
 
+  void init() {
+    _step = 0;
+  }
+
   void render(Board board) {
-    var boardRotationMatrix = new Matrix4.rotation(board.rotation[0], board.rotation[1], board.rotation[2]);
+    var rotationY = _startRotationY + _incrementalRotationY * _step;
+    var translationY = _startTranslationY + _incrementalTranslationY * _step;
+
+    var boardRotationMatrix = new Matrix4.rotation(0.0, rotationY, 0.0);
+    var boardTranslationMatrix = new Matrix4.translation(0.0, translationY, 0.0);
+
+    if (_step < _numSteps) {
+      _step++;
+    }
 
     _glProgram.gl
-      ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, boardRotationMatrix.floatList);
+      ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, boardRotationMatrix.floatList)
+      ..uniformMatrix4fv(_glProgram.boardTranslationMatrixLocation, false, boardTranslationMatrix.floatList);
 
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
@@ -312,6 +335,6 @@ class BoardRenderer {
 
     _glProgram.gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
-      ..drawElements(webgl.TRIANGLES, 36 * numRings * numCells, webgl.UNSIGNED_SHORT, 0);
+      ..drawElements(webgl.TRIANGLES, 36 * _numRings * _numCells, webgl.UNSIGNED_SHORT, 0);
   }
 }

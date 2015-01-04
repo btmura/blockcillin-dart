@@ -47,6 +47,7 @@ class AppController {
 
     appView.onNewGameButtonClick.listen((_) {
       app.startGame(new Game.withRandomBoard(3, 3));
+      appView.gameView.init();
       _update();
     });
 

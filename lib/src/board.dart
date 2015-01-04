@@ -3,7 +3,6 @@ part of client;
 class Board {
 
   final List<Ring> rings;
-  final List<double> rotation = [0.0, 0.0, 0.0];
 
   Board(this.rings);
 
@@ -15,7 +14,5 @@ class Board {
     return new Board(rings);
   }
 
-  void update() {
-    rotation[1] += math.PI / 400;
-  }
+  void update() {}
 }
