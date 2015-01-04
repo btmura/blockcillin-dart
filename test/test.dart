@@ -26,7 +26,7 @@ part 'src/quaternion_test.dart';
 part 'src/ring_test.dart';
 part 'src/vector3_test.dart';
 
-void test_main() {
+void main() {
   useHtmlEnhancedConfiguration();
 
   _app_tests();
