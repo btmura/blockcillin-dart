@@ -30,13 +30,12 @@ void client_main() {
   var buttonBar = new ButtonBar.withElements();
   document.body.children.add(buttonBar.element);
 
-  // Add canvas after button bar. Some code relies on this order.
-
+  // Create the canvas. Add canvas after button bar to maximize it below the bar.
   var canvas = new CanvasElement()
       ..className = "canvas";
-
   document.body.children.add(canvas);
 
+  // Initialize the canvas now that we're done setting up the DOM.
   var gl = getWebGL(canvas);
   if (gl == null) {
     // TODO(btmura): handle when WebGL isn't supported

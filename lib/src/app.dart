@@ -1,19 +1,20 @@
 part of client;
 
-/// The model represeting the app.
+/// The model that represents the app which may have a current game.
 class App {
 
+  /// State of the app.
   AppState state = AppState.INITIAL;
 
   Game _game;
 
-  /// Starts a new game. Throws out the old game.
+  /// Starts a new game replacing the old one if it exists.
   void startGame(Game newGame) {
     state = AppState.PLAYING;
     _game = newGame;
   }
 
-  /// Updates the app. Call this on each game loop cycle.
+  /// Updates the app. Call this 1 or more times per game loop iteration.
   void update() {
     if (_game != null) {
       _game.update();
