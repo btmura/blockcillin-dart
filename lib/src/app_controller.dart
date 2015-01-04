@@ -24,17 +24,25 @@ class AppController {
     window.onKeyUp
         .where((event) => event.keyCode == KeyCode.ESC)
         .listen((_) {
-          if (app.gameStarted) {
-            app.gamePaused = !app.gamePaused;
-            _update();
+          switch (app.state) {
+            case AppState.INITIAL:
+              break;
+
+            case AppState.PLAYING:
+              app.state = AppState.PAUSED;
+              _update();
+              break;
+
+            case AppState.PAUSED:
+              app.state = AppState.PLAYING;
+              _update();
+              break;
           }
         });
 
     appView.onContinueGameButtonClick.listen((_) {
-      if (app.gameStarted && app.gamePaused) {
-        app.gamePaused = false;
-        _update();
-      }
+      app.state = AppState.PLAYING;
+      _update();
     });
 
     appView.onNewGameButtonClick.listen((_) {
@@ -43,7 +51,7 @@ class AppController {
     });
 
     appView.onPauseButtonClick.listen((_) {
-      app.gamePaused = true;
+      app.state = AppState.PAUSED;
       _update();
     });
   }
@@ -53,22 +61,26 @@ class AppController {
 
     // TODO(btmura): don't call setters on every frame unless something changes
 
-    appView.mainMenu.continueButtonVisible = app.gameStarted && app.gamePaused;
+    switch (app.state) {
+      case AppState.INITIAL:
+        appView.mainMenu.continueButtonVisible = false;
+        appView.mainMenu.show();
+        appView.gameView.buttonBar.hide();
+        break;
 
-    if (!app.gameStarted || app.gamePaused) {
-      appView.mainMenu.show();
-      appView.gameView.buttonBar.hide();
-    } else {
-      appView.mainMenu.hide();
-      appView.gameView.buttonBar.show();
-    }
+      case AppState.PLAYING:
+        appView.mainMenu.continueButtonVisible = false;
+        appView.mainMenu.hide();
+        appView.gameView.buttonBar.show();
+        appView.gameView.draw(app._game);
+        window.animationFrame.then(_update);
+        break;
 
-    if (app.game != null) {
-      appView.gameView.draw(app.game);
-    }
-
-    if (app.gameStarted && !app.gamePaused) {
-      window.animationFrame.then(_update);
+      case AppState.PAUSED:
+        appView.mainMenu.continueButtonVisible = true;
+        appView.mainMenu.show();
+        appView.gameView.buttonBar.hide();
+        break;
     }
   }
 }

@@ -5,3 +5,6 @@ dependencies:
   browser: any
   mock: any
   unittest: any
+transformers:
+- $dart2js:
+    commandLineOptions: ["--enable-enum"]

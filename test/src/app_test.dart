@@ -2,25 +2,35 @@ part of test;
 
 _app_tests() {
 
-  var app;
+  MockGame mockGame;
+  App app;
 
   group("app", () {
     setUp(() {
+      mockGame = new MockGame();
       app = new App();
     });
 
     test("App", () {
-      expect(app.gameStarted, isFalse);
-      expect(app.gamePaused, isFalse);
-      expect(app.game, isNull);
+      expect(app.state, equals(AppState.INITIAL));
     });
 
     test("App.startGame", () {
-      var game = new Game.withRandomBoard(3, 3);
-      app.startGame(game);
-      expect(app.gameStarted, isTrue);
-      expect(app.gamePaused, isFalse);
-      expect(app.game, equals(game));
+      app.startGame(mockGame);
+      expect(app.state, equals(AppState.PLAYING));
+    });
+
+    test("App.update", () {
+      app.update();
+      mockGame.calls("update").verify(neverHappened);
+
+      app.startGame(mockGame);
+      app.update();
+      mockGame.calls("update").verify(happenedOnce);
     });
   });
+}
+
+class MockGame extends Mock implements Game {
+  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
