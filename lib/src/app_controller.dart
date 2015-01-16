@@ -46,7 +46,7 @@ class AppController {
     });
 
     appView.onNewGameButtonClick.listen((_) {
-      var game = new Game.withRandomBoard(3, 3);
+      var game = new Game.withRandomBoard(10, 24, BlockColor.values.length);
       app.startGame(game);
       appView.init(game);
       _update();

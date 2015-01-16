@@ -7,7 +7,10 @@ class Block {
   Block(this.color);
 
   factory Block.withRandomColor([int seed]) {
-    return new Block(BlockColor.random(seed));
+    var random = new math.Random(seed);
+    var colors = BlockColor.values;
+    var index = random.nextInt(colors.length);
+    return new Block(colors[index]);
   }
 
   bool operator ==(o) => o is Block && o.color == color;
@@ -15,22 +18,11 @@ class Block {
   toString() => "$color";
 }
 
-class BlockColor {
-
-  static const red = const BlockColor._(0);
-  static const blue = const BlockColor._(1);
-
-  static const _allColors = const [red, blue];
-
-  final int _value;
-
-  const BlockColor._(this._value);
-
-  static BlockColor random([int seed]) {
-    var random = new math.Random(seed);
-    var i = random.nextInt(_allColors.length);
-    return _allColors[i];
-  }
-
-  toString() => "$_value";
+enum BlockColor {
+  RED,
+  GREEN,
+  CYAN,
+  PURPLE,
+  YELLOW,
+  BLUE,
 }

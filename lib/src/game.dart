@@ -6,8 +6,8 @@ class Game {
 
   Game(this.board);
 
-  factory Game.withRandomBoard(int numRings, int numCells) {
-    var board = new Board.withRandomRings(numRings, numCells);
+  factory Game.withRandomBoard(int numRings, int numCells, int numBlockColors) {
+    var board = new Board.withRandomRings(numRings, numCells, numBlockColors);
     return new Game(board);
   }
 

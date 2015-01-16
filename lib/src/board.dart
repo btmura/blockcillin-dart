@@ -10,22 +10,22 @@ class Board {
 
   static final int _numSteps = (1.0 / _incrementalTranslationY).round();
 
-  final int numRings = 10;
-  final int numCells = 24;
-  final int numBlockColors = 8;
-
   final List<Ring> rings;
+  final int numRings;
+  final int numCells;
+  final int numBlockColors;
 
   int _step = 0;
 
-  Board(this.rings);
+  // TODO(btmura): change num of block colors to set of block colors
+  Board(this.rings, this.numRings, this.numCells, this.numBlockColors);
 
-  factory Board.withRandomRings(int numRings, int numCells) {
+  factory Board.withRandomRings(int numRings, int numCells, int numBlockColors) {
     var rings = new List<Ring>(numRings);
     for (var i = 0; i < numRings; i++) {
       rings[i] = new Ring.withRandomCells(numCells);
     }
-    return new Board(rings);
+    return new Board(rings, numRings, numCells, numBlockColors);
   }
 
   double get rotationY => _startRotationY + _incrementalRotationY * _step;

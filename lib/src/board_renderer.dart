@@ -2,6 +2,12 @@ part of client;
 
 class BoardRenderer {
 
+  /// Number of tiles per row in the single square texture.
+  static const double _numTextureTiles = 8.0;
+
+  /// Relative size of a single texture tile in the larger texture.
+  static const double _textureTileSize = 1.0 / _numTextureTiles;
+
   final GLProgram _glProgram;
 
   webgl.Buffer _vertexBuffer;
@@ -182,61 +188,7 @@ class BoardRenderer {
         ..generateMipmap(webgl.TEXTURE_2D);
     });
 
-    // ul = (0, 0), br = (1, 1)
-    var texturePoints = [
-      // Front
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Back
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Left
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Right
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Top
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Bottom
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-    ];
-
-    var random = new math.Random();
-    var tileWidth = 1.0 / board.numBlockColors;
-
-    var textureData = [];
-    for (var i = 0; i < board.numRings; i++) {
-      for (var j = 0; j < board.numCells; j++) {
-        var r = random.nextInt(board.numBlockColors - 2);
-        for (var k = 0; k < texturePoints.length; k++) {
-          var p = texturePoints[k] * tileWidth;
-          p.x += tileWidth * r;
-          textureData.add(p.x);
-          textureData.add(p.y);
-        }
-      }
-    }
-
+    var textureData = _getTextureData(board);
     _textureBuffer = gl.createBuffer();
     gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _textureBuffer)
@@ -281,6 +233,66 @@ class BoardRenderer {
     gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
       ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
+  }
+
+  List<double> _getTextureData(Board board) {
+    // ul = (0, 0), br = (1, 1)
+    var texturePoints = [
+      // Front
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Back
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Left
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Right
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Top
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Bottom
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+    ];
+
+    var flattenedPoints = [];
+    for (var ring in board.rings) {
+      for (var cell in ring.cells) {
+        var colorIndex = cell.block.color.index;
+        for (var relPoint in texturePoints) {
+
+          // Translate the relative point to absolute space.
+          var absPoint = relPoint * _textureTileSize;
+
+          // Move right to change colors relying on the image tiles.
+          absPoint.x += colorIndex * _textureTileSize;
+
+          flattenedPoints.add(absPoint.x);
+          flattenedPoints.add(absPoint.y);
+        }
+      }
+    }
+    return flattenedPoints;
   }
 
   void render(Board board) {

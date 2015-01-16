@@ -4,12 +4,12 @@ _board_tests() {
   group("board", () {
     test("Board", () {
       var rings = [new Ring.withRandomCells(3), new Ring.withRandomCells(3)];
-      var board = new Board(rings);
+      var board = new Board(rings, 2, 3, 1);
       expect(board.rings, equals(rings));
     });
 
     test("Board.withRandomRings", () {
-      var board = new Board.withRandomRings(3, 2);
+      var board = new Board.withRandomRings(3, 2, 1);
       expect(board.rings.length, equals(3));
       expect(board.rings[0].cells.length, 2);
       expect(board.rings[1].cells.length, 2);
