@@ -167,12 +167,20 @@ class BoardRenderer {
     var vertexData = [];
     var normalData = [];
 
+    // Vector to translate cells out of the scene to make them appear empty.
+    var emptyTranslation = new Vector3(100.0, 0.0, 0.0);
+
     var totalRingTranslation = new Vector3(0.0, 0.0, 0.0);
     for (var i = 0; i < board.numRings; i++) {
       var totalCellRotation = new Quaternion.fromAxisAngle(yAxis, 0.0);
       for (var j = 0; j < board.numCells; j++) {
+        var cell = board.rings[i].cells[j];
         for (var k = 0; k < vertices.length; k++) {
           var rotatedVertex = totalCellRotation.rotate(totalRingTranslation + vertices[k]);
+          if (cell.block == null) {
+            rotatedVertex += emptyTranslation;
+          }
+
           vertexData.add(rotatedVertex.x);
           vertexData.add(rotatedVertex.y);
           vertexData.add(rotatedVertex.z);
@@ -233,7 +241,7 @@ class BoardRenderer {
     var flattenedPoints = [];
     for (var ring in board.rings) {
       for (var cell in ring.cells) {
-        var colorIndex = cell.block.color.index;
+        var colorIndex = cell.block != null ? cell.block.color.index : 0;
         for (var relPoint in texturePoints) {
 
           // Translate the relative point to absolute space.
