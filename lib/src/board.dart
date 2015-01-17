@@ -4,20 +4,14 @@ class Board {
 
   static const double _emptyRatio = 0.5;
 
-  static final double _startRotationY = 0.0;
-  static final double _incrementalRotationY = math.PI / 150;
-
-  static final double _startTranslationY = -1.0;
-  static final double _incrementalTranslationY = 0.02;
-
-  static final int _numSteps = (1.0 / _incrementalTranslationY).round();
+  static const int numStartSteps = 50;
 
   final List<Ring> rings;
   final int numRings;
   final int numCells;
   final int numBlockColors;
 
-  int _step = 0;
+  int step = 0;
 
   // TODO(btmura): change num of block colors to set of block colors
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors);
@@ -40,13 +34,9 @@ class Board {
     return new Board(rings, numRings, numCells, numBlockColors);
   }
 
-  double get rotationY => _startRotationY + _incrementalRotationY * _step;
-
-  double get translationY => _startTranslationY + _incrementalTranslationY * _step;
-
   void update() {
-    if (_step < _numSteps) {
-      _step++;
+    if (step < numStartSteps) {
+      step++;
     }
   }
 }
