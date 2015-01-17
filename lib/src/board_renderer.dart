@@ -21,16 +21,8 @@ class BoardRenderer {
     var gl = _glProgram.gl;
 
     var data = _getTextureAndNormalData(board);
-
-    _vertexBuffer = gl.createBuffer();
-    gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
-      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(data[0]), webgl.STATIC_DRAW);
-
-    _normalBuffer = gl.createBuffer();
-    gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, _normalBuffer)
-      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(data[1]), webgl.STATIC_DRAW);
+    _vertexBuffer = createArrayBuffer(gl, data[0]);
+    _normalBuffer = createArrayBuffer(gl, data[1]);
 
     var texture = gl.createTexture();
     var green = [0, 255, 0, 255];
@@ -48,17 +40,8 @@ class BoardRenderer {
         ..generateMipmap(webgl.TEXTURE_2D);
     });
 
-    var textureData = _getTextureData(board);
-    _textureBuffer = gl.createBuffer();
-    gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, _textureBuffer)
-      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(textureData), webgl.STATIC_DRAW);
-
-    var indexData = _getIndexData(board);
-    _indexBuffer = gl.createBuffer();
-    gl
-      ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
-      ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
+    _textureBuffer = createArrayBuffer(gl, _getTextureData(board));
+    _indexBuffer = createElementArrayBuffer(gl, _getIndexData(board));
   }
 
   List<List<double>> _getTextureAndNormalData(Board board) {

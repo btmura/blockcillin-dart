@@ -59,3 +59,21 @@ webgl.Shader _createShader(webgl.RenderingContext gl, int type, String source) {
 
   return shader;
 }
+
+/// Creates a STATIC_DRAW array buffer with the data.
+webgl.Buffer createArrayBuffer(webgl.RenderingContext gl, List<double> data) {
+  var buffer = gl.createBuffer();
+  gl
+    ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
+    ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(data), webgl.STATIC_DRAW);
+  return buffer;
+}
+
+/// Creates a STATIC_DRAW element array buffer with the data.
+webgl.Buffer createElementArrayBuffer(webgl.RenderingContext gl, List<int> data) {
+  var buffer = gl.createBuffer();
+  gl
+    ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, buffer)
+    ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(data), webgl.STATIC_DRAW);
+  return buffer;
+}
