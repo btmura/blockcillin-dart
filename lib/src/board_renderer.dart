@@ -20,6 +20,48 @@ class BoardRenderer {
   void init(Board board) {
     var gl = _glProgram.gl;
 
+    var data = _getTextureAndNormalData(board);
+
+    _vertexBuffer = gl.createBuffer();
+    gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
+      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(data[0]), webgl.STATIC_DRAW);
+
+    _normalBuffer = gl.createBuffer();
+    gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, _normalBuffer)
+      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(data[1]), webgl.STATIC_DRAW);
+
+    var texture = gl.createTexture();
+    var green = [0, 255, 0, 255];
+    gl
+      ..bindTexture(webgl.TEXTURE_2D, texture)
+      ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, 1, 1, 0, webgl.RGBA, webgl.UNSIGNED_BYTE, new Uint8List.fromList(green));
+
+    var image = new ImageElement(src: "packages/blockcillin/texture.png");
+    image.onLoad.listen((_) {
+      gl
+        ..bindTexture(webgl.TEXTURE_2D, texture)
+        ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, image)
+        ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR)
+        ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR_MIPMAP_NEAREST)
+        ..generateMipmap(webgl.TEXTURE_2D);
+    });
+
+    var textureData = _getTextureData(board);
+    _textureBuffer = gl.createBuffer();
+    gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, _textureBuffer)
+      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(textureData), webgl.STATIC_DRAW);
+
+    var indexData = _getIndexData(board);
+    _indexBuffer = gl.createBuffer();
+    gl
+      ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
+      ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
+  }
+
+  List<List<double>> _getTextureAndNormalData(Board board) {
     var outerRadius = 1.0;
     var innerRadius = 0.75;
 
@@ -162,77 +204,7 @@ class BoardRenderer {
       totalRingTranslation += ringTranslation;
     }
 
-    _vertexBuffer = gl.createBuffer();
-    gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
-      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(vertexData), webgl.STATIC_DRAW);
-
-    _normalBuffer = gl.createBuffer();
-    gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, _normalBuffer)
-      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(normalData), webgl.STATIC_DRAW);
-
-    var texture = gl.createTexture();
-    var green = [0, 255, 0, 255];
-    gl
-      ..bindTexture(webgl.TEXTURE_2D, texture)
-      ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, 1, 1, 0, webgl.RGBA, webgl.UNSIGNED_BYTE, new Uint8List.fromList(green));
-
-    var image = new ImageElement(src: "packages/blockcillin/texture.png");
-    image.onLoad.listen((_) {
-      gl
-        ..bindTexture(webgl.TEXTURE_2D, texture)
-        ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, image)
-        ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR)
-        ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR_MIPMAP_NEAREST)
-        ..generateMipmap(webgl.TEXTURE_2D);
-    });
-
-    var textureData = _getTextureData(board);
-    _textureBuffer = gl.createBuffer();
-    gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, _textureBuffer)
-      ..bufferData(webgl.ARRAY_BUFFER, new Float32List.fromList(textureData), webgl.STATIC_DRAW);
-
-    var indexPoints = [
-      // Front
-      0, 1, 2,
-      2, 3, 0,
-
-      // Back
-      4, 5, 6,
-      6, 7, 4,
-
-      // Left
-      8, 9, 10,
-      10, 11, 8,
-
-      // Right
-      12, 13, 14,
-      14, 15, 12,
-
-      // Top
-      16, 17, 18,
-      18, 19, 16,
-
-      // Bottom
-      20, 21, 22,
-      22, 23, 20,
-    ];
-
-    var indexData = [];
-    for (var i = 0; i < board.numRings; i++) {
-      for (var j = 0; j < board.numCells; j++) {
-        for (var k = 0; k < indexPoints.length; k++) {
-          indexData.add((i * 24 * board.numCells) + (j * 24) + indexPoints[k]);
-        }
-      }
-    }
-
-    _indexBuffer = gl.createBuffer();
-    gl
-      ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
-      ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indexData), webgl.STATIC_DRAW);
+    return [vertexData, normalData];
   }
 
   List<double> _getTextureData(Board board) {
@@ -293,6 +265,44 @@ class BoardRenderer {
       }
     }
     return flattenedPoints;
+  }
+
+  List<int> _getIndexData(Board board) {
+    var indexPoints = [
+      // Front
+      0, 1, 2,
+      2, 3, 0,
+
+      // Back
+      4, 5, 6,
+      6, 7, 4,
+
+      // Left
+      8, 9, 10,
+      10, 11, 8,
+
+      // Right
+      12, 13, 14,
+      14, 15, 12,
+
+      // Top
+      16, 17, 18,
+      18, 19, 16,
+
+      // Bottom
+      20, 21, 22,
+      22, 23, 20,
+    ];
+
+    var indexData = [];
+    for (var i = 0; i < board.numRings; i++) {
+      for (var j = 0; j < board.numCells; j++) {
+        for (var k = 0; k < indexPoints.length; k++) {
+          indexData.add((i * 24 * board.numCells) + (j * 24) + indexPoints[k]);
+        }
+      }
+    }
+    return indexData;
   }
 
   void render(Board board) {
