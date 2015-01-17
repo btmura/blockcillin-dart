@@ -10,7 +10,7 @@ _cell_tests() {
 
     test("Cell.withRandomBlock", () {
       var cell = new Cell.withRandomBlock(1337);
-      expect(cell.block, equals(new Block(BlockColor.red)));
+      expect(cell.block, equals(new Block(BlockColor.YELLOW)));
     });
 
     test("Cell.block", () {
