@@ -268,7 +268,7 @@ class BoardRenderer {
     var indexData = [];
     for (var i = 0; i < board.numRings; i++) {
       for (var j = 0; j < board.numCells; j++) {
-        indexData.addAll(Block.indices.map((index) {
+        indexData.addAll(Block.getIndexData().map((index) {
           var offset = (i * board.numCells + j) * Block.numIndices;
           return offset + index;
         }));
