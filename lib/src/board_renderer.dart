@@ -125,50 +125,7 @@ class BoardRenderer {
       innerBottomRight,
     ];
 
-    var frontNormal = new Vector3(0.0, 0.0, 1.0);
-    var backNormal = new Vector3(0.0, 0.0, -1.0);
-    var leftNormal = new Vector3(-1.0, 0.0, 0.0);
-    var rightNormal = new Vector3(1.0, 0.0, 0.0);
-    var topNormal = new Vector3(0.0, 1.0, 0.0);
-    var bottomNormal = new Vector3(0.0, -1.0, 0.0);
-
-    var normals = [
-      // Front
-      frontNormal,
-      frontNormal,
-      frontNormal,
-      frontNormal,
-
-      // Back
-      backNormal,
-      backNormal,
-      backNormal,
-      backNormal,
-
-      // Left
-      leftNormal,
-      leftNormal,
-      leftNormal,
-      leftNormal,
-
-      // Right
-      rightNormal,
-      rightNormal,
-      rightNormal,
-      rightNormal,
-
-      // Top
-      topNormal,
-      topNormal,
-      topNormal,
-      topNormal,
-
-      // Bottom
-      bottomNormal,
-      bottomNormal,
-      bottomNormal,
-      bottomNormal,
-    ];
+    var normalVectors = Block.getNormalVectors();
 
     var vertexData = [];
     var normalData = [];
@@ -191,7 +148,7 @@ class BoardRenderer {
           vertexData.add(rotatedVertex.y);
           vertexData.add(rotatedVertex.z);
 
-          var rotatedNormal = totalCellRotation.rotate(normals[k]);
+          var rotatedNormal = totalCellRotation.rotate(normalVectors[k]);
           normalData.add(rotatedNormal.x);
           normalData.add(rotatedNormal.y);
           normalData.add(rotatedNormal.z);

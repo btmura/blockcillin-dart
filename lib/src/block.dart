@@ -28,6 +28,54 @@ class Block {
 
   toString() => "$color";
 
+  /// Returns a list of vectors specifying the normals.
+  static List<Vector3> getNormalVectors() {
+    var frontNormal = new Vector3(0.0, 0.0, 1.0);
+    var backNormal = new Vector3(0.0, 0.0, -1.0);
+    var leftNormal = new Vector3(-1.0, 0.0, 0.0);
+    var rightNormal = new Vector3(1.0, 0.0, 0.0);
+    var topNormal = new Vector3(0.0, 1.0, 0.0);
+    var bottomNormal = new Vector3(0.0, -1.0, 0.0);
+
+    return [
+      // Front
+      frontNormal,
+      frontNormal,
+      frontNormal,
+      frontNormal,
+
+      // Back
+      backNormal,
+      backNormal,
+      backNormal,
+      backNormal,
+
+      // Left
+      leftNormal,
+      leftNormal,
+      leftNormal,
+      leftNormal,
+
+      // Right
+      rightNormal,
+      rightNormal,
+      rightNormal,
+      rightNormal,
+
+      // Top
+      topNormal,
+      topNormal,
+      topNormal,
+      topNormal,
+
+      // Bottom
+      bottomNormal,
+      bottomNormal,
+      bottomNormal,
+      bottomNormal,
+    ];
+  }
+
   /// Returns a flattened texture coordinate list to draw a block of some color.
   static List<double> getTextureData(BlockColor color) {
     // TODO(btmura): create a Vector2 class
