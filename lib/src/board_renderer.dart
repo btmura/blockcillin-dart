@@ -265,38 +265,13 @@ class BoardRenderer {
   }
 
   List<int> _getIndexData(Board board) {
-    var indexPoints = [
-      // Front
-      0, 1, 2,
-      2, 3, 0,
-
-      // Back
-      4, 5, 6,
-      6, 7, 4,
-
-      // Left
-      8, 9, 10,
-      10, 11, 8,
-
-      // Right
-      12, 13, 14,
-      14, 15, 12,
-
-      // Top
-      16, 17, 18,
-      18, 19, 16,
-
-      // Bottom
-      20, 21, 22,
-      22, 23, 20,
-    ];
-
     var indexData = [];
     for (var i = 0; i < board.numRings; i++) {
       for (var j = 0; j < board.numCells; j++) {
-        for (var k = 0; k < indexPoints.length; k++) {
-          indexData.add((i * 24 * board.numCells) + (j * 24) + indexPoints[k]);
-        }
+        indexData.addAll(Block.indices.map((index) {
+          var offset = (i * board.numCells + j) * Block.numIndices;
+          return offset + index;
+        }));
       }
     }
     return indexData;
