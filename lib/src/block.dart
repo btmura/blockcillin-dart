@@ -28,8 +28,83 @@ class Block {
 
   toString() => "$color";
 
-  /// Returns a list of vectors specifying the normals.
+  /// Returns a list of vectors specifying the block's vertices.
+  static List<Vector3> getVertexVectors(double outerRadius, double innerRadius, double theta) {
+    var outerVector = new Vector3(0.0, 0.0, outerRadius);
+    var innerVector = new Vector3(0.0, 0.0, innerRadius);
+
+    var yAxis = new Vector3(0.0, 1.0, 0.0);
+    var halfSwing = new Quaternion.fromAxisAngle(yAxis, theta / 2);
+    var cellRotation = new Quaternion.fromAxisAngle(yAxis, theta);
+
+    var outerSwingVector = halfSwing.rotate(outerVector);
+    var innerSwingVector = halfSwing.rotate(innerVector);
+
+    var outerX = outerSwingVector.x;
+    var outerY = outerX;
+    var outerZ = outerSwingVector.z;
+
+    var innerX = innerSwingVector.x;
+    var innerY = outerX;
+    var innerZ = innerSwingVector.z;
+
+    var ringTranslation = new Vector3(0.0, -outerX * 2, 0.0);
+
+    var outerUpperRight = new Vector3(outerX, outerY, outerZ);
+    var outerUpperLeft = new Vector3(-outerX, outerY, outerZ);
+
+    var outerBottomLeft = new Vector3(-outerX, -outerY, outerZ);
+    var outerBottomRight = new Vector3(outerX, -outerY, outerZ);
+
+    var innerUpperLeft = new Vector3(-innerX, innerY, innerZ);
+    var innerUpperRight = new Vector3(innerX, innerY, innerZ);
+
+    var innerBottomRight = new Vector3(innerX, -innerY, innerZ);
+    var innerBottomLeft = new Vector3(-innerX, -innerY, innerZ);
+
+    // ur, ccw
+    return [
+      // Front
+      outerUpperRight,
+      outerUpperLeft,
+      outerBottomLeft,
+      outerBottomRight,
+
+      // Back
+      innerUpperLeft,
+      innerUpperRight,
+      innerBottomRight,
+      innerBottomLeft,
+
+      // Left
+      outerUpperLeft,
+      innerUpperLeft,
+      innerBottomLeft,
+      outerBottomLeft,
+
+      // Right
+      innerUpperRight,
+      outerUpperRight,
+      outerBottomRight,
+      innerBottomRight,
+
+      // Top
+      innerUpperRight,
+      innerUpperLeft,
+      outerUpperLeft,
+      outerUpperRight,
+
+      // Bottom
+      outerBottomRight,
+      outerBottomLeft,
+      innerBottomLeft,
+      innerBottomRight,
+    ];
+  }
+
+  /// Returns a list of vectors specifying the block's normals.
   static List<Vector3> getNormalVectors() {
+    // TODO(btmura): fix normals to match shape of block
     var frontNormal = new Vector3(0.0, 0.0, 1.0);
     var backNormal = new Vector3(0.0, 0.0, -1.0);
     var leftNormal = new Vector3(-1.0, 0.0, 0.0);

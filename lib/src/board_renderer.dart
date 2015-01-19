@@ -2,12 +2,6 @@ part of client;
 
 class BoardRenderer {
 
-  /// Number of tiles per row in the single square texture.
-  static const double _numTextureTiles = 8.0;
-
-  /// Relative size of a single texture tile in the larger texture.
-  static const double _textureTileSize = 1.0 / _numTextureTiles;
-
   static const double _startRotationY = 0.0;
   static const double _incrementalRotationY = math.PI / 2.0 / Board.numStartSteps;
 
@@ -26,7 +20,7 @@ class BoardRenderer {
   void init(Board board) {
     var gl = _glProgram.gl;
 
-    var data = _getTextureAndNormalData(board);
+    var data = _getVertexAndNormalData(board);
     _vertexBuffer = createArrayBuffer(gl, data[0]);
     _normalBuffer = createArrayBuffer(gl, data[1]);
 
@@ -50,81 +44,20 @@ class BoardRenderer {
     _indexBuffer = createElementArrayBuffer(gl, _getIndexData(board));
   }
 
-  List<List<double>> _getTextureAndNormalData(Board board) {
+  List<List<double>> _getVertexAndNormalData(Board board) {
+    var yAxis = new Vector3(0.0, 1.0, 0.0);
+    var theta = 2 * math.PI / board.numCells;
+    var cellRotation = new Quaternion.fromAxisAngle(yAxis, theta);
+
     var outerRadius = 1.0;
     var innerRadius = 0.75;
 
     var outerVector = new Vector3(0.0, 0.0, outerRadius);
-    var innerVector = new Vector3(0.0, 0.0, innerRadius);
-
-    var yAxis = new Vector3(0.0, 1.0, 0.0);
-    var halfSwing = new Quaternion.fromAxisAngle(yAxis, math.PI / board.numCells);
-    var cellRotation = new Quaternion.fromAxisAngle(yAxis, 2 * math.PI / board.numCells);
-
+    var halfSwing = new Quaternion.fromAxisAngle(yAxis, theta / 2);
     var outerSwingVector = halfSwing.rotate(outerVector);
-    var innerSwingVector = halfSwing.rotate(innerVector);
+    var ringTranslation = new Vector3(0.0, -outerSwingVector.x * 2, 0.0);
 
-    var outerX = outerSwingVector.x;
-    var outerY = outerX;
-    var outerZ = outerSwingVector.z;
-
-    var innerX = innerSwingVector.x;
-    var innerY = outerX;
-    var innerZ = innerSwingVector.z;
-
-    var ringTranslation = new Vector3(0.0, -outerX * 2, 0.0);
-
-    Vector3 outerUpperRight = new Vector3(outerX, outerY, outerZ);
-    Vector3 outerUpperLeft = new Vector3(-outerX, outerY, outerZ);
-
-    Vector3 outerBottomLeft = new Vector3(-outerX, -outerY, outerZ);
-    Vector3 outerBottomRight = new Vector3(outerX, -outerY, outerZ);
-
-    Vector3 innerUpperLeft = new Vector3(-innerX, innerY, innerZ);
-    Vector3 innerUpperRight = new Vector3(innerX, innerY, innerZ);
-
-    Vector3 innerBottomRight = new Vector3(innerX, -innerY, innerZ);
-    Vector3 innerBottomLeft = new Vector3(-innerX, -innerY, innerZ);
-
-    // ur, ccw
-    var vertices = [
-      // Front
-      outerUpperRight,
-      outerUpperLeft,
-      outerBottomLeft,
-      outerBottomRight,
-
-      // Back
-      innerUpperLeft,
-      innerUpperRight,
-      innerBottomRight,
-      innerBottomLeft,
-
-      // Left
-      outerUpperLeft,
-      innerUpperLeft,
-      innerBottomLeft,
-      outerBottomLeft,
-
-      // Right
-      innerUpperRight,
-      outerUpperRight,
-      outerBottomRight,
-      innerBottomRight,
-
-      // Top
-      innerUpperRight,
-      innerUpperLeft,
-      outerUpperLeft,
-      outerUpperRight,
-
-      // Bottom
-      outerBottomRight,
-      outerBottomLeft,
-      innerBottomLeft,
-      innerBottomRight,
-    ];
-
+    var vertexVectors = Block.getVertexVectors(outerRadius, innerRadius, theta);
     var normalVectors = Block.getNormalVectors();
 
     var vertexData = [];
@@ -138,8 +71,8 @@ class BoardRenderer {
       var totalCellRotation = new Quaternion.fromAxisAngle(yAxis, 0.0);
       for (var j = 0; j < board.numCells; j++) {
         var cell = board.rings[i].cells[j];
-        for (var k = 0; k < vertices.length; k++) {
-          var rotatedVertex = totalCellRotation.rotate(totalRingTranslation + vertices[k]);
+        for (var k = 0; k < vertexVectors.length; k++) {
+          var rotatedVertex = totalCellRotation.rotate(totalRingTranslation + vertexVectors[k]);
           if (cell.block == null) {
             rotatedVertex += emptyTranslation;
           }
