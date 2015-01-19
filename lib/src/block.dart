@@ -3,6 +3,12 @@ part of client;
 /// Block of a certain color.
 class Block {
 
+  /// Number of tiles per row in the single square texture.
+  static const double _numTextureTiles = 8.0;
+
+  /// Relative size of a single texture tile in the larger texture.
+  static const double _textureTileSize = 1.0 / _numTextureTiles;
+
   /// Number of unique indices in a block's index buffer.
   static const numIndices = 24;
 
@@ -22,7 +28,63 @@ class Block {
 
   toString() => "$color";
 
-  /// Returns a list of indices needed to draw the block.
+  /// Returns a flattened texture coordinate list to draw a block of some color.
+  static List<double> getTextureData(BlockColor color) {
+    // TODO(btmura): create a Vector2 class
+    // ul = (0, 0), br = (1, 1)
+    var texturePoints = [
+      // Front
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Back
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Left
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Right
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Top
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+
+      // Bottom
+      new Vector3(1.0, 0.0, 0.0),
+      new Vector3(0.0, 0.0, 0.0),
+      new Vector3(0.0, 1.0, 0.0),
+      new Vector3(1.0, 1.0, 0.0),
+    ];
+
+    var data = [];
+    for (var relPoint in texturePoints) {
+      // Translate the relative point to absolute space.
+      var absPoint = relPoint * _textureTileSize;
+
+      // Move right to change colors relying on the image tiles.
+      absPoint.x += color.index * _textureTileSize;
+
+      data.add(absPoint.x);
+      data.add(absPoint.y);
+    }
+    return data;
+  }
+
+  /// Returns a list of indices to draw the block.
   static List<int> getIndexData() {
     return const [
       // Front

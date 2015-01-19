@@ -205,76 +205,27 @@ class BoardRenderer {
   }
 
   List<double> _getTextureData(Board board) {
-    // ul = (0, 0), br = (1, 1)
-    var texturePoints = [
-      // Front
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Back
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Left
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Right
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Top
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-
-      // Bottom
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
-    ];
-
-    var flattenedPoints = [];
+    var data = [];
     for (var ring in board.rings) {
       for (var cell in ring.cells) {
-        var colorIndex = cell.block != null ? cell.block.color.index : 0;
-        for (var relPoint in texturePoints) {
-
-          // Translate the relative point to absolute space.
-          var absPoint = relPoint * _textureTileSize;
-
-          // Move right to change colors relying on the image tiles.
-          absPoint.x += colorIndex * _textureTileSize;
-
-          flattenedPoints.add(absPoint.x);
-          flattenedPoints.add(absPoint.y);
-        }
+        var color = cell.block != null ? cell.block.color : BlockColor.RED;
+        data.addAll(Block.getTextureData(color));
       }
     }
-    return flattenedPoints;
+    return data;
   }
 
   List<int> _getIndexData(Board board) {
-    var indexData = [];
+    var data = [];
     for (var i = 0; i < board.numRings; i++) {
       for (var j = 0; j < board.numCells; j++) {
-        indexData.addAll(Block.getIndexData().map((index) {
+        data.addAll(Block.getIndexData().map((index) {
           var offset = (i * board.numCells + j) * Block.numIndices;
           return offset + index;
         }));
       }
     }
-    return indexData;
+    return data;
   }
 
   void render(Board board) {
