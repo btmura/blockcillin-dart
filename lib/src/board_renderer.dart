@@ -49,15 +49,12 @@ class BoardRenderer {
     var theta = 2 * math.PI / board.numCells;
     var cellRotation = new Quaternion.fromAxisAngle(yAxis, theta);
 
-    var outerRadius = 1.0;
-    var innerRadius = 0.75;
-
-    var outerVector = new Vector3(0.0, 0.0, outerRadius);
+    var outerVector = new Vector3(0.0, 0.0, board.outerRadius);
     var halfSwing = new Quaternion.fromAxisAngle(yAxis, theta / 2);
     var outerSwingVector = halfSwing.rotate(outerVector);
     var ringTranslation = new Vector3(0.0, -outerSwingVector.x * 2, 0.0);
 
-    var vertexVectors = Block.getVertexVectors(outerRadius, innerRadius, theta);
+    var vertexVectors = Block.getVertexVectors(board.outerRadius, board.innerRadius, theta);
     var normalVectors = Block.getNormalVectors();
 
     var vertexData = [];

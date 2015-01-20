@@ -2,14 +2,27 @@ part of client;
 
 class Board {
 
+  /// Outer radius of the cylinder.
+  static const double _outerRadius = 1.0;
+
+  /// Inner radius of the cylinder.
+  static const double _innerRadius = 0.75;
+
   static const double _emptyRatio = 0.5;
 
   static const int numStartSteps = 50;
 
   final List<Ring> rings;
+
   final int numRings;
+
   final int numCells;
+
   final int numBlockColors;
+
+  final double outerRadius = _outerRadius;
+
+  final double innerRadius = _innerRadius;
 
   int step = 0;
 
