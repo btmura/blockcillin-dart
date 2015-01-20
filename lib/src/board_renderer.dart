@@ -2,12 +2,6 @@ part of client;
 
 class BoardRenderer {
 
-  static const double _startRotationY = 0.0;
-  static const double _incrementalRotationY = math.PI / 2.0 / Board.numStartSteps;
-
-  static const double _startTranslationY = -1.0;
-  static const double _incrementalTranslationY = 1.0 / Board.numStartSteps;
-
   final GLProgram _glProgram;
 
   webgl.Buffer _vertexBuffer;
@@ -116,11 +110,8 @@ class BoardRenderer {
   }
 
   void render(Board board) {
-    var rotationY = _startRotationY + _incrementalRotationY * board.step;
-    var translationY = _startTranslationY + _incrementalTranslationY * board.step;
-
-    var rotationMatrix = new Matrix4.rotation(0.0, rotationY, 0.0);
-    var translationMatrix = new Matrix4.translation(0.0, translationY, 0.0);
+    var rotationMatrix = new Matrix4.rotation(0.0, board.rotationY, 0.0);
+    var translationMatrix = new Matrix4.translation(0.0, board.translationY, 0.0);
 
     _glProgram.gl
       ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, rotationMatrix.floatList)

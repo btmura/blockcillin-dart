@@ -2,6 +2,10 @@ part of client;
 
 class Board {
 
+  static const int numStartSteps = 50;
+
+  static const int numEndSteps = 200;
+
   /// Outer radius of the cylinder.
   static const double _outerRadius = 1.0;
 
@@ -10,7 +14,13 @@ class Board {
 
   static const double _emptyRatio = 0.5;
 
-  static const int numStartSteps = 50;
+  static const double _startRotationY = 0.0;
+
+  static const double _incrementalRotationY = math.PI / 2.0 / Board.numStartSteps;
+
+  static const double _startTranslationY = -1.0;
+
+  static const double _incrementalTranslationY = 1.0 / Board.numStartSteps;
 
   final List<Ring> rings;
 
@@ -23,6 +33,10 @@ class Board {
   final double outerRadius = _outerRadius;
 
   final double innerRadius = _innerRadius;
+
+  bool _ending = false;
+
+  bool done = false;
 
   int step = 0;
 
@@ -48,8 +62,23 @@ class Board {
   }
 
   void update() {
-    if (step < numStartSteps) {
+    if (step < numStartSteps || _ending && step < numEndSteps) {
       step++;
     }
+    if (_ending && step == numEndSteps) {
+      done = true;
+    }
+  }
+
+  double get rotationY {
+    return _startRotationY + _incrementalRotationY * step;
+  }
+
+  double get translationY {
+    return _startTranslationY + _incrementalTranslationY * step;
+  }
+
+  void end() {
+    _ending = true;
   }
 }

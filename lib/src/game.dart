@@ -17,10 +17,11 @@ class Game {
 
   void update() {
     board.update();
+    done = board.done;
   }
 
   /// Signals to the game that it should start it's ending sequence.
   void end() {
-    done = true;
+    board.end();
   }
 }
