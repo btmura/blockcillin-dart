@@ -74,7 +74,7 @@ class AppController {
         appView.mainMenu.continueButtonVisible = false;
         appView.mainMenu.hide();
         appView.gameView.buttonBar.show();
-        appView.gameView.draw(app._game);
+        appView.gameView.draw(app.game);
         window.animationFrame.then(_update);
         break;
 

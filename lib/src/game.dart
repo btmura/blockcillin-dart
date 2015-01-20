@@ -4,6 +4,8 @@ class Game {
 
   final Board board;
 
+  bool hasUpdates = true;
+
   Game(this.board);
 
   factory Game.withRandomBoard(int numRings, int numCells, int numBlockColors) {
@@ -13,5 +15,9 @@ class Game {
 
   void update() {
     board.update();
+  }
+
+  void end() {
+    hasUpdates = false;
   }
 }

@@ -6,18 +6,35 @@ class App {
   /// State of the app.
   AppState state = AppState.INITIAL;
 
-  Game _game;
+  /// Queue of games to be played. First element is the current game.
+  List<Game> _games = [];
 
-  /// Starts a new game replacing the old one if it exists.
+  /// Current game being played.
+  Game get game => _games.first;
+
+  /// Starts a new game after ending the current game.
   void startGame(Game newGame) {
     state = AppState.PLAYING;
-    _game = newGame;
+
+    // End the current game if it exists.
+    if (_games.isNotEmpty) {
+      _games.first.end();
+    }
+
+    // Queue the new game.
+    _games.add(newGame);
   }
 
   /// Updates the app. Call this 1 or more times per game loop iteration.
   void update() {
-    if (_game != null) {
-      _game.update();
+    // Remove the current game if it no longer can be updated (ending animation is done).
+    if (_games.isNotEmpty && !_games.first.hasUpdates) {
+      _games.removeAt(0);
+    }
+
+    // Update the current game if it exists.
+    if (_games.isNotEmpty) {
+      _games.first.update();
     }
   }
 }
