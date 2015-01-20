@@ -40,20 +40,26 @@ class AppController {
           }
         });
 
-    appView.onContinueGameButtonClick.listen((_) {
-      app.state = AppState.PLAYING;
+    appView.onNewGameButtonClick.listen((_) {
+      var game = new Game.withRandomBoard(10, 24, BlockColor.values.length);
+      if (app.startGame(game)) {
+        appView.init(game);
+      }
       _update();
     });
 
-    appView.onNewGameButtonClick.listen((_) {
-      var game = new Game.withRandomBoard(10, 24, BlockColor.values.length);
-      app.startGame(game);
+    app.onNextGameStarted.listen((game) {
       appView.init(game);
       _update();
     });
 
     appView.onPauseButtonClick.listen((_) {
       app.state = AppState.PAUSED;
+      _update();
+    });
+
+    appView.onContinueGameButtonClick.listen((_) {
+      app.state = AppState.PLAYING;
       _update();
     });
   }
@@ -74,7 +80,7 @@ class AppController {
         appView.mainMenu.continueButtonVisible = false;
         appView.mainMenu.hide();
         appView.gameView.buttonBar.show();
-        appView.gameView.draw(app.game);
+        appView.gameView.draw(app.currentGame);
         window.animationFrame.then(_update);
         break;
 

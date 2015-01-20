@@ -2,9 +2,11 @@ part of client;
 
 class Game {
 
+  /// Board with the blocks.
   final Board board;
 
-  bool hasUpdates = true;
+  /// Done meaning the game has finished its ending sequence.
+  bool done = false;
 
   Game(this.board);
 
@@ -17,7 +19,8 @@ class Game {
     board.update();
   }
 
+  /// Signals to the game that it should start it's ending sequence.
   void end() {
-    hasUpdates = false;
+    done = true;
   }
 }

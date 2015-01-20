@@ -6,35 +6,53 @@ class App {
   /// State of the app.
   AppState state = AppState.INITIAL;
 
-  /// Queue of games to be played. First element is the current game.
-  List<Game> _games = [];
+  /// Current game being played or ending. Null only once at the start.
+  Game _currentGame;
+
+  /// Next game queued to become the current game. Often null.
+  Game _nextGame;
+
+  /// StreamController that emits the next game when it becomes the current game.
+  StreamController<Game> _nextGameController = new StreamController();
 
   /// Current game being played.
-  Game get game => _games.first;
+  Game get currentGame => _currentGame;
 
-  /// Starts a new game after ending the current game.
-  void startGame(Game newGame) {
+  /// Stream that broadcasts when the next game has become the current game.
+  Stream<Game> get onNextGameStarted => _nextGameController.stream;
+
+  /// Starts a new game and returns true if the game will be started immediately.
+  bool startGame(Game newGame) {
     state = AppState.PLAYING;
 
-    // End the current game if it exists.
-    if (_games.isNotEmpty) {
-      _games.first.end();
+    // Make the new game the current one if there is no current game.
+    if (_currentGame == null) {
+      _currentGame = newGame;
+      return true;
     }
 
-    // Queue the new game.
-    _games.add(newGame);
+    // Start ending the current game and queue up the next game.
+    _currentGame.end();
+    _nextGame = newGame;
+    return false;
   }
 
   /// Updates the app. Call this 1 or more times per game loop iteration.
   void update() {
-    // Remove the current game if it no longer can be updated (ending animation is done).
-    if (_games.isNotEmpty && !_games.first.hasUpdates) {
-      _games.removeAt(0);
+    // Switch to the next game if the current game is done (ending sequence finished).
+    if (_currentGame != null && _currentGame.done) {
+      _currentGame = _nextGame;
+      _nextGame = null;
+
+      // Broadcast that the next game has become the current game.
+      if (_currentGame != null && !_nextGameController.isPaused) {
+        _nextGameController.add(_currentGame);
+      }
     }
 
-    // Update the current game if it exists.
-    if (_games.isNotEmpty) {
-      _games.first.update();
+    // Update the current game if there is one.
+    if (_currentGame != null) {
+      _currentGame.update();
     }
   }
 }
