@@ -4,8 +4,8 @@ class BoardRenderer {
 
   final GLProgram _glProgram;
 
-  webgl.Buffer _vertexBuffer;
-  webgl.Buffer _vertexOffsetBuffer;
+  webgl.Buffer _positionBuffer;
+  webgl.Buffer _positionOffsetBuffer;
   webgl.Buffer _normalBuffer;
   webgl.Buffer _textureBuffer;
   webgl.Buffer _indexBuffer;
@@ -16,8 +16,8 @@ class BoardRenderer {
     var gl = _glProgram.gl;
 
     var data = _getVertexAndNormalData(board);
-    _vertexBuffer = createArrayBuffer(gl, data[0]);
-    _vertexOffsetBuffer = createArrayBuffer(gl, data[1]);
+    _positionBuffer = createArrayBuffer(gl, data[0]);
+    _positionOffsetBuffer = createArrayBuffer(gl, data[1]);
     _normalBuffer = createArrayBuffer(gl, data[2]);
 
     var texture = gl.createTexture();
@@ -53,8 +53,8 @@ class BoardRenderer {
     var vertexVectors = Block.getVertexVectors(board.outerRadius, board.innerRadius, theta);
     var normalVectors = Block.getNormalVectors();
 
-    var vertexData = [];
-    var vertexOffsetData = [];
+    var positionData = [];
+    var positionOffsetData = [];
     var normalData = [];
 
     // Vector to translate cells out of the scene to make them appear empty.
@@ -71,13 +71,13 @@ class BoardRenderer {
             rotatedVertex += emptyTranslation;
           }
 
-          vertexData.add(rotatedVertex.x);
-          vertexData.add(rotatedVertex.y);
-          vertexData.add(rotatedVertex.z);
+          positionData.add(rotatedVertex.x);
+          positionData.add(rotatedVertex.y);
+          positionData.add(rotatedVertex.z);
 
-          vertexOffsetData.add(0.0);
-          vertexOffsetData.add(0.0);
-          vertexOffsetData.add(0.0);
+          positionOffsetData.add(cell.positionOffset.x);
+          positionOffsetData.add(cell.positionOffset.y);
+          positionOffsetData.add(cell.positionOffset.z);
 
           var rotatedNormal = totalCellRotation.rotate(normalVectors[k]);
           normalData.add(rotatedNormal.x);
@@ -89,7 +89,7 @@ class BoardRenderer {
       totalRingTranslation += ringTranslation;
     }
 
-    return [vertexData, vertexOffsetData, normalData];
+    return [positionData, positionOffsetData, normalData];
   }
 
   List<double> _getTextureData(Board board) {
@@ -125,12 +125,12 @@ class BoardRenderer {
       ..uniformMatrix4fv(_glProgram.boardTranslationMatrixLocation, false, translationMatrix.floatList);
 
     _glProgram.gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
+      ..bindBuffer(webgl.ARRAY_BUFFER, _positionBuffer)
       ..enableVertexAttribArray(_glProgram.positionLocation)
       ..vertexAttribPointer(_glProgram.positionLocation, 3, webgl.FLOAT, false, 0, 0);
 
     _glProgram.gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, _vertexOffsetBuffer)
+      ..bindBuffer(webgl.ARRAY_BUFFER, _positionOffsetBuffer)
       ..enableVertexAttribArray(_glProgram.positionOffsetLocation)
       ..vertexAttribPointer(_glProgram.positionOffsetLocation, 3, webgl.FLOAT, false, 0, 0);
 
