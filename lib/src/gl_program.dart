@@ -10,6 +10,7 @@ class GLProgram {
   final webgl.UniformLocation boardRotationMatrixLocation;
   final webgl.UniformLocation boardTranslationMatrixLocation;
   final int positionLocation;
+  final int positionOffsetLocation;
   final int normalLocation;
   final int textureCoordLocation;
 
@@ -26,7 +27,8 @@ class GLProgram {
       uniform mat4 u_boardRotationMatrix;
       uniform mat4 u_boardTranslationMatrix;
 
-      attribute vec4 a_position;
+      attribute vec3 a_position;
+      attribute vec3 a_positionOffset;
       attribute vec3 a_normal;
       attribute vec2 a_textureCoord;
 
@@ -35,11 +37,18 @@ class GLProgram {
       varying vec3 v_lighting;
 
       void main(void) {
-        gl_Position = u_projectionMatrix * u_viewMatrix * u_boardRotationMatrix * u_boardTranslationMatrix * a_position;
+        vec4 position = vec4(a_position + a_positionOffset, 1.0);
+
+        gl_Position = u_projectionMatrix
+            * u_viewMatrix
+            * u_boardRotationMatrix
+            * u_boardTranslationMatrix
+            * position;
+
         v_textureCoord = a_textureCoord;
 
-        // TODO(btmura): use inform to specify step thresholds
-        v_blackAmount = 1.0 - smoothstep(-2.0, 0.0, a_position.y);
+        // TODO(btmura): use uniform to specify step thresholds
+        v_blackAmount = 1.0 - smoothstep(-2.0, 0.0, position.y);
 
         vec4 transformedNormal = u_normalMatrix * u_boardRotationMatrix * u_boardTranslationMatrix * vec4(a_normal, 1.0);
         float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
@@ -101,6 +110,11 @@ class GLProgram {
       throw new StateError("a_position not found");
     }
 
+    var positionOffsetLocation = gl.getAttribLocation(program, "a_positionOffset");
+    if (positionOffsetLocation == -1) {
+      throw new StateError("a_positionOffset not found");
+    }
+
     var normalLocation = gl.getAttribLocation(program, "a_normal");
     if (normalLocation == -1) {
       throw new StateError("a_normal not found");
@@ -111,8 +125,30 @@ class GLProgram {
       throw new StateError("a_textureCoord not found");
     }
 
-    return new GLProgram._(gl, program, projectionMatrixLocation, viewMatrixLocation, normalMatrixLocation, boardRotationMatrixLocation, boardTranslationMatrixLocation, positionLocation, normalLocation, textureCoordLocation);
+    return new GLProgram._(
+        gl,
+        program,
+        projectionMatrixLocation,
+        viewMatrixLocation,
+        normalMatrixLocation,
+        boardRotationMatrixLocation,
+        boardTranslationMatrixLocation,
+        positionLocation,
+        positionOffsetLocation,
+        normalLocation,
+        textureCoordLocation);
   }
 
-  GLProgram._(this.gl, this.program, this.projectionMatrixLocation, this.viewMatrixLocation, this.normalMatrixLocation, this.boardRotationMatrixLocation, this.boardTranslationMatrixLocation, this.positionLocation, this.normalLocation, this.textureCoordLocation);
+  GLProgram._(
+      this.gl,
+      this.program,
+      this.projectionMatrixLocation,
+      this.viewMatrixLocation,
+      this.normalMatrixLocation,
+      this.boardRotationMatrixLocation,
+      this.boardTranslationMatrixLocation,
+      this.positionLocation,
+      this.positionOffsetLocation,
+      this.normalLocation,
+      this.textureCoordLocation);
 }

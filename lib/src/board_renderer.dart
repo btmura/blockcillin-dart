@@ -5,6 +5,7 @@ class BoardRenderer {
   final GLProgram _glProgram;
 
   webgl.Buffer _vertexBuffer;
+  webgl.Buffer _vertexOffsetBuffer;
   webgl.Buffer _normalBuffer;
   webgl.Buffer _textureBuffer;
   webgl.Buffer _indexBuffer;
@@ -16,7 +17,8 @@ class BoardRenderer {
 
     var data = _getVertexAndNormalData(board);
     _vertexBuffer = createArrayBuffer(gl, data[0]);
-    _normalBuffer = createArrayBuffer(gl, data[1]);
+    _vertexOffsetBuffer = createArrayBuffer(gl, data[1]);
+    _normalBuffer = createArrayBuffer(gl, data[2]);
 
     var texture = gl.createTexture();
     var green = [0, 255, 0, 255];
@@ -52,6 +54,7 @@ class BoardRenderer {
     var normalVectors = Block.getNormalVectors();
 
     var vertexData = [];
+    var vertexOffsetData = [];
     var normalData = [];
 
     // Vector to translate cells out of the scene to make them appear empty.
@@ -72,6 +75,10 @@ class BoardRenderer {
           vertexData.add(rotatedVertex.y);
           vertexData.add(rotatedVertex.z);
 
+          vertexOffsetData.add(0.0);
+          vertexOffsetData.add(0.0);
+          vertexOffsetData.add(0.0);
+
           var rotatedNormal = totalCellRotation.rotate(normalVectors[k]);
           normalData.add(rotatedNormal.x);
           normalData.add(rotatedNormal.y);
@@ -82,7 +89,7 @@ class BoardRenderer {
       totalRingTranslation += ringTranslation;
     }
 
-    return [vertexData, normalData];
+    return [vertexData, vertexOffsetData, normalData];
   }
 
   List<double> _getTextureData(Board board) {
@@ -121,6 +128,11 @@ class BoardRenderer {
       ..bindBuffer(webgl.ARRAY_BUFFER, _vertexBuffer)
       ..enableVertexAttribArray(_glProgram.positionLocation)
       ..vertexAttribPointer(_glProgram.positionLocation, 3, webgl.FLOAT, false, 0, 0);
+
+    _glProgram.gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, _vertexOffsetBuffer)
+      ..enableVertexAttribArray(_glProgram.positionOffsetLocation)
+      ..vertexAttribPointer(_glProgram.positionOffsetLocation, 3, webgl.FLOAT, false, 0, 0);
 
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _normalBuffer)
