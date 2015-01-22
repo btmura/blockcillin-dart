@@ -124,6 +124,31 @@ class BoardRenderer {
       ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, rotationMatrix.floatList)
       ..uniformMatrix4fv(_glProgram.boardTranslationMatrixLocation, false, translationMatrix.floatList);
 
+    for (var r = 0; r < board.rings.length; r++) {
+      var ring = board.rings[r];
+      for (var c = 0; c < ring.cells.length; c++) {
+        var cell = ring.cells[c];
+        if (cell.positionOffsetChanged) {
+          var offset = (r * board.numCells + c) * 24 * 3;
+          var newData = new List.generate(24, (i) {
+            switch (i % 3) {
+              case 0:
+                return cell.positionOffset.x;
+
+              case 1:
+                return cell.positionOffset.y;
+
+              case 2:
+                return cell.positionOffset.z;
+            }
+          });
+          _glProgram.gl
+            ..bindBuffer(webgl.ARRAY_BUFFER, _positionOffsetBuffer)
+            ..bufferSubData(webgl.ARRAY_BUFFER, offset, new Float32List.fromList(newData));
+        }
+      }
+    }
+
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _positionBuffer)
       ..enableVertexAttribArray(_glProgram.positionLocation)

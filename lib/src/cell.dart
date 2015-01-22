@@ -8,6 +8,8 @@ class Cell {
   /// Position offset that should be added to the position to get the absolute position.
   Vector3 positionOffset = new Vector3(0.0, 0.0, 0.0);
 
+  bool positionOffsetChanged = false;
+
   /// Creates a cell with a block of random color in it. Never empty.
   factory Cell.withRandomBlock([int seed]) {
     return new Cell(new Block.withRandomColor(seed));

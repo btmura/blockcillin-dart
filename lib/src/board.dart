@@ -65,8 +65,18 @@ class Board {
     if (step < numStartSteps || _ending && step < numEndSteps) {
       step++;
     }
-    if (_ending && step == numEndSteps) {
-      done = true;
+    if (_ending) {
+      if (step < numEndSteps) {
+        for (var ring in rings) {
+          for (var cell in ring.cells) {
+            cell.positionOffset.y += 0.01;
+            cell.positionOffsetChanged = true;
+          }
+        }
+      }
+      if (step == numEndSteps) {
+        done = true;
+      }
     }
   }
 
