@@ -7,7 +7,7 @@ _vector3_tests() {
       expect(v.x, equals(1.0));
       expect(v.y, equals(2.0));
       expect(v.z, equals(3.0));
-      expect(v.storage, equals(new Float32List.fromList([1.0, 2.0, 3.0])));
+      expect(v.floatList, equals(new Float32List.fromList([1.0, 2.0, 3.0])));
     });
 
     test("Vector3.length", () {

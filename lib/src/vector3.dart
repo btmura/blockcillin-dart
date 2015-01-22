@@ -1,29 +1,31 @@
 part of client;
 
+/// A vector with 3 components: x, y, and z.
 class Vector3 {
 
-  final Float32List storage;
+  /// Float list containing x, y, and z.
+  final Float32List floatList;
 
-  Vector3(double x, double y, double z) : storage = new Float32List(3) {
-    storage[0] = x;
-    storage[1] = y;
-    storage[2] = z;
+  Vector3(double x, double y, double z) : floatList = new Float32List(3) {
+    floatList[0] = x;
+    floatList[1] = y;
+    floatList[2] = z;
   }
 
-  double get x => storage[0];
-  double get y => storage[1];
-  double get z => storage[2];
+  double get x => floatList[0];
+  double get y => floatList[1];
+  double get z => floatList[2];
 
   void set x(x) {
-    storage[0] = x;
+    floatList[0] = x;
   }
 
   void set y(y) {
-    storage[1] = y;
+    floatList[1] = y;
   }
 
   void set z(z) {
-    storage[2] = z;
+    floatList[2] = z;
   }
 
   double get length => math.sqrt(x * x + y * y + z * z);
