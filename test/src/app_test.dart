@@ -24,6 +24,7 @@ _app_tests() {
       mockGame.calls("update").verify(neverHappened);
 
       app.startGame(mockGame);
+      mockGame.when(callsTo("get done")).thenReturn(false);
       app.update();
       mockGame.calls("update").verify(happenedOnce);
     });
