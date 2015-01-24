@@ -153,44 +153,43 @@ class Block {
 
   /// Returns a flattened texture coordinate list to draw a block of some color.
   static List<double> getTextureData(BlockColor color) {
-    // TODO(btmura): create a Vector2 class
     // ul = (0, 0), br = (1, 1)
     var texturePoints = [
       // Front
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
+      new Vector2(1.0, 0.0),
+      new Vector2(0.0, 0.0),
+      new Vector2(0.0, 1.0),
+      new Vector2(1.0, 1.0),
 
       // Back
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
+      new Vector2(1.0, 0.0),
+      new Vector2(0.0, 0.0),
+      new Vector2(0.0, 1.0),
+      new Vector2(1.0, 1.0),
 
       // Left
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
+      new Vector2(1.0, 0.0),
+      new Vector2(0.0, 0.0),
+      new Vector2(0.0, 1.0),
+      new Vector2(1.0, 1.0),
 
       // Right
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
+      new Vector2(1.0, 0.0),
+      new Vector2(0.0, 0.0),
+      new Vector2(0.0, 1.0),
+      new Vector2(1.0, 1.0),
 
       // Top
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
+      new Vector2(1.0, 0.0),
+      new Vector2(0.0, 0.0),
+      new Vector2(0.0, 1.0),
+      new Vector2(1.0, 1.0),
 
       // Bottom
-      new Vector3(1.0, 0.0, 0.0),
-      new Vector3(0.0, 0.0, 0.0),
-      new Vector3(0.0, 1.0, 0.0),
-      new Vector3(1.0, 1.0, 0.0),
+      new Vector2(1.0, 0.0),
+      new Vector2(0.0, 0.0),
+      new Vector2(0.0, 1.0),
+      new Vector2(1.0, 1.0),
     ];
 
     var data = [];

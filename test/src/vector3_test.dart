@@ -56,5 +56,10 @@ _vector3_tests() {
       expect(v.y, inInclusiveRange(0.5773, 0.5774), reason: "y");
       expect(v.z, inInclusiveRange(0.5773, 0.5774), reason: "z");
     });
+
+    test("Vector3.toString", () {
+      var v = new Vector3(1.0, 2.0, 3.0);
+      expect(v.toString(), equals("(1.0, 2.0, 3.0)"));
+    });
   });
 }

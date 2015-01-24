@@ -25,6 +25,7 @@ part 'src/main_menu_test.dart';
 part 'src/mocks.dart';
 part 'src/quaternion_test.dart';
 part 'src/ring_test.dart';
+part 'src/vector2_test.dart';
 part 'src/vector3_test.dart';
 
 void main() {
@@ -44,5 +45,6 @@ void main() {
   _main_menu_tests();
   _quaternion_tests();
   _ring_tests();
+  _vector2_tests();
   _vector3_tests();
 }

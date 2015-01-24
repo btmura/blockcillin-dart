@@ -1,30 +1,36 @@
 part of client;
 
-/// A vector with 3 components: x, y, and z.
+/// A vector with x, y, and z components.
 class Vector3 {
 
-  /// Float list containing x, y, and z.
+  /// Float list with x, y, and z.
   final Float32List floatList;
 
+  /// Constructs a vector from x, y, and z values.
   Vector3(double x, double y, double z) : floatList = new Float32List(3) {
     floatList[0] = x;
     floatList[1] = y;
     floatList[2] = z;
   }
 
+  /// x component of the vector.
   double get x => floatList[0];
+
+  /// y component of the vector.
   double get y => floatList[1];
+
+  /// z component of the vector.
   double get z => floatList[2];
 
-  void set x(x) {
+  void set x(double x) {
     floatList[0] = x;
   }
 
-  void set y(y) {
+  void set y(double y) {
     floatList[1] = y;
   }
 
-  void set z(z) {
+  void set z(double z) {
     floatList[2] = z;
   }
 
@@ -38,6 +44,7 @@ class Vector3 {
     return new Vector3(x - o.x, y - o.y, z - o.z);
   }
 
+  /// Multiplies the vector by a scalar. Returns a new Vector3 instance.
   Vector3 operator *(double scalar) {
     return new Vector3(x * scalar, y * scalar, z * scalar);
   }
