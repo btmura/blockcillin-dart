@@ -58,14 +58,18 @@ class App {
 }
 
 /// State that the app can be in.
-enum AppState {
+class AppState {
 
   /// No game has ever been started. States never go back to this.
-  INITIAL,
+  static const AppState INITIAL = const AppState._(0);
 
   /// Game has been started. Can only go to PAUSED.
-  PLAYING,
+  static const AppState PLAYING = const AppState._(1);
 
   /// Game has been paused. Can only goto to PLAYING.
-  PAUSED
+  static const AppState PAUSED = const AppState._(2);
+
+  final int index;
+
+  const AppState._(this.index);
 }

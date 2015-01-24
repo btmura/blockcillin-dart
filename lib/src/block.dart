@@ -236,11 +236,31 @@ class Block {
   }
 }
 
-enum BlockColor {
-  RED,
-  GREEN,
-  CYAN,
-  PURPLE,
-  YELLOW,
-  BLUE,
+/// Color of a block.
+class BlockColor {
+
+  static const BlockColor RED = const BlockColor._(0);
+
+  static const BlockColor GREEN = const BlockColor._(1);
+
+  static const BlockColor CYAN = const BlockColor._(2);
+
+  static const BlockColor PURPLE = const BlockColor._(3);
+
+  static const BlockColor YELLOW = const BlockColor._(4);
+
+  static const BlockColor BLUE = const BlockColor._(5);
+
+  static const List<BlockColor> values = const [
+    RED,
+    GREEN,
+    CYAN,
+    PURPLE,
+    YELLOW,
+    BLUE
+  ];
+
+  final int index;
+
+  const BlockColor._(this.index);
 }
