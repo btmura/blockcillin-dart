@@ -129,8 +129,8 @@ class BoardRenderer {
       for (var c = 0; c < ring.cells.length; c++) {
         var cell = ring.cells[c];
         if (cell.positionOffsetChanged) {
-          var offset = (r * board.numCells + c) * 24 * 3;
-          var newData = new List.generate(24, (i) {
+          var offset = (r * board.numCells + c) * 24 * 3 * 4;
+          var newData = new List.generate(24 * 3, (i) {
             switch (i % 3) {
               case 0:
                 return cell.positionOffset.x;
