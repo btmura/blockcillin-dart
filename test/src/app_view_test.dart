@@ -19,11 +19,3 @@ _app_view_tests() {
     });
   });
 }
-
-class MockMainMenu extends Mock implements MainMenu {
-  noSuchMethod(Invocation invocation) {}
-}
-
-class MockGameView extends Mock implements GameView {
-  noSuchMethod(Invocation invocation) {}
-}

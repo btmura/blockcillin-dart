@@ -21,12 +21,12 @@ _app_tests() {
 
     test("App.update", () {
       app.update();
-      mockGame.calls("update").verify(neverHappened);
+      verify(mockGame.update()).never();
 
       app.startGame(mockGame);
-      mockGame.when(callsTo("get done")).thenReturn(false);
+      when(mockGame.done).thenReturn(false);
       app.update();
-      mockGame.calls("update").verify(happenedOnce);
+      verify(mockGame.update()).times(1);
     });
   });
 }

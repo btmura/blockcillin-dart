@@ -4,7 +4,7 @@ import 'dart:html';
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:web_gl' as webgl;
-import 'package:mock/mock.dart';
+import 'package:typed_mock/typed_mock.dart';
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 
