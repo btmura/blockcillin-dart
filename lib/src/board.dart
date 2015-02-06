@@ -2,10 +2,6 @@ part of client;
 
 class Board {
 
-  static const int numStartSteps = 50;
-
-  static const int numEndSteps = 200;
-
   /// Outer radius of the cylinder.
   static const double _outerRadius = 1.0;
 
@@ -14,34 +10,26 @@ class Board {
 
   static const double _emptyRatio = 0.5;
 
-  static const double _startRotationY = 0.0;
-
-  static const double _incrementalRotationY = math.PI / 2.0 / Board.numStartSteps;
-
-  static const double _startTranslationY = -1.0;
-
-  static const double _incrementalTranslationY = 1.0 / Board.numStartSteps;
-
   final List<Ring> rings;
 
   final int numRings;
-
   final int numCells;
-
   final int numBlockColors;
 
   final double outerRadius = _outerRadius;
-
   final double innerRadius = _innerRadius;
 
-  bool _ending = false;
+  final List<State> _stateQueue = [];
 
   bool done = false;
 
-  int step = 0;
+  double _rotationY;
+  double _translationY;
 
   // TODO(btmura): change num of block colors to set of block colors
-  Board(this.rings, this.numRings, this.numCells, this.numBlockColors);
+  Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
+    _stateQueue.add(_newStartingGameState());
+  }
 
   factory Board.withRandomRings(int numRings, int numCells, int numBlockColors) {
     var random = new math.Random();
@@ -61,34 +49,60 @@ class Board {
     return new Board(rings, numRings, numCells, numBlockColors);
   }
 
-  void update() {
-    if (step < numStartSteps || _ending && step < numEndSteps) {
-      step++;
-    }
-    if (_ending) {
-      if (step < numEndSteps) {
-        for (var ring in rings) {
-          for (var cell in ring.cells) {
-            cell.positionOffset.y += 0.01;
-            cell.positionOffsetChanged = true;
-          }
-        }
-      }
-      if (step == numEndSteps) {
-        done = true;
-      }
-    }
-  }
-
   double get rotationY {
-    return _startRotationY + _incrementalRotationY * step;
+    return _rotationY;
   }
 
   double get translationY {
-    return _startTranslationY + _incrementalTranslationY * step;
+    return _translationY;
+  }
+
+  void update() {
+    if (_stateQueue.isNotEmpty) {
+      if (_stateQueue.first.call()) {
+        _stateQueue.removeAt(0);
+      }
+    }
   }
 
   void end() {
-    _ending = true;
+    _stateQueue.add(_newEndingGameState());
+  }
+
+  State _newStartingGameState() {
+    const int numSteps = 50;
+    const double deltaRotationY = math.PI / 2.0 / numSteps;
+    const double deltaTranslationY = 1.0 / numSteps;
+
+    int step = 0;
+
+    return () {
+      if (step == 0) {
+        _rotationY = 0.0;
+        _translationY = -1.0;
+      } else {
+        _rotationY += deltaRotationY;
+        _translationY += deltaTranslationY;
+      }
+      return ++step == numSteps;
+    };
+  }
+
+  State _newEndingGameState() {
+    const int numSteps = 150;
+
+    int step = 0;
+
+    return () {
+      for (var ring in rings) {
+        for (var cell in ring.cells) {
+          cell.positionOffset.y += 0.01;
+          cell.positionOffsetChanged = true;
+        }
+      }
+
+      done = ++step == numSteps;
+      return done;
+    };
   }
 }

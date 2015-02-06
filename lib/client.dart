@@ -23,6 +23,7 @@ part 'src/main_menu.dart';
 part 'src/matrix4.dart';
 part 'src/quaternion.dart';
 part 'src/ring.dart';
+part 'src/state.dart';
 part 'src/vector2.dart';
 part 'src/vector3.dart';
 
