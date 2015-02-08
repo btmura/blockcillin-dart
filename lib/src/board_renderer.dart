@@ -26,6 +26,7 @@ class BoardRenderer {
       ..bindTexture(webgl.TEXTURE_2D, texture)
       ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, 1, 1, 0, webgl.RGBA, webgl.UNSIGNED_BYTE, new Uint8List.fromList(green));
 
+    // TODO(btmura): don't allow game to be started until texture is ready
     var image = new ImageElement(src: "packages/blockcillin/texture.png");
     image.onLoad.listen((_) {
       gl
