@@ -37,12 +37,12 @@ class GLProgram {
       varying vec3 v_lighting;
 
       void main(void) {
-        vec4 position = vec4(a_position + a_positionOffset, 1.0);
+        vec4 position = u_boardRotationMatrix
+            * u_boardTranslationMatrix
+            * vec4(a_position + a_positionOffset, 1.0);
 
         gl_Position = u_projectionMatrix
             * u_viewMatrix
-            * u_boardRotationMatrix
-            * u_boardTranslationMatrix
             * position;
 
         v_textureCoord = a_textureCoord;
@@ -50,8 +50,8 @@ class GLProgram {
         // TODO(btmura): use uniform to specify step thresholds
         v_blackAmount = 1.0 - smoothstep(-2.0, 0.0, position.y);
 
-        vec4 transformedNormal = u_normalMatrix * u_boardRotationMatrix * u_boardTranslationMatrix * vec4(a_normal, 1.0);
-        float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+        vec4 transformedNormal = u_normalMatrix * vec4(a_normal, 1.0);
+        float directional = max(dot(transformedNormal.xyz, directionalVector), 1.0);
         v_lighting = ambientLight * (directionalLightColor * directional);
       }
     ''';
