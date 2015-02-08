@@ -51,7 +51,7 @@ class BoardRenderer {
     var ringTranslation = new Vector3(0.0, -outerSwingVector.x * 2, 0.0);
 
     var vertexVectors = Block.getVertexVectors(board.outerRadius, board.innerRadius, theta);
-    var normalVectors = Block.getNormalVectors();
+    var normalVectors = Block.getNormalVectors(theta);
 
     var positionData = [];
     var positionOffsetData = [];

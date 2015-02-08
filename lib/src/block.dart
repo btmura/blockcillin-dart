@@ -103,12 +103,20 @@ class Block {
   }
 
   /// Returns a list of vectors specifying the block's normals.
-  static List<Vector3> getNormalVectors() {
-    // TODO(btmura): fix normals to match shape of block
+  static List<Vector3> getNormalVectors(double theta) {
+    var yAxis = new Vector3(0.0, 1.0, 0.0);
+    var halfSwingLeft = new Quaternion.fromAxisAngle(yAxis, -theta / 2);
+    var halfSwingRight = new Quaternion.fromAxisAngle(yAxis, theta / 2);
+
+    var zAxis = new Vector3(0.0, 0.0, 1.0);
+    var vectorSwungLeft = halfSwingLeft.rotate(zAxis);
+    var vectorSwungRight = halfSwingRight.rotate(zAxis);
+
+    var leftNormal = vectorSwungLeft.cross(yAxis).normalize();
+    var rightNormal = vectorSwungRight.cross(yAxis).normalize();
+
     var frontNormal = new Vector3(0.0, 0.0, 1.0);
     var backNormal = new Vector3(0.0, 0.0, -1.0);
-    var leftNormal = new Vector3(-1.0, 0.0, 0.0);
-    var rightNormal = new Vector3(1.0, 0.0, 0.0);
     var topNormal = new Vector3(0.0, 1.0, 0.0);
     var bottomNormal = new Vector3(0.0, -1.0, 0.0);
 
