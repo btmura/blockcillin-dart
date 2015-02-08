@@ -8,7 +8,7 @@ class Board {
   /// Inner radius of the cylinder.
   static const double _innerRadius = 0.75;
 
-  static const double _emptyRatio = 0.5;
+  static const double _emptyRatio = 0.25;
 
   final List<Ring> rings;
   final int numRings;
@@ -101,15 +101,15 @@ class Board {
 
   State _newMidState() {
     return () {
-      _translationY += 0.003;
+      _translationY += 0.001;
       return !_clearing;
     };
   }
 
   State _newEndState() {
-    const int numSteps = 150;
-    const double deltaRotationY = math.PI / numSteps;
-    const double deltaTranslationY = 1.0 / numSteps;
+    const int numSteps = 50;
+    const double deltaRotationY = math.PI / 2.0 / numSteps;
+    const double deltaTranslationY = 2.0 / numSteps;
 
     int step = 0;
 
