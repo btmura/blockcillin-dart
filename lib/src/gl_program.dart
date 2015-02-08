@@ -84,7 +84,7 @@ class GLProgram {
       throw new StateError("couldn't create program");
     }
 
-    webgl.UniformLocation mustGetUniformLocation(String name) {
+    webgl.UniformLocation newUniform(String name) {
       var location = gl.getUniformLocation(program, name);
       if (location == null) {
         throw new StateError("${name} not found");
@@ -92,66 +92,27 @@ class GLProgram {
       return location;
     }
 
-    var projectionMatrixLocation = gl.getUniformLocation(program, "u_projectionMatrix");
-    if (projectionMatrixLocation == null) {
-      throw new StateError("u_projectionMatrix not found");
-    }
-
-    var viewMatrixLocation = gl.getUniformLocation(program, "u_viewMatrix");
-    if (viewMatrixLocation == null) {
-      throw new StateError("u_viewMatrix not found");
-    }
-
-    var normalMatrixLocation = gl.getUniformLocation(program, "u_normalMatrix");
-    if (normalMatrixLocation == null) {
-      throw new StateError("u_normalMatrix not found");
-    }
-
-    var boardRotationMatrixLocation = gl.getUniformLocation(program, "u_boardRotationMatrix");
-    if (boardRotationMatrixLocation == null) {
-      throw new StateError("u_boardRotationMatrix not found");
-    }
-
-    var boardTranslationMatrixLocation = gl.getUniformLocation(program, "u_boardTranslationMatrix");
-    if (boardTranslationMatrixLocation == null) {
-      throw new StateError("u_boardTranslationMatrix not found");
-    }
-
-    var grayscaleAmountLocation = mustGetUniformLocation("u_grayscaleAmount");
-
-    var positionLocation = gl.getAttribLocation(program, "a_position");
-    if (positionLocation == -1) {
-      throw new StateError("a_position not found");
-    }
-
-    var positionOffsetLocation = gl.getAttribLocation(program, "a_positionOffset");
-    if (positionOffsetLocation == -1) {
-      throw new StateError("a_positionOffset not found");
-    }
-
-    var normalLocation = gl.getAttribLocation(program, "a_normal");
-    if (normalLocation == -1) {
-      throw new StateError("a_normal not found");
-    }
-
-    var textureCoordLocation = gl.getAttribLocation(program, "a_textureCoord");
-    if (textureCoordLocation == -1) {
-      throw new StateError("a_textureCoord not found");
+    int newAttrib(String name) {
+      var location = gl.getAttribLocation(program, name);
+      if (location == -1) {
+        throw new StateError("${name} not found");
+      }
+      return location;
     }
 
     return new GLProgram._(
         gl,
         program,
-        projectionMatrixLocation,
-        viewMatrixLocation,
-        normalMatrixLocation,
-        boardRotationMatrixLocation,
-        boardTranslationMatrixLocation,
-        grayscaleAmountLocation,
-        positionLocation,
-        positionOffsetLocation,
-        normalLocation,
-        textureCoordLocation);
+        newUniform("u_projectionMatrix"),
+        newUniform("u_viewMatrix"),
+        newUniform("u_normalMatrix"),
+        newUniform("u_boardRotationMatrix"),
+        newUniform("u_boardTranslationMatrix"),
+        newUniform("u_grayscaleAmount"),
+        newAttrib("a_position"),
+        newAttrib("a_positionOffset"),
+        newAttrib("a_normal"),
+        newAttrib("a_textureCoord"));
   }
 
   GLProgram._(
