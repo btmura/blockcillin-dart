@@ -5,8 +5,8 @@ class Game {
   /// Board with the blocks.
   final Board board;
 
-  /// Done meaning the game has finished its ending sequence.
-  bool done = false;
+  /// Whether the game is completely finished visually.
+  bool _finished = false;
 
   Game(this.board);
 
@@ -15,13 +15,19 @@ class Game {
     return new Game(board);
   }
 
+  /// Whether the game is completely finished visually.
+  bool get finished {
+    return _finished;
+  }
+
+  /// Advances the state of the game.
   void update() {
     board.update();
-    done = board.done;
+    _finished = board.cleared;
   }
 
   /// Signals to the game that it should start it's ending sequence.
-  void end() {
-    board.end();
+  void finish() {
+    board.clear();
   }
 }

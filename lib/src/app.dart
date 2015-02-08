@@ -32,7 +32,7 @@ class App {
     }
 
     // Start ending the current game and queue up the next game.
-    _currentGame.end();
+    _currentGame.finish();
     _nextGame = newGame;
     return false;
   }
@@ -40,7 +40,7 @@ class App {
   /// Updates the app. Call this 1 or more times per game loop iteration.
   void update() {
     // Switch to the next game if the current game is done (ending sequence finished).
-    if (_currentGame != null && _currentGame.done) {
+    if (_currentGame != null && _currentGame.finished) {
       _currentGame = _nextGame;
       _nextGame = null;
 

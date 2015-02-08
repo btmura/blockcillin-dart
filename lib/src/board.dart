@@ -11,7 +11,6 @@ class Board {
   static const double _emptyRatio = 0.5;
 
   final List<Ring> rings;
-
   final int numRings;
   final int numCells;
   final int numBlockColors;
@@ -19,16 +18,23 @@ class Board {
   final double outerRadius = _outerRadius;
   final double innerRadius = _innerRadius;
 
-  final List<State> _stateQueue = [];
+  final StateQueue _stateQueue = new StateQueue();
 
-  bool done = false;
-
+  /// Rotation of the board around the y-axis.
   double _rotationY;
+
+  /// Translation of the board on the y-axis.
   double _translationY;
+
+  /// Whether the board is being cleared for the next game.
+  bool _clearing = false;
 
   // TODO(btmura): change num of block colors to set of block colors
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
-    _stateQueue.add(_newStartingGameState());
+    _stateQueue
+      ..add(_newStartState())
+      ..add(_newMidState())
+      ..add(_newEndState());
   }
 
   factory Board.withRandomRings(int numRings, int numCells, int numBlockColors) {
@@ -49,27 +55,32 @@ class Board {
     return new Board(rings, numRings, numCells, numBlockColors);
   }
 
+  /// Rotation of the board around the y-axis.
   double get rotationY {
     return _rotationY;
   }
 
+  /// Translation of the board on the y-axis.
   double get translationY {
     return _translationY;
   }
 
+  /// Whether the board has been cleared.
+  bool get cleared {
+    return _stateQueue.isEmpty;
+  }
+
+  /// Advances the state of the board.
   void update() {
-    if (_stateQueue.isNotEmpty) {
-      if (_stateQueue.first.call()) {
-        _stateQueue.removeAt(0);
-      }
-    }
+    _stateQueue.update();
   }
 
-  void end() {
-    _stateQueue.add(_newEndingGameState());
+  /// Clears the board meaning the player has decided to quit.
+  void clear() {
+    _clearing = true;
   }
 
-  State _newStartingGameState() {
+  State _newStartState() {
     const int numSteps = 50;
     const double deltaRotationY = math.PI / 2.0 / numSteps;
     const double deltaTranslationY = 1.0 / numSteps;
@@ -84,16 +95,28 @@ class Board {
         _rotationY += deltaRotationY;
         _translationY += deltaTranslationY;
       }
-      return ++step == numSteps;
+      return ++step < numSteps;
     };
   }
 
-  State _newEndingGameState() {
+  State _newMidState() {
+    return () {
+      _translationY += 0.003;
+      return !_clearing;
+    };
+  }
+
+  State _newEndState() {
     const int numSteps = 150;
+    const double deltaRotationY = math.PI / numSteps;
+    const double deltaTranslationY = 1.0 / numSteps;
 
     int step = 0;
 
     return () {
+      _rotationY += deltaRotationY;
+      _translationY += deltaRotationY;
+
       for (var ring in rings) {
         for (var cell in ring.cells) {
           cell.positionOffset.y += 0.01;
@@ -101,8 +124,7 @@ class Board {
         }
       }
 
-      done = ++step == numSteps;
-      return done;
+      return ++step < numSteps;
     };
   }
 }
