@@ -26,6 +26,9 @@ class Board {
   /// Translation of the board on the y-axis.
   double _translationY;
 
+  /// How much of the color should be grayscale from 0.0 to 1.0.
+  double _grayscaleAmount;
+
   /// Whether the board is being cleared for the next game.
   bool _clearing = false;
 
@@ -56,19 +59,16 @@ class Board {
   }
 
   /// Rotation of the board around the y-axis.
-  double get rotationY {
-    return _rotationY;
-  }
+  double get rotationY => _rotationY;
 
   /// Translation of the board on the y-axis.
-  double get translationY {
-    return _translationY;
-  }
+  double get translationY => _translationY;
+
+  /// How much of the color should be grayscale from 0.0 to 1.0.
+  double get grayscaleAmount => _grayscaleAmount;
 
   /// Whether the board has been cleared.
-  bool get cleared {
-    return _stateQueue.isEmpty;
-  }
+  bool get cleared => _stateQueue.isEmpty;
 
   /// Advances the state of the board.
   void update() {
@@ -91,6 +91,7 @@ class Board {
       if (step == 0) {
         _rotationY = 0.0;
         _translationY = -1.0;
+        _grayscaleAmount = 0.0;
       } else {
         _rotationY += deltaRotationY;
         _translationY += deltaTranslationY;
@@ -110,12 +111,14 @@ class Board {
     const int numSteps = 50;
     const double deltaRotationY = math.PI / 2.0 / numSteps;
     const double deltaTranslationY = 2.0 / numSteps;
+    const double deltaGrayscaleAmount = 1.0 / numSteps;
 
     int step = 0;
 
     return () {
       _rotationY += deltaRotationY;
       _translationY += deltaRotationY;
+      _grayscaleAmount += deltaGrayscaleAmount;
 
       for (var ring in rings) {
         for (var cell in ring.cells) {

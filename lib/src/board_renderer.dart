@@ -58,7 +58,7 @@ class BoardRenderer {
     var normalData = [];
 
     // Vector to translate cells out of the scene to make them appear empty.
-    var emptyTranslation = new Vector3(100.0, 0.0, 0.0);
+    var emptyTranslation = new Vector3(0.0, -100.0, 0.0);
 
     var totalRingTranslation = new Vector3(0.0, 0.0, 0.0);
     for (var i = 0; i < board.numRings; i++) {
@@ -122,7 +122,8 @@ class BoardRenderer {
 
     _glProgram.gl
       ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, rotationMatrix.floatList)
-      ..uniformMatrix4fv(_glProgram.boardTranslationMatrixLocation, false, translationMatrix.floatList);
+      ..uniformMatrix4fv(_glProgram.boardTranslationMatrixLocation, false, translationMatrix.floatList)
+      ..uniform1f(_glProgram.grayscaleAmountLocation, board.grayscaleAmount);
 
     for (var r = 0; r < board.rings.length; r++) {
       var ring = board.rings[r];

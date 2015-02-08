@@ -9,6 +9,7 @@ class GLProgram {
   final webgl.UniformLocation normalMatrixLocation;
   final webgl.UniformLocation boardRotationMatrixLocation;
   final webgl.UniformLocation boardTranslationMatrixLocation;
+  final webgl.UniformLocation grayscaleAmountLocation;
   final int positionLocation;
   final int positionOffsetLocation;
   final int normalLocation;
@@ -59,9 +60,10 @@ class GLProgram {
     var fragmentShaderSource = '''
       precision mediump float;
 
-      const vec3 black = vec3(0.0, 0.0, 0.0);
+      const vec3 blackColor = vec3(0.0, 0.0, 0.0);
 
       uniform sampler2D u_texture;
+      uniform float u_grayscaleAmount;
 
       varying vec2 v_textureCoord;
       varying float v_blackAmount;
@@ -69,7 +71,9 @@ class GLProgram {
       
       void main(void) {
         vec4 color = texture2D(u_texture, v_textureCoord);
-        color = vec4(mix(color.rgb, black, v_blackAmount), color.a); 
+        vec3 grayscaleColor = vec3(color.r * 0.21 + color.g * 0.72 + color.b * 0.07);
+        color = vec4(mix(color.rgb, grayscaleColor, u_grayscaleAmount), color.a);
+        color = vec4(mix(color.rgb, blackColor, v_blackAmount), color.a); 
         color = vec4(color.rgb * v_lighting, color.a);
         gl_FragColor = color;
       }
@@ -78,6 +82,14 @@ class GLProgram {
     var program = createProgram(gl, vertexShaderSource, fragmentShaderSource);
     if (program == null) {
       throw new StateError("couldn't create program");
+    }
+
+    webgl.UniformLocation mustGetUniformLocation(String name) {
+      var location = gl.getUniformLocation(program, name);
+      if (location == null) {
+        throw new StateError("${name} not found");
+      }
+      return location;
     }
 
     var projectionMatrixLocation = gl.getUniformLocation(program, "u_projectionMatrix");
@@ -104,6 +116,8 @@ class GLProgram {
     if (boardTranslationMatrixLocation == null) {
       throw new StateError("u_boardTranslationMatrix not found");
     }
+
+    var grayscaleAmountLocation = mustGetUniformLocation("u_grayscaleAmount");
 
     var positionLocation = gl.getAttribLocation(program, "a_position");
     if (positionLocation == -1) {
@@ -133,6 +147,7 @@ class GLProgram {
         normalMatrixLocation,
         boardRotationMatrixLocation,
         boardTranslationMatrixLocation,
+        grayscaleAmountLocation,
         positionLocation,
         positionOffsetLocation,
         normalLocation,
@@ -147,6 +162,7 @@ class GLProgram {
       this.normalMatrixLocation,
       this.boardRotationMatrixLocation,
       this.boardTranslationMatrixLocation,
+      this.grayscaleAmountLocation,
       this.positionLocation,
       this.positionOffsetLocation,
       this.normalLocation,
