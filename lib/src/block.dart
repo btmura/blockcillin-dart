@@ -113,7 +113,7 @@ class Block {
     var vectorSwungRight = halfSwingRight.rotate(zAxis);
 
     var leftNormal = vectorSwungLeft.cross(yAxis).normalize();
-    var rightNormal = vectorSwungRight.cross(yAxis).normalize();
+    var rightNormal = yAxis.cross(vectorSwungRight).normalize();
 
     var frontNormal = new Vector3(0.0, 0.0, 1.0);
     var backNormal = new Vector3(0.0, 0.0, -1.0);
