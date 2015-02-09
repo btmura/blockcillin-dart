@@ -1,18 +1,18 @@
 part of client;
 
 /// State function that advances the state and returns true if the state is still applicable.
-typedef bool State();
+typedef bool StateFunc();
 
 /// A queue that manages different states of something.
 class StateQueue {
 
-  final List<State> _queue = [];
+  final List<StateFunc> _queue = [];
 
   /// Whether the queue is empty.
   bool get isEmpty => _queue.isEmpty;
 
   /// Adds a new state to the queue. It'll be applied after the other states have expired.
-  void add(State state) {
+  void add(StateFunc state) {
     _queue.add(state);
   }
 

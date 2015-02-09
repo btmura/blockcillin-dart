@@ -86,7 +86,7 @@ class Board {
     _stateQueue.add(_endState());
   }
 
-  State _startState() {
+  StateFunc _startState() {
     const double n = 50.0;
 
     var i = 0.0;
@@ -101,14 +101,14 @@ class Board {
     };
   }
 
-  State _midState() {
+  StateFunc _midState() {
     return () {
       _translationY += 0.001;
       return !_clearing;
     };
   }
 
-  State _endState() {
+  StateFunc _endState() {
     const double n = 50.0;
 
     var i = 0.0;
