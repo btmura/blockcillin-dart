@@ -29,15 +29,19 @@ class Board {
   /// How much of the color should be grayscale from 0.0 to 1.0.
   double _grayscaleAmount;
 
+  /// How much of the color should be black from 0.0 to 1.0.
+  double _blackAmount;
+
   /// Whether the board is being cleared for the next game.
   bool _clearing = false;
 
   // TODO(btmura): change num of block colors to set of block colors
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
     _stateQueue
-      ..add(_newStartState())
-      ..add(_newMidState())
-      ..add(_newEndState());
+      ..add(_startState())
+      ..add(_midState())
+      ..add(_endState())
+      ..add(_endState2());
   }
 
   factory Board.withRandomRings(int numRings, int numCells, int numBlockColors) {
@@ -67,6 +71,9 @@ class Board {
   /// How much of the color should be grayscale from 0.0 to 1.0.
   double get grayscaleAmount => _grayscaleAmount;
 
+  /// How much of the color should be black from 0.0 to 1.0.
+  double get blackAmount => _blackAmount;
+
   /// Whether the board has been cleared.
   bool get cleared => _stateQueue.isEmpty;
 
@@ -80,54 +87,56 @@ class Board {
     _clearing = true;
   }
 
-  State _newStartState() {
+  State _startState() {
     const int numSteps = 50;
     const double deltaRotationY = math.PI / 2.0 / numSteps;
     const double deltaTranslationY = 1.0 / numSteps;
 
-    int step = 0;
-
+    int i = 0;
     return () {
-      if (step == 0) {
+      if (i == 0) {
         _rotationY = 0.0;
         _translationY = -1.0;
         _grayscaleAmount = 0.0;
+        _blackAmount = 0.0;
       } else {
         _rotationY += deltaRotationY;
         _translationY += deltaTranslationY;
       }
-      return ++step < numSteps;
+      return ++i < numSteps;
     };
   }
 
-  State _newMidState() {
+  State _midState() {
     return () {
       _translationY += 0.001;
       return !_clearing;
     };
   }
 
-  State _newEndState() {
+  State _endState() {
+    const int numSteps = 25;
+    const double deltaGrayscale = 1.0 / numSteps;
+
+    int i = 0;
+    return () {
+      _grayscaleAmount += deltaGrayscale;
+      return ++i < numSteps;
+    };
+  }
+
+  State _endState2() {
     const int numSteps = 50;
     const double deltaRotationY = math.PI / 2.0 / numSteps;
-    const double deltaTranslationY = 2.0 / numSteps;
-    const double deltaGrayscaleAmount = 1.0 / numSteps;
+    const double deltaTranslationY = 1.0 / numSteps;
+    const double deltaBlack = 1.0 / numSteps;
 
-    int step = 0;
-
+    int i = 0;
     return () {
-      _rotationY += deltaRotationY;
-      _translationY += deltaRotationY;
-      _grayscaleAmount += deltaGrayscaleAmount;
-
-      for (var ring in rings) {
-        for (var cell in ring.cells) {
-          cell.positionOffset.y += 0.01;
-          cell.positionOffsetChanged = true;
-        }
-      }
-
-      return ++step < numSteps;
+      _rotationY -= deltaRotationY;
+      _translationY -= deltaTranslationY;
+      _blackAmount += deltaBlack;
+      return ++i < numSteps;
     };
   }
 }

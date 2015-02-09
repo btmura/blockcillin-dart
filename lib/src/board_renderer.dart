@@ -124,7 +124,8 @@ class BoardRenderer {
     _glProgram.gl
       ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, rotationMatrix.floatList)
       ..uniformMatrix4fv(_glProgram.boardTranslationMatrixLocation, false, translationMatrix.floatList)
-      ..uniform1f(_glProgram.grayscaleAmountLocation, board.grayscaleAmount);
+      ..uniform1f(_glProgram.grayscaleAmountLocation, board.grayscaleAmount)
+      ..uniform1f(_glProgram.blackAmountLocation, board.blackAmount);
 
     for (var r = 0; r < board.rings.length; r++) {
       var ring = board.rings[r];

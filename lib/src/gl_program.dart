@@ -10,6 +10,7 @@ class GLProgram {
   final webgl.UniformLocation boardRotationMatrixLocation;
   final webgl.UniformLocation boardTranslationMatrixLocation;
   final webgl.UniformLocation grayscaleAmountLocation;
+  final webgl.UniformLocation blackAmountLocation;
   final int positionLocation;
   final int positionOffsetLocation;
   final int normalLocation;
@@ -27,6 +28,7 @@ class GLProgram {
       uniform mat4 u_normalMatrix;
       uniform mat4 u_boardRotationMatrix;
       uniform mat4 u_boardTranslationMatrix;
+      uniform float u_blackAmount;
 
       attribute vec3 a_position;
       attribute vec3 a_positionOffset;
@@ -49,7 +51,7 @@ class GLProgram {
         v_textureCoord = a_textureCoord;
 
         // TODO(btmura): use uniform to specify step thresholds
-        v_blackAmount = 1.0 - smoothstep(-2.0, 0.0, position.y);
+        v_blackAmount = max(1.0 - smoothstep(-2.0, 0.0, position.y), u_blackAmount);
 
         vec4 transformedNormal = u_normalMatrix * vec4(a_normal, 1.0);
         float directional = max(dot(transformedNormal.xyz, directionalVector), 1.0);
@@ -73,7 +75,7 @@ class GLProgram {
         vec4 color = texture2D(u_texture, v_textureCoord);
         vec3 grayscaleColor = vec3(color.r * 0.21 + color.g * 0.72 + color.b * 0.07);
         color = vec4(mix(color.rgb, grayscaleColor, u_grayscaleAmount), color.a);
-        color = vec4(mix(color.rgb, blackColor, v_blackAmount), color.a); 
+        color = vec4(mix(color.rgb, blackColor, v_blackAmount), color.a);
         color = vec4(color.rgb * v_lighting, color.a);
         gl_FragColor = color;
       }
@@ -84,7 +86,7 @@ class GLProgram {
       throw new StateError("couldn't create program");
     }
 
-    webgl.UniformLocation newUniform(String name) {
+    webgl.UniformLocation uniform(String name) {
       var location = gl.getUniformLocation(program, name);
       if (location == null) {
         throw new StateError("${name} not found");
@@ -92,7 +94,7 @@ class GLProgram {
       return location;
     }
 
-    int newAttrib(String name) {
+    int attrib(String name) {
       var location = gl.getAttribLocation(program, name);
       if (location == -1) {
         throw new StateError("${name} not found");
@@ -103,16 +105,17 @@ class GLProgram {
     return new GLProgram._(
         gl,
         program,
-        newUniform("u_projectionMatrix"),
-        newUniform("u_viewMatrix"),
-        newUniform("u_normalMatrix"),
-        newUniform("u_boardRotationMatrix"),
-        newUniform("u_boardTranslationMatrix"),
-        newUniform("u_grayscaleAmount"),
-        newAttrib("a_position"),
-        newAttrib("a_positionOffset"),
-        newAttrib("a_normal"),
-        newAttrib("a_textureCoord"));
+        uniform("u_projectionMatrix"),
+        uniform("u_viewMatrix"),
+        uniform("u_normalMatrix"),
+        uniform("u_boardRotationMatrix"),
+        uniform("u_boardTranslationMatrix"),
+        uniform("u_grayscaleAmount"),
+        uniform("u_blackAmount"),
+        attrib("a_position"),
+        attrib("a_positionOffset"),
+        attrib("a_normal"),
+        attrib("a_textureCoord"));
   }
 
   GLProgram._(
@@ -124,6 +127,7 @@ class GLProgram {
       this.boardRotationMatrixLocation,
       this.boardTranslationMatrixLocation,
       this.grayscaleAmountLocation,
+      this.blackAmountLocation,
       this.positionLocation,
       this.positionOffsetLocation,
       this.normalLocation,
