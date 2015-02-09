@@ -125,15 +125,3 @@ class Board {
     };
   }
 }
-
-// TODO(btmura): move interpolators to separate file
-
-typedef double InterpolateFunc(double start, double end);
-
-InterpolateFunc _easeOutCubic(double time, double duration) {
-  return (double start, double end) {
-    var delta = end - start;
-    var t = time / duration - 1;
-    return start + delta * (t * t * t + 1);
-  };
-}

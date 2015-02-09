@@ -20,6 +20,7 @@ part 'src/game_view.dart';
 part 'src/gl.dart';
 part 'src/gl_program.dart';
 part 'src/main_menu.dart';
+part 'src/math.dart';
 part 'src/matrix4.dart';
 part 'src/quaternion.dart';
 part 'src/ring.dart';
