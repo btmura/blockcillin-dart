@@ -82,8 +82,10 @@ class Board {
 
   /// Clears the board meaning the player has decided to quit.
   void clear() {
-    _clearing = true;
-    _stateQueue.add(_endState());
+    if (!_clearing) {
+      _clearing = true;
+      _stateQueue.add(_endState());
+    }
   }
 
   StateFunc _startState() {
