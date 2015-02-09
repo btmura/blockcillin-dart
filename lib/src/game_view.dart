@@ -33,9 +33,9 @@ class GameView {
 
     _program.gl
       ..useProgram(_program.program)
-      ..uniformMatrix4fv(_program.projectionMatrixLocation, false, _projectionMatrix.floatList)
-      ..uniformMatrix4fv(_program.viewMatrixLocation, false, _viewMatrix.floatList)
-      ..uniformMatrix4fv(_program.normalMatrixLocation, false, _normalMatrix.floatList);
+      ..uniformMatrix4fv(_program.projectionMatrixUniform, false, _projectionMatrix.floatList)
+      ..uniformMatrix4fv(_program.viewMatrixUniform, false, _viewMatrix.floatList)
+      ..uniformMatrix4fv(_program.normalMatrixUniform, false, _normalMatrix.floatList);
 
     _boardRenderer.render(game.board);
   }

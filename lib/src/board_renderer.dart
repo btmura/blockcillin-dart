@@ -122,10 +122,10 @@ class BoardRenderer {
     var translationMatrix = new Matrix4.translation(0.0, board.translationY, 0.0);
 
     _glProgram.gl
-      ..uniformMatrix4fv(_glProgram.boardRotationMatrixLocation, false, rotationMatrix.floatList)
-      ..uniformMatrix4fv(_glProgram.boardTranslationMatrixLocation, false, translationMatrix.floatList)
-      ..uniform1f(_glProgram.grayscaleAmountLocation, board.grayscaleAmount)
-      ..uniform1f(_glProgram.blackAmountLocation, board.blackAmount);
+      ..uniformMatrix4fv(_glProgram.boardRotationMatrixUniform, false, rotationMatrix.floatList)
+      ..uniformMatrix4fv(_glProgram.boardTranslationMatrixUniform, false, translationMatrix.floatList)
+      ..uniform1f(_glProgram.grayscaleAmountUniform, board.grayscaleAmount)
+      ..uniform1f(_glProgram.blackAmountUniform, board.blackAmount);
 
     for (var r = 0; r < board.rings.length; r++) {
       var ring = board.rings[r];
@@ -154,23 +154,23 @@ class BoardRenderer {
 
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _positionBuffer)
-      ..enableVertexAttribArray(_glProgram.positionLocation)
-      ..vertexAttribPointer(_glProgram.positionLocation, 3, webgl.FLOAT, false, 0, 0);
+      ..enableVertexAttribArray(_glProgram.positionAttrib)
+      ..vertexAttribPointer(_glProgram.positionAttrib, 3, webgl.FLOAT, false, 0, 0);
 
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _positionOffsetBuffer)
-      ..enableVertexAttribArray(_glProgram.positionOffsetLocation)
-      ..vertexAttribPointer(_glProgram.positionOffsetLocation, 3, webgl.FLOAT, false, 0, 0);
+      ..enableVertexAttribArray(_glProgram.positionOffsetAttrib)
+      ..vertexAttribPointer(_glProgram.positionOffsetAttrib, 3, webgl.FLOAT, false, 0, 0);
 
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _normalBuffer)
-      ..enableVertexAttribArray(_glProgram.normalLocation)
-      ..vertexAttribPointer(_glProgram.normalLocation, 3, webgl.FLOAT, false, 0, 0);
+      ..enableVertexAttribArray(_glProgram.normalAttrib)
+      ..vertexAttribPointer(_glProgram.normalAttrib, 3, webgl.FLOAT, false, 0, 0);
 
     _glProgram.gl
       ..bindBuffer(webgl.ARRAY_BUFFER, _textureBuffer)
-      ..enableVertexAttribArray(_glProgram.textureCoordLocation)
-      ..vertexAttribPointer(_glProgram.textureCoordLocation, 2, webgl.FLOAT, false, 0, 0);
+      ..enableVertexAttribArray(_glProgram.textureCoordAttrib)
+      ..vertexAttribPointer(_glProgram.textureCoordAttrib, 2, webgl.FLOAT, false, 0, 0);
 
     _glProgram.gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)

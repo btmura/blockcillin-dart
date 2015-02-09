@@ -4,17 +4,19 @@ class GLProgram {
 
   final webgl.RenderingContext gl;
   final webgl.Program program;
-  final webgl.UniformLocation projectionMatrixLocation;
-  final webgl.UniformLocation viewMatrixLocation;
-  final webgl.UniformLocation normalMatrixLocation;
-  final webgl.UniformLocation boardRotationMatrixLocation;
-  final webgl.UniformLocation boardTranslationMatrixLocation;
-  final webgl.UniformLocation grayscaleAmountLocation;
-  final webgl.UniformLocation blackAmountLocation;
-  final int positionLocation;
-  final int positionOffsetLocation;
-  final int normalLocation;
-  final int textureCoordLocation;
+
+  final webgl.UniformLocation projectionMatrixUniform;
+  final webgl.UniformLocation viewMatrixUniform;
+  final webgl.UniformLocation normalMatrixUniform;
+  final webgl.UniformLocation boardRotationMatrixUniform;
+  final webgl.UniformLocation boardTranslationMatrixUniform;
+  final webgl.UniformLocation grayscaleAmountUniform;
+  final webgl.UniformLocation blackAmountUniform;
+
+  final int positionAttrib;
+  final int positionOffsetAttrib;
+  final int normalAttrib;
+  final int textureCoordAttrib;
 
   factory GLProgram(webgl.RenderingContext gl) {
     var vertexShaderSource = '''
@@ -105,6 +107,7 @@ class GLProgram {
     return new GLProgram._(
         gl,
         program,
+
         uniform("u_projectionMatrix"),
         uniform("u_viewMatrix"),
         uniform("u_normalMatrix"),
@@ -112,6 +115,7 @@ class GLProgram {
         uniform("u_boardTranslationMatrix"),
         uniform("u_grayscaleAmount"),
         uniform("u_blackAmount"),
+
         attrib("a_position"),
         attrib("a_positionOffset"),
         attrib("a_normal"),
@@ -121,15 +125,17 @@ class GLProgram {
   GLProgram._(
       this.gl,
       this.program,
-      this.projectionMatrixLocation,
-      this.viewMatrixLocation,
-      this.normalMatrixLocation,
-      this.boardRotationMatrixLocation,
-      this.boardTranslationMatrixLocation,
-      this.grayscaleAmountLocation,
-      this.blackAmountLocation,
-      this.positionLocation,
-      this.positionOffsetLocation,
-      this.normalLocation,
-      this.textureCoordLocation);
+
+      this.projectionMatrixUniform,
+      this.viewMatrixUniform,
+      this.normalMatrixUniform,
+      this.boardRotationMatrixUniform,
+      this.boardTranslationMatrixUniform,
+      this.grayscaleAmountUniform,
+      this.blackAmountUniform,
+
+      this.positionAttrib,
+      this.positionOffsetAttrib,
+      this.normalAttrib,
+      this.textureCoordAttrib);
 }

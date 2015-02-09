@@ -19,7 +19,7 @@ _gl_program_tests() {
     });
 
     test("GLProgram.positionLocation", () {
-      expect(glProgram.positionLocation, isNonNegative);
+      expect(glProgram.positionAttrib, isNonNegative);
     });
   });
 }
