@@ -87,14 +87,17 @@ class Board {
   }
 
   State _startState() {
-    const double numSteps = 50.0;
-    double i = 0.0;
+    const double n = 50.0;
+
+    var i = 0.0;
+
     return () {
-      _grayscaleAmount = _easeOutCubic(i, 1.0, -1.0, numSteps);
-      _blackAmount = _easeOutCubic(i, 1.0, -1.0, numSteps);
-      _rotationY = _easeOutCubic(i, 0.0, math.PI, numSteps);
-      _translationY = _easeOutCubic(i, -1.0, 1.0, numSteps);
-      return ++i < numSteps;
+      var interp = _easeOutCubic(i, n);
+      _grayscaleAmount = interp(1.0, 0.0);
+      _blackAmount = interp(1.0, 0.0);
+      _rotationY = interp(0.0, math.PI);
+      _translationY = interp(-1.0, 0.0);
+      return ++i < n;
     };
   }
 
@@ -106,21 +109,31 @@ class Board {
   }
 
   State _endState() {
-    const double numSteps = 50.0;
-    double i = 0.0;
-    double currentRotationY = _rotationY;
-    double currentTranslationY = _translationY;
+    const double n = 50.0;
+
+    var i = 0.0;
+    var cr = _rotationY;
+    var ct = _translationY;
+
     return () {
-      _grayscaleAmount = _easeOutCubic(i, 0.0, 1.0, numSteps);
-      _blackAmount = _easeOutCubic(i, 0.0, 1.0, numSteps);
-      _rotationY = _easeOutCubic(i, currentRotationY, -math.PI, numSteps);
-      _translationY = _easeOutCubic(i, currentTranslationY, -1.0, numSteps);
-      return ++i < numSteps;
+      var interp = _easeOutCubic(i, n);
+      _grayscaleAmount = interp(0.0, 1.0);
+      _blackAmount = interp(0.0, 1.0);
+      _rotationY = interp(cr, cr - math.PI);
+      _translationY = interp(ct, ct - 1.0);
+      return ++i < n;
     };
   }
+}
 
-  double _easeOutCubic(double time, double start, double change, double duration) {
-    double deltaTime = time / duration - 1;
-    return start + change * (deltaTime * deltaTime * deltaTime + 1);
-  }
+// TODO(btmura): move interpolators to separate file
+
+typedef double InterpolateFunc(double start, double end);
+
+InterpolateFunc _easeOutCubic(double time, double duration) {
+  return (double start, double end) {
+    var delta = end - start;
+    var t = time / duration - 1;
+    return start + delta * (t * t * t + 1);
+  };
 }
