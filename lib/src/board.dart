@@ -39,9 +39,7 @@ class Board {
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
     _stateQueue
       ..add(_startState())
-      ..add(_midState())
-      ..add(_endState())
-      ..add(_endState2());
+      ..add(_midState());
   }
 
   factory Board.withRandomRings(int numRings, int numCells, int numBlockColors) {
@@ -85,24 +83,17 @@ class Board {
   /// Clears the board meaning the player has decided to quit.
   void clear() {
     _clearing = true;
+    _stateQueue.add(_endState());
   }
 
   State _startState() {
-    const int numSteps = 50;
-    const double deltaRotationY = math.PI / 2.0 / numSteps;
-    const double deltaTranslationY = 1.0 / numSteps;
-
-    int i = 0;
+    const double numSteps = 50.0;
+    double i = 0.0;
     return () {
-      if (i == 0) {
-        _rotationY = 0.0;
-        _translationY = -1.0;
-        _grayscaleAmount = 0.0;
-        _blackAmount = 0.0;
-      } else {
-        _rotationY += deltaRotationY;
-        _translationY += deltaTranslationY;
-      }
+      _grayscaleAmount = _easeOutCubic(i, 1.0, -1.0, numSteps);
+      _blackAmount = _easeOutCubic(i, 1.0, -1.0, numSteps);
+      _rotationY = _easeOutCubic(i, 0.0, math.PI, numSteps);
+      _translationY = _easeOutCubic(i, -1.0, 1.0, numSteps);
       return ++i < numSteps;
     };
   }
@@ -115,28 +106,21 @@ class Board {
   }
 
   State _endState() {
-    const int numSteps = 25;
-    const double deltaGrayscale = 1.0 / numSteps;
-
-    int i = 0;
+    const double numSteps = 50.0;
+    double i = 0.0;
+    double currentRotationY = _rotationY;
+    double currentTranslationY = _translationY;
     return () {
-      _grayscaleAmount += deltaGrayscale;
+      _grayscaleAmount = _easeOutCubic(i, 0.0, 1.0, numSteps);
+      _blackAmount = _easeOutCubic(i, 0.0, 1.0, numSteps);
+      _rotationY = _easeOutCubic(i, currentRotationY, -math.PI, numSteps);
+      _translationY = _easeOutCubic(i, currentTranslationY, -1.0, numSteps);
       return ++i < numSteps;
     };
   }
 
-  State _endState2() {
-    const int numSteps = 50;
-    const double deltaRotationY = math.PI / 2.0 / numSteps;
-    const double deltaTranslationY = 1.0 / numSteps;
-    const double deltaBlack = 1.0 / numSteps;
-
-    int i = 0;
-    return () {
-      _rotationY -= deltaRotationY;
-      _translationY -= deltaTranslationY;
-      _blackAmount += deltaBlack;
-      return ++i < numSteps;
-    };
+  double _easeOutCubic(double time, double start, double change, double duration) {
+    double deltaTime = time / duration - 1;
+    return start + change * (deltaTime * deltaTime * deltaTime + 1);
   }
 }
