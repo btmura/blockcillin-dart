@@ -8,7 +8,11 @@ class Board {
   /// Inner radius of the cylinder.
   static const double _innerRadius = 0.75;
 
+  /// Ration of how many blocks can be missing from each column.
   static const double _emptyRatio = 0.25;
+
+  /// Number of update steps for each transition like pausing and resuming.
+  static const double _numUpdates = 100.0;
 
   final List<Ring> rings;
   final int numRings;
@@ -32,14 +36,23 @@ class Board {
   /// How much of the color should be black from 0.0 to 1.0.
   double _blackAmount;
 
-  /// Whether the board is being cleared for the next game.
-  bool _clearing = false;
+  /// Rotation of the board around the y-axis.
+  double get rotationY => _rotationY;
+
+  /// Translation of the board on the y-axis.
+  double get translationY => _translationY;
+
+  /// How much of the color should be grayscale from 0.0 to 1.0.
+  double get grayscaleAmount => _grayscaleAmount;
+
+  /// How much of the color should be black from 0.0 to 1.0.
+  double get blackAmount => _blackAmount;
 
   // TODO(btmura): change num of block colors to set of block colors
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
     _stateQueue
-      ..add(_startState())
-      ..add(_midState());
+      ..add(_startingState())
+      ..add(_playingState());
   }
 
   factory Board.withRandomRings(int numRings, int numCells, int numBlockColors) {
@@ -60,70 +73,84 @@ class Board {
     return new Board(rings, numRings, numCells, numBlockColors);
   }
 
-  /// Rotation of the board around the y-axis.
-  double get rotationY => _rotationY;
+  /// Returns whether the board changed after advancing it's state.
+  bool update() {
+    return _stateQueue.update();
+  }
 
-  /// Translation of the board on the y-axis.
-  double get translationY => _translationY;
+  /// Pauses the board.
+  void pause() {
+    // Pop off the infinite playing state before adding the pausing state.
+    _stateQueue
+      ..removeLast()
+      ..add(_pausingState());
+  }
 
-  /// How much of the color should be grayscale from 0.0 to 1.0.
-  double get grayscaleAmount => _grayscaleAmount;
-
-  /// How much of the color should be black from 0.0 to 1.0.
-  double get blackAmount => _blackAmount;
-
-  /// Whether the board has been cleared.
-  bool get cleared => _stateQueue.isEmpty;
-
-  /// Advances the state of the board.
-  void update() {
-    _stateQueue.update();
+  /// Resumes the board.
+  void resume() {
+    _stateQueue
+      ..add(_resumingState())
+      ..add(_playingState());
   }
 
   /// Clears the board meaning the player has decided to quit.
+  // TODO(btmura): rename to finish to match method in game class.
   void clear() {
-    if (!_clearing) {
-      _clearing = true;
-      _stateQueue.add(_endState());
-    }
+    _stateQueue.add(_clearingState());
   }
 
-  StateFunc _startState() {
-    const double n = 50.0;
-
+  StateFunc _startingState() {
     var i = 0.0;
-
     return () {
-      var interp = _easeOutCubic(i, n);
+      var interp = _easeOutCubic(i, _numUpdates);
       _grayscaleAmount = interp(1.0, 0.0);
       _blackAmount = interp(1.0, 0.0);
       _rotationY = interp(0.0, math.PI);
       _translationY = interp(-1.0, 0.0);
-      return ++i < n;
+      return ++i < _numUpdates;
     };
   }
 
-  StateFunc _midState() {
+  StateFunc _playingState() {
     return () {
       _translationY += 0.001;
-      return !_clearing;
+      return true;
     };
   }
 
-  StateFunc _endState() {
-    const double n = 50.0;
+  StateFunc _pausingState() {
+    var i = 0.0;
+    var cg = _grayscaleAmount;
+    var cb = _blackAmount;
+    return () {
+      var interp = _easeOutCubic(i, _numUpdates);
+      _grayscaleAmount = interp(cg, 1.0);
+      _blackAmount = interp(cb, 0.65);
+      return ++i < _numUpdates;
+    };
+  }
 
+  StateFunc _resumingState() {
+    var i = 0.0;
+    return () {
+      var interp = _easeOutCubic(i, _numUpdates);
+      _grayscaleAmount = interp(1.0, 0.0);
+      _blackAmount = interp(0.65, 0.0);
+      return ++i < _numUpdates;
+    };
+  }
+
+  StateFunc _clearingState() {
     var i = 0.0;
     var cr = _rotationY;
     var ct = _translationY;
-
     return () {
-      var interp = _easeOutCubic(i, n);
+      var interp = _easeOutCubic(i, _numUpdates);
       _grayscaleAmount = interp(0.0, 1.0);
       _blackAmount = interp(0.0, 1.0);
       _rotationY = interp(cr, cr - math.PI);
       _translationY = interp(ct, ct - 1.0);
-      return ++i < n;
+      return ++i < _numUpdates;
     };
   }
 }

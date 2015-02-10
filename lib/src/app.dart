@@ -4,7 +4,7 @@ part of client;
 class App {
 
   /// State of the app.
-  AppState state = AppState.INITIAL;
+  AppState _state = AppState.INITIAL;
 
   /// Current game being played or ending. Null only once at the start.
   Game _currentGame;
@@ -13,17 +13,19 @@ class App {
   Game _nextGame;
 
   /// StreamController that emits the next game when it becomes the current game.
-  StreamController<Game> _nextGameController = new StreamController();
+  StreamController<Game> _nextGameStream = new StreamController();
 
   /// Current game being played.
   Game get currentGame => _currentGame;
 
   /// Stream that broadcasts when the next game has become the current game.
-  Stream<Game> get onNextGameStarted => _nextGameController.stream;
+  Stream<Game> get onNextGameStarted => _nextGameStream.stream;
+
+  AppState get state => _state;
 
   /// Starts a new game and returns true if the game will be started immediately.
   bool startGame(Game newGame) {
-    state = AppState.PLAYING;
+    _state = AppState.PLAYING;
 
     // Make the new game the current one if there is no current game.
     if (_currentGame == null) {
@@ -37,23 +39,43 @@ class App {
     return false;
   }
 
-  /// Updates the app. Call this 1 or more times per game loop iteration.
-  void update() {
-    // Switch to the next game if the current game is done (ending sequence finished).
-    if (_currentGame != null && _currentGame.finished) {
+  /// Pauses the current game if there is one.
+  void pauseGame() {
+    _state = AppState.PAUSED;
+    if (_currentGame != null) {
+      _currentGame.pause();
+    }
+  }
+
+  /// Resumes the current game if there is one.
+  void resumeGame() {
+    _state = AppState.PLAYING;
+    if (_currentGame != null) {
+      _currentGame.resume();
+    }
+  }
+
+  /// Returns whether the app has changed after advancing it's state.
+  bool update() {
+    // Update the current game if there is one. Return true if it changed.
+    if (_currentGame != null && _currentGame.update()) {
+        return true;
+    }
+
+    // If there is a next game and the current game isn't changing, then start the next game.
+    if (_nextGame != null) {
       _currentGame = _nextGame;
       _nextGame = null;
 
       // Broadcast that the next game has become the current game.
-      if (_currentGame != null && !_nextGameController.isPaused) {
-        _nextGameController.add(_currentGame);
+      if (_currentGame != null && !_nextGameStream.isPaused) {
+        _nextGameStream.add(_currentGame);
       }
+
+      return currentGame.update();
     }
 
-    // Update the current game if there is one.
-    if (_currentGame != null) {
-      _currentGame.update();
-    }
+    return false;
   }
 }
 

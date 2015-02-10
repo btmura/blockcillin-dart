@@ -5,9 +5,6 @@ class Game {
   /// Board with the blocks.
   final Board board;
 
-  /// Whether the game is completely finished visually.
-  bool _finished = false;
-
   Game(this.board);
 
   factory Game.withRandomBoard(int numRings, int numCells, int numBlockColors) {
@@ -15,15 +12,19 @@ class Game {
     return new Game(board);
   }
 
-  /// Whether the game is completely finished visually.
-  bool get finished {
-    return _finished;
+  /// Returns whether the game changed after advancing it's state.
+  bool update() {
+    return board.update();
   }
 
-  /// Advances the state of the game.
-  void update() {
-    board.update();
-    _finished = board.cleared;
+  /// Pauses the game.
+  void pause() {
+    board.pause();
+  }
+
+  /// Resumes the game.
+  void resume() {
+    board.resume();
   }
 
   /// Signals to the game that it should start it's ending sequence.

@@ -24,7 +24,6 @@ _app_tests() {
       verify(mockGame.update()).never();
 
       app.startGame(mockGame);
-      when(mockGame.finished).thenReturn(false);
       app.update();
       verify(mockGame.update()).times(1);
     });

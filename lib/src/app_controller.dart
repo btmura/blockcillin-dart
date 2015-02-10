@@ -29,12 +29,12 @@ class AppController {
               break;
 
             case AppState.PLAYING:
-              app.state = AppState.PAUSED;
+              app.pauseGame();
               _update();
               break;
 
             case AppState.PAUSED:
-              app.state = AppState.PLAYING;
+              app.resumeGame();
               _update();
               break;
           }
@@ -54,18 +54,21 @@ class AppController {
     });
 
     appView.onPauseButtonClick.listen((_) {
-      app.state = AppState.PAUSED;
+      app.pauseGame();
       _update();
     });
 
     appView.onContinueGameButtonClick.listen((_) {
-      app.state = AppState.PLAYING;
+      app.resumeGame();
       _update();
     });
   }
 
   void _update([num delta]) {
-    app.update();
+    if (app.update()) {
+        appView.gameView.draw(app.currentGame);
+        window.animationFrame.then(_update);
+    }
 
     // TODO(btmura): don't call setters on every frame unless something changes
 
@@ -80,8 +83,6 @@ class AppController {
         appView.mainMenu.continueButtonVisible = false;
         appView.mainMenu.hide();
         appView.gameView.buttonBar.show();
-        appView.gameView.draw(app.currentGame);
-        window.animationFrame.then(_update);
         break;
 
       case AppState.PAUSED:
