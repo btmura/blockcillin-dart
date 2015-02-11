@@ -41,17 +41,15 @@ class App {
 
   /// Pauses the current game if there is one.
   void pauseGame() {
-    _state = AppState.PAUSED;
-    if (_currentGame != null) {
-      _currentGame.pause();
+    if (_currentGame != null && _currentGame.pause()) {
+      _state = AppState.PAUSED;
     }
   }
 
   /// Resumes the current game if there is one.
   void resumeGame() {
-    _state = AppState.PLAYING;
-    if (_currentGame != null) {
-      _currentGame.resume();
+    if (_currentGame != null && _currentGame.resume()) {
+      _state = AppState.PLAYING;
     }
   }
 

@@ -14,6 +14,12 @@ class Board {
   /// Number of update steps for each transition like pausing and resuming.
   static const double _numUpdates = 100.0;
 
+  static const int _stateStarting = 0;
+  static const int _statePlaying = 1;
+  static const int _statePausing = 2;
+  static const int _stateResuming = 3;
+  static const int _stateClearing = 4;
+
   final List<Ring> rings;
   final int numRings;
   final int numCells;
@@ -78,79 +84,93 @@ class Board {
     return _stateQueue.update();
   }
 
-  /// Pauses the board.
-  void pause() {
-    // Pop off the infinite playing state before adding the pausing state.
+  /// Returns true when the board was successfully paused.
+  bool pause() {
+    if (_stateQueue.containsAny([_statePausing, _stateClearing])) {
+      return false;
+    }
+
     _stateQueue
-      ..removeLast()
+      ..remove(_statePlaying)
       ..add(_pausingState());
+    return true;
   }
 
-  /// Resumes the board.
-  void resume() {
+  /// Returns true if the board was successfully resumed.
+  bool resume() {
+    if (_stateQueue.containsAny([_stateResuming, _stateClearing])) {
+      return false;
+    }
+
     _stateQueue
       ..add(_resumingState())
       ..add(_playingState());
+    return true;
   }
 
-  /// Clears the board meaning the player has decided to quit.
+  /// Returns true if the board was successfully cleared.
   // TODO(btmura): rename to finish to match method in game class.
-  void clear() {
+  bool clear() {
+    if (_stateQueue.containsAny([_stateClearing])) {
+      return false;
+    }
+
     _stateQueue.add(_clearingState());
+    return true;
   }
 
-  StateFunc _startingState() {
+  State _startingState() {
     var i = 0.0;
-    return () {
+    return new State(_stateStarting, () {
       var interp = _easeOutCubic(i, _numUpdates);
       _grayscaleAmount = interp(1.0, 0.0);
       _blackAmount = interp(1.0, 0.0);
       _rotationY = interp(0.0, math.PI);
       _translationY = interp(-1.0, 0.0);
       return ++i < _numUpdates;
-    };
+    });
   }
 
-  StateFunc _playingState() {
-    return () {
+  State _playingState() {
+    return new State(_statePlaying, () {
       _translationY += 0.001;
       return true;
-    };
+    });
   }
 
-  StateFunc _pausingState() {
+  State _pausingState() {
     var i = 0.0;
     var cg = _grayscaleAmount;
     var cb = _blackAmount;
-    return () {
+    return new State(_statePausing, () {
       var interp = _easeOutCubic(i, _numUpdates);
       _grayscaleAmount = interp(cg, 1.0);
       _blackAmount = interp(cb, 0.65);
       return ++i < _numUpdates;
-    };
+    });
   }
 
-  StateFunc _resumingState() {
+  State _resumingState() {
     var i = 0.0;
-    return () {
+    return new State(_stateResuming, () {
       var interp = _easeOutCubic(i, _numUpdates);
       _grayscaleAmount = interp(1.0, 0.0);
       _blackAmount = interp(0.65, 0.0);
       return ++i < _numUpdates;
-    };
+    });
   }
 
-  StateFunc _clearingState() {
+  State _clearingState() {
     var i = 0.0;
     var cr = _rotationY;
     var ct = _translationY;
-    return () {
+    return new State(_stateClearing, () {
       var interp = _easeOutCubic(i, _numUpdates);
       _grayscaleAmount = interp(0.0, 1.0);
       _blackAmount = interp(0.0, 1.0);
       _rotationY = interp(cr, cr - math.PI);
       _translationY = interp(ct, ct - 1.0);
       return ++i < _numUpdates;
-    };
+    });
   }
 }

@@ -18,13 +18,13 @@ class Game {
   }
 
   /// Pauses the game.
-  void pause() {
-    board.pause();
+  bool pause() {
+    return board.pause();
   }
 
   /// Resumes the game.
-  void resume() {
-    board.resume();
+  bool resume() {
+    return board.resume();
   }
 
   /// Signals to the game that it should start it's ending sequence.
