@@ -33,8 +33,8 @@ class App {
       return true;
     }
 
-    // Start ending the current game and queue up the next game.
-    _currentGame.finish();
+    // Stop the current game and queue up the next game.
+    _currentGame.stop();
     _nextGame = newGame;
     return false;
   }

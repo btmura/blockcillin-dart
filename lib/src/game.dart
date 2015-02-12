@@ -27,8 +27,8 @@ class Game {
     return board.resume();
   }
 
-  /// Signals to the game that it should start it's ending sequence.
-  void finish() {
-    board.clear();
+  /// Signals to the game that it should stop.
+  bool stop() {
+    return board.stop();
   }
 }

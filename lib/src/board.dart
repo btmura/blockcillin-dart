@@ -12,13 +12,16 @@ class Board {
   static const double _emptyRatio = 0.25;
 
   /// Number of update steps for each transition like pausing and resuming.
-  static const double _numUpdates = 100.0;
+  static const double _updatesPerState = 75.0;
+
+  /// Amount to rotate when starting and stopping.
+  static const double _startStopRotation = math.PI;
 
   static const int _stateStarting = 0;
   static const int _statePlaying = 1;
   static const int _statePausing = 2;
   static const int _stateResuming = 3;
-  static const int _stateClearing = 4;
+  static const int _stateStopping = 4;
 
   final List<Ring> rings;
   final int numRings;
@@ -86,7 +89,7 @@ class Board {
 
   /// Returns true when the board was successfully paused.
   bool pause() {
-    if (_stateQueue.containsAny([_statePausing, _stateClearing])) {
+    if (_stateQueue.containsAny([_statePausing, _stateStopping])) {
       return false;
     }
 
@@ -98,7 +101,7 @@ class Board {
 
   /// Returns true if the board was successfully resumed.
   bool resume() {
-    if (_stateQueue.containsAny([_stateResuming, _stateClearing])) {
+    if (_stateQueue.containsAny([_stateResuming, _stateStopping])) {
       return false;
     }
 
@@ -108,26 +111,25 @@ class Board {
     return true;
   }
 
-  /// Returns true if the board was successfully cleared.
-  // TODO(btmura): rename to finish to match method in game class.
-  bool clear() {
-    if (_stateQueue.containsAny([_stateClearing])) {
+  /// Returns true if the board has successfully stopped.
+  bool stop() {
+    if (_stateQueue.containsAny([_stateStopping])) {
       return false;
     }
 
-    _stateQueue.add(_clearingState());
+    _stateQueue.add(_stoppingState());
     return true;
   }
 
   State _startingState() {
     var i = 0.0;
     return new State(_stateStarting, () {
-      var interp = _easeOutCubic(i, _numUpdates);
+      var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(1.0, 0.0);
       _blackAmount = interp(1.0, 0.0);
-      _rotationY = interp(0.0, math.PI);
+      _rotationY = interp(0.0, _startStopRotation);
       _translationY = interp(-1.0, 0.0);
-      return ++i < _numUpdates;
+      return ++i < _updatesPerState;
     });
   }
 
@@ -143,34 +145,34 @@ class Board {
     var cg = _grayscaleAmount;
     var cb = _blackAmount;
     return new State(_statePausing, () {
-      var interp = _easeOutCubic(i, _numUpdates);
+      var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(cg, 1.0);
       _blackAmount = interp(cb, 0.65);
-      return ++i < _numUpdates;
+      return ++i < _updatesPerState;
     });
   }
 
   State _resumingState() {
     var i = 0.0;
     return new State(_stateResuming, () {
-      var interp = _easeOutCubic(i, _numUpdates);
+      var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(1.0, 0.0);
       _blackAmount = interp(0.65, 0.0);
-      return ++i < _numUpdates;
+      return ++i < _updatesPerState;
     });
   }
 
-  State _clearingState() {
+  State _stoppingState() {
     var i = 0.0;
     var cr = _rotationY;
     var ct = _translationY;
-    return new State(_stateClearing, () {
-      var interp = _easeOutCubic(i, _numUpdates);
+    return new State(_stateStopping, () {
+      var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(0.0, 1.0);
       _blackAmount = interp(0.0, 1.0);
-      _rotationY = interp(cr, cr - math.PI);
+      _rotationY = interp(cr, cr - _startStopRotation);
       _translationY = interp(ct, ct - 1.0);
-      return ++i < _numUpdates;
+      return ++i < _updatesPerState;
     });
   }
 }
