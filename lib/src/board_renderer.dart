@@ -3,6 +3,7 @@ part of client;
 class BoardRenderer {
 
   final GLProgram _glProgram;
+  final ImageElement _textureImage;
 
   webgl.Buffer _positionBuffer;
   webgl.Buffer _positionOffsetBuffer;
@@ -10,7 +11,7 @@ class BoardRenderer {
   webgl.Buffer _textureBuffer;
   webgl.Buffer _indexBuffer;
 
-  BoardRenderer(this._glProgram);
+  BoardRenderer(this._glProgram, this._textureImage);
 
   void init(Board board) {
     var gl = _glProgram.gl;
@@ -21,21 +22,12 @@ class BoardRenderer {
     _normalBuffer = createArrayBuffer(gl, data[2]);
 
     var texture = gl.createTexture();
-    var green = [0, 255, 0, 255];
     gl
       ..bindTexture(webgl.TEXTURE_2D, texture)
-      ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, 1, 1, 0, webgl.RGBA, webgl.UNSIGNED_BYTE, new Uint8List.fromList(green));
-
-    // TODO(btmura): don't allow game to be started until texture is ready
-    var image = new ImageElement(src: "packages/blockcillin/texture.png");
-    image.onLoad.listen((_) {
-      gl
-        ..bindTexture(webgl.TEXTURE_2D, texture)
-        ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, image)
-        ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR)
-        ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR_MIPMAP_NEAREST)
-        ..generateMipmap(webgl.TEXTURE_2D);
-    });
+      ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, _textureImage)
+      ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR)
+      ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR_MIPMAP_NEAREST)
+      ..generateMipmap(webgl.TEXTURE_2D);
 
     _textureBuffer = createArrayBuffer(gl, _getTextureData(board));
     _indexBuffer = createElementArrayBuffer(gl, _getIndexData(board));

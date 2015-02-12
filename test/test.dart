@@ -18,7 +18,6 @@ part 'src/board_test.dart';
 part 'src/button_bar_test.dart';
 part 'src/cell_test.dart';
 part 'src/game_test.dart';
-part 'src/game_view_test.dart';
 part 'src/gl_program_test.dart';
 part 'src/gl_test.dart';
 part 'src/main_menu_test.dart';
@@ -39,7 +38,6 @@ void main() {
   _button_bar_tests();
   _cell_tests();
   _game_tests();
-  _game_view_tests();
   _gl_program_tests();
   _gl_tests();
   _main_menu_tests();

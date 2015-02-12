@@ -45,15 +45,19 @@ void run_client() {
     return;
   }
 
-  var glProgram = new GLProgram(gl);
-  var boardRenderer = new BoardRenderer(glProgram);
-  var gameView = new GameView(buttonBar, canvas, glProgram, boardRenderer);
+  // Wait for the texture to load before showing the main menu.
+  var image = new ImageElement(src: "packages/blockcillin/texture.png");
+  image.onLoad.listen((_) {
+    var glProgram = new GLProgram(gl);
+    var boardRenderer = new BoardRenderer(glProgram, image);
+    var gameView = new GameView(buttonBar, canvas, glProgram, boardRenderer);
 
-  var mainMenu = new MainMenu.withElements();
-  var appView = new AppView(mainMenu, gameView);
+    var mainMenu = new MainMenu.withElements();
+    var appView = new AppView(mainMenu, gameView);
 
-  var app = new App();
-  var appController = new AppController(app, appView);
+    var app = new App();
+    var appController = new AppController(app, appView);
 
-  appController.run();
+    appController.run();
+  });
 }
