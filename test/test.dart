@@ -11,7 +11,6 @@ import 'package:unittest/unittest.dart';
 import 'package:blockcillin/client.dart';
 
 part 'src/app_test.dart';
-part 'src/app_controller_test.dart';
 part 'src/app_view_test.dart';
 part 'src/block_test.dart';
 part 'src/board_test.dart';
@@ -31,7 +30,6 @@ void main() {
   useHtmlEnhancedConfiguration();
 
   _app_tests();
-  _app_controller_tests();
   _app_view_tests();
   _block_tests();
   _board_tests();

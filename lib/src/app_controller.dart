@@ -2,10 +2,15 @@ part of client;
 
 class AppController {
 
+  static const int _msPerUpdate = 16;
+
   final App app;
   final AppView appView;
+  final Stopwatch _stopwatch;
 
-  AppController(this.app, this.appView);
+  int _lag = 0;
+
+  AppController(this.app, this.appView, this._stopwatch);
 
   void run() {
     _init();
@@ -35,6 +40,8 @@ class AppController {
 
             case AppState.PAUSED:
               app.resumeGame();
+              _stopwatch.reset();
+              _lag = 0;
               _update();
               break;
           }
@@ -45,11 +52,15 @@ class AppController {
       if (app.startGame(game)) {
         appView.init(game);
       }
+      _stopwatch.reset();
+      _lag = 0;
       _update();
     });
 
     app.onNextGameStarted.listen((game) {
       appView.init(game);
+      _stopwatch.reset();
+      _lag = 0;
       _update();
     });
 
@@ -60,14 +71,38 @@ class AppController {
 
     appView.onContinueGameButtonClick.listen((_) {
       app.resumeGame();
+      _stopwatch.reset();
+      _lag = 0;
       _update();
     });
+
+    _stopwatch.start();
   }
 
   void _update([num delta]) {
-    if (app.update()) {
-        appView.gameView.draw(app.currentGame);
-        window.animationFrame.then(_update);
+    var elapsed = _stopwatch.elapsedMilliseconds;
+    _stopwatch.reset();
+
+    _lag += elapsed;
+
+    var scheduleUpdate = true;
+    var changed = false;
+    for (var i = 0; _lag >= _msPerUpdate; i++) {
+      _lag -= _msPerUpdate;
+      if (app.update()) {
+        changed = true;
+      } else {
+        scheduleUpdate = false;
+        break;
+      }
+    }
+
+    if (changed) {
+      appView.gameView.draw(app.currentGame);
+    }
+
+    if (scheduleUpdate) {
+      window.animationFrame.then(_update);
     }
 
     // TODO(btmura): don't call setters on every frame unless something changes

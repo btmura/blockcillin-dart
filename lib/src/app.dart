@@ -40,17 +40,21 @@ class App {
   }
 
   /// Pauses the current game if there is one.
-  void pauseGame() {
+  bool pauseGame() {
     if (_currentGame != null && _currentGame.pause()) {
       _state = AppState.PAUSED;
+      return true;
     }
+    return false;
   }
 
   /// Resumes the current game if there is one.
-  void resumeGame() {
+  bool resumeGame() {
     if (_currentGame != null && _currentGame.resume()) {
       _state = AppState.PLAYING;
+      return true;
     }
+    return false;
   }
 
   /// Returns whether the app has changed after advancing it's state.
