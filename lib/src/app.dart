@@ -22,7 +22,7 @@ class App {
   /// Current game being played.
   Game get currentGame => _currentGame;
 
-  /// Starts a new game and returns true if the game will be started immediately.
+  /// Starts a new game.
   void startGame(Game newGame) {
     _setState(AppState.PLAYING);
 
