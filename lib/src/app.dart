@@ -34,23 +34,23 @@ class App {
     }
 
     // Stop the current game and queue up the next game.
-    _currentGame.stop();
+    _currentGame.requestStop();
     _nextGame = newGame;
     return false;
   }
 
-  /// Pauses the current game if there is one.
-  bool pauseGame() {
-    if (_currentGame != null && _currentGame.pause()) {
+  /// Returns true if the request to pause the game was accepted.
+  bool requestPauseGame() {
+    if (_currentGame != null && _currentGame.requestPause()) {
       _state = AppState.PAUSED;
       return true;
     }
     return false;
   }
 
-  /// Resumes the current game if there is one.
-  bool resumeGame() {
-    if (_currentGame != null && _currentGame.resume()) {
+  /// Returns true if the request to resume the game was accepted.
+  bool requestResumeGame() {
+    if (_currentGame != null && _currentGame.requestResume()) {
       _state = AppState.PLAYING;
       return true;
     }

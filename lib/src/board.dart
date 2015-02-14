@@ -87,8 +87,8 @@ class Board {
     return _stateQueue.update();
   }
 
-  /// Returns true when the board was successfully paused.
-  bool pause() {
+  /// Returns true if the request to pause was accepted.
+  bool requestPause() {
     if (_stateQueue.containsAny([_statePausing, _stateStopping])) {
       return false;
     }
@@ -99,8 +99,8 @@ class Board {
     return true;
   }
 
-  /// Returns true if the board was successfully resumed.
-  bool resume() {
+  /// Returns true if the request to resume was accepted.
+  bool requestResume() {
     if (_stateQueue.containsAny([_stateResuming, _stateStopping])) {
       return false;
     }
@@ -111,8 +111,8 @@ class Board {
     return true;
   }
 
-  /// Returns true if the board has successfully stopped.
-  bool stop() {
+  /// Returns true if the request to stop was accepted.
+  bool requestStop() {
     if (_stateQueue.containsAny([_stateStopping])) {
       return false;
     }

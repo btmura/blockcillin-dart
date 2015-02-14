@@ -2,7 +2,7 @@ part of client;
 
 class AppController {
 
-  static const int _msPerUpdate = 16;
+  static const int _msPerUpdate = 8;
 
   final App app;
   final AppView appView;
@@ -34,12 +34,12 @@ class AppController {
               break;
 
             case AppState.PLAYING:
-              app.pauseGame();
+              app.requestPauseGame();
               _update();
               break;
 
             case AppState.PAUSED:
-              app.resumeGame();
+              app.requestResumeGame();
               _stopwatch.reset();
               _lag = 0;
               _update();
@@ -65,12 +65,12 @@ class AppController {
     });
 
     appView.onPauseButtonClick.listen((_) {
-      app.pauseGame();
+      app.requestPauseGame();
       _update();
     });
 
     appView.onContinueGameButtonClick.listen((_) {
-      app.resumeGame();
+      app.requestResumeGame();
       _stopwatch.reset();
       _lag = 0;
       _update();

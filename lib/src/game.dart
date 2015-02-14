@@ -17,18 +17,18 @@ class Game {
     return board.update();
   }
 
-  /// Pauses the game.
-  bool pause() {
-    return board.pause();
+  /// Returns true if the request to pause was accepted.
+  bool requestPause() {
+    return board.requestPause();
   }
 
-  /// Resumes the game.
-  bool resume() {
-    return board.resume();
+  /// Returns true if the request to resume was accepted.
+  bool requestResume() {
+    return board.requestResume();
   }
 
-  /// Signals to the game that it should stop.
-  bool stop() {
-    return board.stop();
+  /// Returns true if the request to stop was accepted.
+  bool requestStop() {
+    return board.requestStop();
   }
 }
