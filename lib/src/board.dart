@@ -17,11 +17,13 @@ class Board {
   /// Amount to rotate when starting and stopping.
   static const double _startStopRotation = math.PI;
 
-  static const int _stateStarting = 0;
-  static const int _statePlaying = 1;
-  static const int _statePausing = 2;
-  static const int _stateResuming = 3;
-  static const int _stateStopping = 4;
+  static const int _startingState = 0;
+  static const int _playingState = 1;
+  static const int _pausingState = 2;
+  static const int _pausedState = 3;
+  static const int _resumingState = 4;
+  static const int _stoppingState = 5;
+  static const int _stoppedState = 6;
 
   final List<Ring> rings;
   final int numRings;
@@ -60,8 +62,8 @@ class Board {
   // TODO(btmura): change num of block colors to set of block colors
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
     _stateQueue
-      ..add(_startingState())
-      ..add(_playingState());
+      ..add(_newStartingState())
+      ..add(_newPlayingState());
   }
 
   factory Board.withRandomRings(int numRings, int numCells, int numBlockColors) {
@@ -89,90 +91,104 @@ class Board {
 
   /// Returns true if the request to pause was accepted.
   bool requestPause() {
-    if (_stateQueue.containsAny([_statePausing, _stateStopping])) {
-      return false;
+    if (_stateQueue.isState(_playingState)) {
+      _stateQueue
+        ..removeFirst()
+        ..add(_newPausingState())
+        ..add(_newPausedState());
+      return true;
     }
-
-    _stateQueue
-      ..remove(_statePlaying)
-      ..add(_pausingState());
-    return true;
+    return false;
   }
 
   /// Returns true if the request to resume was accepted.
   bool requestResume() {
-    if (_stateQueue.containsAny([_stateResuming, _stateStopping])) {
-      return false;
+    if (_stateQueue.isState(_pausedState)) {
+      _stateQueue
+        ..removeFirst()
+        ..add(_newResumingState())
+        ..add(_newPlayingState());
+      return true;
     }
-
-    _stateQueue
-      ..add(_resumingState())
-      ..add(_playingState());
-    return true;
+    return false;
   }
 
   /// Returns true if the request to stop was accepted.
   bool requestStop() {
-    if (_stateQueue.containsAny([_stateStopping])) {
-      return false;
+    if (_stateQueue.isState(_pausedState)) {
+        _stateQueue
+          ..removeFirst()
+          ..add(_newStoppingState())
+          ..add(_newStoppedState());
+        return true;
     }
-
-    _stateQueue.add(_stoppingState());
-    return true;
+    return false;
   }
 
-  State _startingState() {
+  State _newStartingState() {
     var i = 0.0;
-    return new State(_stateStarting, () {
+    return new State(_startingState, () {
       var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(1.0, 0.0);
       _blackAmount = interp(1.0, 0.0);
       _rotationY = interp(0.0, _startStopRotation);
       _translationY = interp(-1.0, 0.0);
-      return ++i < _updatesPerState;
+      return new StateResult(++i < _updatesPerState, true);
     });
   }
 
-  State _playingState() {
-    return new State(_statePlaying, () {
+  State _newPlayingState() {
+    return new State(_playingState, () {
       _translationY += 0.001;
-      return true;
+      return StateResult.loop;
     });
   }
 
-  State _pausingState() {
+  State _newPausingState() {
     var i = 0.0;
     var cg = _grayscaleAmount;
     var cb = _blackAmount;
-    return new State(_statePausing, () {
+    return new State(_pausingState, () {
       var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(cg, 1.0);
       _blackAmount = interp(cb, 0.65);
-      return ++i < _updatesPerState;
+      return new StateResult(++i < _updatesPerState, true);
     });
   }
 
-  State _resumingState() {
+  State _newPausedState() {
+    return new State(_pausedState, () {
+      return StateResult.pause;
+    });
+  }
+
+  State _newResumingState() {
     var i = 0.0;
-    return new State(_stateResuming, () {
+    return new State(_resumingState, () {
       var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(1.0, 0.0);
       _blackAmount = interp(0.65, 0.0);
-      return ++i < _updatesPerState;
+      return new StateResult(++i < _updatesPerState, true);
     });
   }
 
-  State _stoppingState() {
+  State _newStoppingState() {
     var i = 0.0;
     var cr = _rotationY;
     var ct = _translationY;
-    return new State(_stateStopping, () {
+    return new State(_stoppingState, () {
       var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(0.0, 1.0);
       _blackAmount = interp(0.0, 1.0);
       _rotationY = interp(cr, cr - _startStopRotation);
       _translationY = interp(ct, ct - 1.0);
-      return ++i < _updatesPerState;
+      return new StateResult(++i < _updatesPerState, true);
+    });
+  }
+
+  State _newStoppedState() {
+    return new State(_stoppedState, () {
+      return StateResult.pause;
     });
   }
 }
