@@ -63,7 +63,7 @@ class AppController {
       }
     });
 
-    _appView.onContinueGameButtonClick.listen((_) {
+    _appView.onContinueButtonClick.listen((_) {
       if (_app.requestResumeGame()) {
         _scheduleUpdate();
       }
@@ -95,7 +95,7 @@ class AppController {
     }
 
     if (changed) {
-      _appView.gameView.draw(_app.currentGame);
+      _appView.draw(_app.currentGame);
     }
 
     if (scheduleUpdate) {
@@ -108,21 +108,15 @@ class AppController {
   void _refreshView(AppState state) {
     switch (_app.state) {
       case AppState.INITIAL:
-        _appView.mainMenu.continueButtonVisible = false;
-        _appView.mainMenu.show();
-        _appView.gameView.buttonBar.hide();
+        _appView.showInitialView();
         break;
 
       case AppState.PLAYING:
-        _appView.mainMenu.continueButtonVisible = false;
-        _appView.mainMenu.hide();
-        _appView.gameView.buttonBar.show();
+        _appView.showPlayingView();
         break;
 
       case AppState.PAUSED:
-        _appView.mainMenu.continueButtonVisible = true;
-        _appView.mainMenu.show();
-        _appView.gameView.buttonBar.hide();
+        _appView.showPausedView();
         break;
     }
   }
