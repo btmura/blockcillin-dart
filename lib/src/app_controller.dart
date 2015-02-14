@@ -4,13 +4,13 @@ class AppController {
 
   static const int _msPerUpdate = 8;
 
-  final App app;
-  final AppView appView;
+  final App _app;
+  final AppView _appView;
   final Stopwatch _stopwatch;
 
   int _lag = 0;
 
-  AppController(this.app, this.appView, this._stopwatch);
+  AppController(this._app, this._appView, this._stopwatch);
 
   void run() {
     _init();
@@ -18,10 +18,10 @@ class AppController {
   }
 
   void _init() {
-    appView.resize();
+    _appView.resize();
 
     window.onResize.listen((_) {
-      if (appView.resize()) {
+      if (_appView.resize()) {
         _scheduleUpdate();
       }
     });
@@ -29,66 +29,60 @@ class AppController {
     window.onKeyUp
         .where((event) => event.keyCode == KeyCode.ESC)
         .listen((_) {
-          switch (app.state) {
-            case AppState.INITIAL:
-              break;
-
+          switch (_app.state) {
             case AppState.PLAYING:
-              app.requestPauseGame();
+              _app.requestPauseGame();
               _scheduleUpdate();
               break;
 
             case AppState.PAUSED:
-              app.requestResumeGame();
-              _stopwatch.reset();
-              _lag = 0;
+              _app.requestResumeGame();
               _scheduleUpdate();
               break;
           }
         });
 
-    app.onAppStateChanged.listen((state) => _refreshView(state));
+    _app.onAppStateChanged.listen((state) => _refreshView(state));
 
-    appView.onNewGameButtonClick.listen((_) {
+    _appView.onNewGameButtonClick.listen((_) {
       var game = new Game.withRandomBoard(20, 24, BlockColor.values.length);
-      app.startGame(game);
+      _app.startGame(game);
       _scheduleUpdate();
     });
 
-    app.onNewGameStarted.listen((game) {
-      appView.init(game);
-      _stopwatch.reset();
-      _lag = 0;
+    _app.onNewGameStarted.listen((game) {
+      _appView.init(game);
       _scheduleUpdate();
     });
 
-    appView.onPauseButtonClick.listen((_) {
-      app.requestPauseGame();
+    _appView.onPauseButtonClick.listen((_) {
+      _app.requestPauseGame();
       _scheduleUpdate();
     });
 
-    appView.onContinueGameButtonClick.listen((_) {
-      app.requestResumeGame();
-      _stopwatch.reset();
-      _lag = 0;
+    _appView.onContinueGameButtonClick.listen((_) {
+      _app.requestResumeGame();
       _scheduleUpdate();
     });
 
-    _refreshView(app.state);
+    _refreshView(_app.state);
     _stopwatch.start();
   }
 
   void _update([num delta]) {
     var elapsed = _stopwatch.elapsedMilliseconds;
-    _stopwatch.reset();
-
     _lag += elapsed;
+
+    _stopwatch.reset();
+    if (!_stopwatch.isRunning) {
+      _stopwatch.start();
+    }
 
     var scheduleUpdate = true;
     var changed = false;
     for (var i = 0; _lag >= _msPerUpdate; i++) {
       _lag -= _msPerUpdate;
-      if (app.update()) {
+      if (_app.update()) {
         changed = true;
       } else {
         scheduleUpdate = false;
@@ -97,32 +91,34 @@ class AppController {
     }
 
     if (changed) {
-      appView.gameView.draw(app.currentGame);
+      _appView.gameView.draw(_app.currentGame);
     }
 
     if (scheduleUpdate) {
       _scheduleUpdate();
+    } else {
+      _stopwatch.stop();
     }
   }
 
   void _refreshView(AppState state) {
-    switch (app.state) {
+    switch (_app.state) {
       case AppState.INITIAL:
-        appView.mainMenu.continueButtonVisible = false;
-        appView.mainMenu.show();
-        appView.gameView.buttonBar.hide();
+        _appView.mainMenu.continueButtonVisible = false;
+        _appView.mainMenu.show();
+        _appView.gameView.buttonBar.hide();
         break;
 
       case AppState.PLAYING:
-        appView.mainMenu.continueButtonVisible = false;
-        appView.mainMenu.hide();
-        appView.gameView.buttonBar.show();
+        _appView.mainMenu.continueButtonVisible = false;
+        _appView.mainMenu.hide();
+        _appView.gameView.buttonBar.show();
         break;
 
       case AppState.PAUSED:
-        appView.mainMenu.continueButtonVisible = true;
-        appView.mainMenu.show();
-        appView.gameView.buttonBar.hide();
+        _appView.mainMenu.continueButtonVisible = true;
+        _appView.mainMenu.show();
+        _appView.gameView.buttonBar.hide();
         break;
     }
   }
