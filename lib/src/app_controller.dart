@@ -102,6 +102,8 @@ class AppController {
       _scheduleUpdate();
     } else {
       _stopwatch.stop();
+      _stopwatch.reset();
+      _lag = 0;
     }
   }
 
