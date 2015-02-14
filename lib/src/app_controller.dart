@@ -57,6 +57,28 @@ class AppController {
       _update();
     });
 
+    app.onAppStateChanged.listen((state) {
+      switch (app.state) {
+        case AppState.INITIAL:
+          appView.mainMenu.continueButtonVisible = false;
+          appView.mainMenu.show();
+          appView.gameView.buttonBar.hide();
+          break;
+
+        case AppState.PLAYING:
+          appView.mainMenu.continueButtonVisible = false;
+          appView.mainMenu.hide();
+          appView.gameView.buttonBar.show();
+          break;
+
+        case AppState.PAUSED:
+          appView.mainMenu.continueButtonVisible = true;
+          appView.mainMenu.show();
+          appView.gameView.buttonBar.hide();
+          break;
+      }
+    });
+
     app.onNextGameStarted.listen((game) {
       appView.init(game);
       _stopwatch.reset();
@@ -103,28 +125,6 @@ class AppController {
 
     if (scheduleUpdate) {
       window.animationFrame.then(_update);
-    }
-
-    // TODO(btmura): don't call setters on every frame unless something changes
-
-    switch (app.state) {
-      case AppState.INITIAL:
-        appView.mainMenu.continueButtonVisible = false;
-        appView.mainMenu.show();
-        appView.gameView.buttonBar.hide();
-        break;
-
-      case AppState.PLAYING:
-        appView.mainMenu.continueButtonVisible = false;
-        appView.mainMenu.hide();
-        appView.gameView.buttonBar.show();
-        break;
-
-      case AppState.PAUSED:
-        appView.mainMenu.continueButtonVisible = true;
-        appView.mainMenu.show();
-        appView.gameView.buttonBar.hide();
-        break;
     }
   }
 }

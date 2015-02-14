@@ -3,29 +3,28 @@ part of client;
 /// The model that represents the app which may have a current game.
 class App {
 
-  /// State of the app.
-  AppState _state = AppState.INITIAL;
+  final StreamController<AppState> _stateStream = new StreamController();
+  final StreamController<Game> _nextGameStream = new StreamController();
 
-  /// Current game being played or ending. Null only once at the start.
+  AppState _state;
   Game _currentGame;
-
-  /// Next game queued to become the current game. Often null.
   Game _nextGame;
 
-  /// StreamController that emits the next game when it becomes the current game.
-  StreamController<Game> _nextGameStream = new StreamController();
-
-  /// Current game being played.
-  Game get currentGame => _currentGame;
+  /// Stream that broadcasts when the app's state has changed.
+  Stream<AppState> get onAppStateChanged => _stateStream.stream;
 
   /// Stream that broadcasts when the next game has become the current game.
   Stream<Game> get onNextGameStarted => _nextGameStream.stream;
 
+  /// State of the app. Null until the first time update is called.
   AppState get state => _state;
+
+  /// Current game being played.
+  Game get currentGame => _currentGame;
 
   /// Starts a new game and returns true if the game will be started immediately.
   bool startGame(Game newGame) {
-    _state = AppState.PLAYING;
+    _setState(AppState.PLAYING);
 
     // Make the new game the current one if there is no current game.
     if (_currentGame == null) {
@@ -42,7 +41,7 @@ class App {
   /// Returns true if the request to pause the game was accepted.
   bool requestPauseGame() {
     if (_currentGame != null && _currentGame.requestPause()) {
-      _state = AppState.PAUSED;
+      _setState(AppState.PAUSED);
       return true;
     }
     return false;
@@ -51,7 +50,7 @@ class App {
   /// Returns true if the request to resume the game was accepted.
   bool requestResumeGame() {
     if (_currentGame != null && _currentGame.requestResume()) {
-      _state = AppState.PLAYING;
+      _setState(AppState.PLAYING);
       return true;
     }
     return false;
@@ -59,6 +58,10 @@ class App {
 
   /// Returns whether the app has changed after advancing it's state.
   bool update() {
+    if (_state == null) {
+      _setState(AppState.INITIAL);
+    }
+
     // Update the current game if there is one. Return true if it changed.
     if (_currentGame != null && _currentGame.update()) {
         return true;
@@ -78,6 +81,15 @@ class App {
     }
 
     return false;
+  }
+
+  void _setState(AppState newState) {
+    if (newState != _state) {
+      _state = newState;
+      if (!_stateStream.isPaused) {
+        _stateStream.add(newState);
+      }
+    }
   }
 }
 
