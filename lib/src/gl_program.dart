@@ -22,8 +22,8 @@ class GLProgram {
     var vertexShaderSource = '''
       // TODO(btmura): use uniforms to make these configurable
       const vec3 ambientLight = vec3(0.7, 0.7, 0.7);
-      const vec3 directionalLightColor = vec3(0.8, 0.8, 0.8);
-      const vec3 directionalVector = vec3(0.0, 1.0, 3.0);
+      const vec3 directionalLightColor = vec3(0.4, 0.4, 0.4);
+      const vec3 directionalVector = vec3(0.0, 3.0, -3.0);
 
       uniform mat4 u_projectionMatrix;
       uniform mat4 u_viewMatrix;
@@ -56,7 +56,7 @@ class GLProgram {
         v_blackAmount = max(1.0 - smoothstep(-2.0, 0.0, position.y), u_blackAmount);
 
         vec4 transformedNormal = u_normalMatrix * vec4(a_normal, 1.0);
-        float directional = max(dot(transformedNormal.xyz, directionalVector), 1.0);
+        float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
         v_lighting = ambientLight * (directionalLightColor * directional);
       }
     ''';

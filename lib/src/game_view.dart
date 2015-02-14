@@ -47,7 +47,7 @@ class GameView {
   }
 
   Matrix4 _makeViewMatrix() {
-    var cameraPosition = new Vector3(0.0, 1.0, 3.0);
+    var cameraPosition = new Vector3(0.0, 0.5, 3.0);
     var targetPosition = new Vector3(0.0, 0.0, 0.0);
     var up = new Vector3(0.0, 1.0, 0.0);
     return new Matrix4.view(cameraPosition, targetPosition, up);
