@@ -22,7 +22,7 @@ class AppController {
 
     window.onResize.listen((_) {
       if (appView.resize()) {
-        _update();
+        _scheduleUpdate();
       }
     });
 
@@ -35,69 +35,46 @@ class AppController {
 
             case AppState.PLAYING:
               app.requestPauseGame();
-              _update();
+              _scheduleUpdate();
               break;
 
             case AppState.PAUSED:
               app.requestResumeGame();
               _stopwatch.reset();
               _lag = 0;
-              _update();
+              _scheduleUpdate();
               break;
           }
         });
 
+    app.onAppStateChanged.listen((state) => _refreshView(state));
+
     appView.onNewGameButtonClick.listen((_) {
       var game = new Game.withRandomBoard(20, 24, BlockColor.values.length);
-      if (app.startGame(game)) {
-        appView.init(game);
-      }
-      _stopwatch.reset();
-      _lag = 0;
-      _update();
+      app.startGame(game);
+      _scheduleUpdate();
     });
 
-    app.onAppStateChanged.listen((state) {
-      switch (app.state) {
-        case AppState.INITIAL:
-          appView.mainMenu.continueButtonVisible = false;
-          appView.mainMenu.show();
-          appView.gameView.buttonBar.hide();
-          break;
-
-        case AppState.PLAYING:
-          appView.mainMenu.continueButtonVisible = false;
-          appView.mainMenu.hide();
-          appView.gameView.buttonBar.show();
-          break;
-
-        case AppState.PAUSED:
-          appView.mainMenu.continueButtonVisible = true;
-          appView.mainMenu.show();
-          appView.gameView.buttonBar.hide();
-          break;
-      }
-    });
-
-    app.onNextGameStarted.listen((game) {
+    app.onNewGameStarted.listen((game) {
       appView.init(game);
       _stopwatch.reset();
       _lag = 0;
-      _update();
+      _scheduleUpdate();
     });
 
     appView.onPauseButtonClick.listen((_) {
       app.requestPauseGame();
-      _update();
+      _scheduleUpdate();
     });
 
     appView.onContinueGameButtonClick.listen((_) {
       app.requestResumeGame();
       _stopwatch.reset();
       _lag = 0;
-      _update();
+      _scheduleUpdate();
     });
 
+    _refreshView(app.state);
     _stopwatch.start();
   }
 
@@ -124,7 +101,33 @@ class AppController {
     }
 
     if (scheduleUpdate) {
-      window.animationFrame.then(_update);
+      _scheduleUpdate();
     }
+  }
+
+  void _refreshView(AppState state) {
+    switch (app.state) {
+      case AppState.INITIAL:
+        appView.mainMenu.continueButtonVisible = false;
+        appView.mainMenu.show();
+        appView.gameView.buttonBar.hide();
+        break;
+
+      case AppState.PLAYING:
+        appView.mainMenu.continueButtonVisible = false;
+        appView.mainMenu.hide();
+        appView.gameView.buttonBar.show();
+        break;
+
+      case AppState.PAUSED:
+        appView.mainMenu.continueButtonVisible = true;
+        appView.mainMenu.show();
+        appView.gameView.buttonBar.hide();
+        break;
+    }
+  }
+
+  void _scheduleUpdate() {
+    window.animationFrame.then(_update);
   }
 }

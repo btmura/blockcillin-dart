@@ -4,38 +4,37 @@ part of client;
 class App {
 
   final StreamController<AppState> _stateStream = new StreamController();
-  final StreamController<Game> _nextGameStream = new StreamController();
+  final StreamController<Game> _newGameStream = new StreamController();
 
-  AppState _state;
+  AppState _state = AppState.INITIAL;
   Game _currentGame;
   Game _nextGame;
 
   /// Stream that broadcasts when the app's state has changed.
   Stream<AppState> get onAppStateChanged => _stateStream.stream;
 
-  /// Stream that broadcasts when the next game has become the current game.
-  Stream<Game> get onNextGameStarted => _nextGameStream.stream;
+  /// Stream that broadcasts when a new game has started.
+  Stream<Game> get onNewGameStarted => _newGameStream.stream;
 
-  /// State of the app. Null until the first time update is called.
+  /// State of the app.
   AppState get state => _state;
 
   /// Current game being played.
   Game get currentGame => _currentGame;
 
   /// Starts a new game and returns true if the game will be started immediately.
-  bool startGame(Game newGame) {
+  void startGame(Game newGame) {
     _setState(AppState.PLAYING);
 
     // Make the new game the current one if there is no current game.
     if (_currentGame == null) {
-      _currentGame = newGame;
-      return true;
+      _setCurrentGame(newGame);
+      return;
     }
 
     // Stop the current game and queue up the next game.
     _currentGame.requestStop();
     _nextGame = newGame;
-    return false;
   }
 
   /// Returns true if the request to pause the game was accepted.
@@ -58,10 +57,6 @@ class App {
 
   /// Returns whether the app has changed after advancing it's state.
   bool update() {
-    if (_state == null) {
-      _setState(AppState.INITIAL);
-    }
-
     // Update the current game if there is one. Return true if it changed.
     if (_currentGame != null && _currentGame.update()) {
         return true;
@@ -69,14 +64,7 @@ class App {
 
     // If there is a next game and the current game isn't changing, then start the next game.
     if (_nextGame != null) {
-      _currentGame = _nextGame;
-      _nextGame = null;
-
-      // Broadcast that the next game has become the current game.
-      if (_currentGame != null && !_nextGameStream.isPaused) {
-        _nextGameStream.add(_currentGame);
-      }
-
+      _setCurrentGame(_nextGame);
       return currentGame.update();
     }
 
@@ -89,6 +77,14 @@ class App {
       if (!_stateStream.isPaused) {
         _stateStream.add(newState);
       }
+    }
+  }
+
+  void _setCurrentGame(Game newGame) {
+    _currentGame = newGame;
+    _nextGame = null;
+    if (!_newGameStream.isPaused) {
+      _newGameStream.add(_currentGame);
     }
   }
 }
