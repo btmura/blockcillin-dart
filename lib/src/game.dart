@@ -27,8 +27,8 @@ class Game {
     return board.requestResume();
   }
 
-  /// Returns true if the request to stop was accepted.
-  bool requestStop() {
-    return board.requestStop();
+  /// Returns true if the request to finish was accepted.
+  bool requestFinish() {
+    return board.requestFinish();
   }
 }

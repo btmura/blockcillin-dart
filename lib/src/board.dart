@@ -2,68 +2,52 @@ part of client;
 
 class Board {
 
-  /// Outer radius of the cylinder.
   static const double _outerRadius = 1.0;
-
-  /// Inner radius of the cylinder.
   static const double _innerRadius = 0.75;
-
-  /// Ration of how many blocks can be missing from each column.
   static const double _emptyRatio = 0.25;
 
-  /// Number of update steps for each transition like pausing and resuming.
-  static const double _updatesPerState = 75.0;
-
-  /// Amount to rotate when starting and stopping.
+  static const double _updatesPerState = 150.0;
   static const double _startStopRotation = math.PI;
 
-  static const int _startingState = 0;
-  static const int _playingState = 1;
-  static const int _pausingState = 2;
-  static const int _pausedState = 3;
-  static const int _resumingState = 4;
-  static const int _stoppingState = 5;
-  static const int _stoppedState = 6;
+  static final State _gameOverMarker = new State.marker("gm");
+  static final State _pausedMarker = new State.marker("pm");
+  static final State _finishedMarker = new State.marker("fm");
 
   final List<Ring> rings;
   final int numRings;
   final int numCells;
   final int numBlockColors;
-
   final double outerRadius = _outerRadius;
   final double innerRadius = _innerRadius;
 
   final StateQueue _stateQueue = new StateQueue();
 
-  /// Rotation of the board around the y-axis.
   double _rotationY;
-
-  /// Translation of the board on the y-axis.
   double _translationY;
-
-  /// How much of the color should be grayscale from 0.0 to 1.0.
   double _grayscaleAmount;
-
-  /// How much of the color should be black from 0.0 to 1.0.
   double _blackAmount;
 
-  /// Rotation of the board around the y-axis.
-  double get rotationY => _rotationY;
-
-  /// Translation of the board on the y-axis.
-  double get translationY => _translationY;
-
-  /// How much of the color should be grayscale from 0.0 to 1.0.
-  double get grayscaleAmount => _grayscaleAmount;
-
-  /// How much of the color should be black from 0.0 to 1.0.
-  double get blackAmount => _blackAmount;
+  State _startTransition;
+  State _playingState;
+  State _gameOverTransition;
+  State _pauseTransition;
+  State _resumeTransition;
+  State _finishTransition;
 
   // TODO(btmura): change num of block colors to set of block colors
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
+    _startTransition = _newStartTransition();
+    _playingState = _newPlayingState();
+    _gameOverTransition = _newGameOverTransition();
+    _pauseTransition = _newPauseTransition();
+    _resumeTransition = _newResumeTransition();
+    _finishTransition = _newFinishTransition();
+
     _stateQueue
-      ..add(_newStartingState())
-      ..add(_newPlayingState());
+      ..add(_startTransition)
+      ..add(_playingState)
+      ..add(_gameOverTransition)
+      ..add(_gameOverMarker);
   }
 
   factory Board.withRandomRings(int numRings, int numCells, int numBlockColors) {
@@ -84,6 +68,18 @@ class Board {
     return new Board(rings, numRings, numCells, numBlockColors);
   }
 
+  /// Rotation of the board around the y-axis.
+  double get rotationY => _rotationY;
+
+  /// Translation of the board on the y-axis.
+  double get translationY => _translationY;
+
+  /// How much of the color should be grayscale from 0.0 to 1.0.
+  double get grayscaleAmount => _grayscaleAmount;
+
+  /// How much of the color should be black from 0.0 to 1.0.
+  double get blackAmount => _blackAmount;
+
   /// Returns whether the board changed after advancing it's state.
   bool update() {
     return _stateQueue.update();
@@ -93,9 +89,9 @@ class Board {
   bool requestPause() {
     if (_stateQueue.isState(_playingState)) {
       _stateQueue
-        ..removeFirst()
-        ..add(_newPausingState())
-        ..add(_newPausedState());
+        ..clear()
+        ..add(_pauseTransition)
+        ..add(_pausedMarker);
       return true;
     }
     return false;
@@ -103,92 +99,73 @@ class Board {
 
   /// Returns true if the request to resume was accepted.
   bool requestResume() {
-    if (_stateQueue.isState(_pausedState)) {
+    if (_stateQueue.isState(_pausedMarker)) {
       _stateQueue
-        ..removeFirst()
-        ..add(_newResumingState())
-        ..add(_newPlayingState());
+        ..clear()
+        ..add(_resumeTransition)
+        ..add(_playingState)
+        ..add(_gameOverTransition)
+        ..add(_gameOverMarker);
       return true;
     }
     return false;
   }
 
-  /// Returns true if the request to stop was accepted.
-  bool requestStop() {
-    if (_stateQueue.isState(_pausedState)) {
+  /// Returns true if the request to finish was accepted.
+  bool requestFinish() {
+    if (_stateQueue.isState(_pausedMarker)) {
         _stateQueue
-          ..removeFirst()
-          ..add(_newStoppingState())
-          ..add(_newStoppedState());
+          ..clear()
+          ..add(_finishTransition)
+          ..add(_finishedMarker);
         return true;
     }
     return false;
   }
 
-  State _newStartingState() {
-    var i = 0.0;
-    return new State(_startingState, () {
-      var interp = _easeOutCubic(i, _updatesPerState);
-      _grayscaleAmount = interp(1.0, 0.0);
-      _blackAmount = interp(1.0, 0.0);
-      _rotationY = interp(0.0, _startStopRotation);
-      _translationY = interp(-1.0, 0.0);
-      return new StateResult(++i < _updatesPerState, true);
-    });
-  }
+  State _newStartTransition() => new State.transition("st", _updatesPerState, (i) {
+    var interp = _easeOutCubic(i, _updatesPerState);
+    _grayscaleAmount = interp(1.0, 0.0);
+    _blackAmount = interp(1.0, 0.0);
+    _rotationY = interp(0.0, _startStopRotation);
+    _translationY = interp(-1.0, 0.0);
+  });
 
-  State _newPlayingState() {
-    return new State(_playingState, () {
-      _translationY += 0.001;
-      return StateResult.loop;
-    });
-  }
+  State _newPlayingState() => new State.state("ps", () {
+    _translationY += 0.001;
+    return _translationY < 1.5;
+  });
 
-  State _newPausingState() {
-    var i = 0.0;
-    var cg = _grayscaleAmount;
-    var cb = _blackAmount;
-    return new State(_pausingState, () {
-      var interp = _easeOutCubic(i, _updatesPerState);
-      _grayscaleAmount = interp(cg, 1.0);
-      _blackAmount = interp(cb, 0.65);
-      return new StateResult(++i < _updatesPerState, true);
-    });
-  }
+  State _newGameOverTransition() => new State.transition("gt", _updatesPerState, (i) {
+    var interp = _easeOutCubic(i, _updatesPerState);
+    _grayscaleAmount = interp(0.0, 1.0);
+    _blackAmount = interp(0.0, 0.65);
+  });
 
-  State _newPausedState() {
-    return new State(_pausedState, () {
-      return StateResult.pause;
-    });
-  }
+  State _newPauseTransition() => new State.transition("ps", _updatesPerState, (i) {
+    var interp = _easeOutCubic(i, _updatesPerState);
+    _grayscaleAmount = interp(0.0, 1.0);
+    _blackAmount = interp(0.0, 0.65);
+  });
 
-  State _newResumingState() {
-    var i = 0.0;
-    return new State(_resumingState, () {
-      var interp = _easeOutCubic(i, _updatesPerState);
-      _grayscaleAmount = interp(1.0, 0.0);
-      _blackAmount = interp(0.65, 0.0);
-      return new StateResult(++i < _updatesPerState, true);
-    });
-  }
+  State _newResumeTransition() => new State.transition("rt", _updatesPerState, (i) {
+    var interp = _easeOutCubic(i, _updatesPerState);
+    _grayscaleAmount = interp(1.0, 0.0);
+    _blackAmount = interp(0.65, 0.0);
+  });
 
-  State _newStoppingState() {
-    var i = 0.0;
-    var cr = _rotationY;
-    var ct = _translationY;
-    return new State(_stoppingState, () {
+  State _newFinishTransition() => () {
+    var cr;
+    var ct;
+    return new State.transition("ft", _updatesPerState, (i) {
       var interp = _easeOutCubic(i, _updatesPerState);
       _grayscaleAmount = interp(0.0, 1.0);
       _blackAmount = interp(0.0, 1.0);
       _rotationY = interp(cr, cr - _startStopRotation);
       _translationY = interp(ct, ct - 1.0);
-      return new StateResult(++i < _updatesPerState, true);
+    }, enter: () {
+      cr = _rotationY;
+      ct = _translationY;
     });
-  }
-
-  State _newStoppedState() {
-    return new State(_stoppedState, () {
-      return StateResult.pause;
-    });
-  }
+  }();
 }

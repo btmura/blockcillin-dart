@@ -33,7 +33,7 @@ class App {
     }
 
     // Stop the current game and queue up the next game.
-    _currentGame.requestStop();
+    _currentGame.requestFinish();
     _nextGame = newGame;
   }
 
