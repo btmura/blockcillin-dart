@@ -87,6 +87,9 @@ class Board {
   /// How much of the color should be black from 0.0 to 1.0.
   double get blackAmount => _blackAmount;
 
+  /// Whether the game is over.
+  bool get gameOver => _stateQueue.inState(_gameOverTransition) || _stateQueue.inState(_gameOverMarker);
+
   /// Returns whether the board changed after advancing it's state.
   bool update() {
     return _stateQueue.update();
@@ -94,7 +97,7 @@ class Board {
 
   /// Returns true if the request to pause was accepted.
   bool requestPause() {
-    if (_stateQueue.isState(_playingState)) {
+    if (_stateQueue.inState(_playingState)) {
       _stateQueue
         ..clear()
         ..add(_pauseTransition)
@@ -106,7 +109,7 @@ class Board {
 
   /// Returns true if the request to resume was accepted.
   bool requestResume() {
-    if (_stateQueue.isState(_pausedMarker)) {
+    if (_stateQueue.inState(_pausedMarker)) {
       _stateQueue
         ..clear()
         ..add(_resumeTransition)
@@ -120,7 +123,7 @@ class Board {
 
   /// Returns true if the request to finish was accepted.
   bool requestFinish() {
-    if (_stateQueue.isState(_pausedMarker)) {
+    if (_stateQueue.inState(_pausedMarker)) {
         _stateQueue
           ..clear()
           ..add(_finishTransition)

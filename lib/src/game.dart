@@ -12,6 +12,9 @@ class Game {
     return new Game(board);
   }
 
+  /// Whether the game is over.
+  bool get gameOver => board.gameOver;
+
   /// Returns whether the game changed after advancing it's state.
   bool update() {
     return board.update();

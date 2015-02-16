@@ -59,6 +59,9 @@ class App {
   bool update() {
     // Update the current game if there is one. Return true if it changed.
     if (_currentGame != null && _currentGame.update()) {
+        if (_currentGame.gameOver) {
+          _setState(AppState.GAME_OVER);
+        }
         return true;
     }
 
@@ -90,18 +93,17 @@ class App {
 }
 
 /// State that the app can be in.
-class AppState {
+enum AppState {
 
   /// No game has ever been started. States never go back to this.
-  static const AppState INITIAL = const AppState._(0);
+  INITIAL,
 
   /// Game has been started. Can only go to PAUSED.
-  static const AppState PLAYING = const AppState._(1);
+  PLAYING,
 
   /// Game has been paused. Can only goto to PLAYING.
-  static const AppState PAUSED = const AppState._(2);
+  PAUSED,
 
-  final int index;
-
-  const AppState._(this.index);
+  /// Game is over. Can only goto to PLAYING.
+  GAME_OVER,
 }

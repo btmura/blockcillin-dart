@@ -30,6 +30,10 @@ class AppController {
         .where((event) => event.keyCode == KeyCode.ESC)
         .listen((_) {
           switch (_app.state) {
+            case AppState.INITIAL:
+            case AppState.GAME_OVER:
+              break;
+
             case AppState.PLAYING:
               if (_app.requestPauseGame()) {
                 _scheduleUpdate();
@@ -44,7 +48,7 @@ class AppController {
           }
         });
 
-    _app.onAppStateChanged.listen((state) => _refreshView(state));
+    _app.onAppStateChanged.listen((state) => _appView.setState(state));
 
     _appView.onNewGameButtonClick.listen((_) {
       var game = new Game.withRandomBoard(20, 24, BlockColor.values.length);
@@ -69,7 +73,7 @@ class AppController {
       }
     });
 
-    _refreshView(_app.state);
+    _appView.setState(_app.state);
     _stopwatch.start();
   }
 
@@ -102,22 +106,6 @@ class AppController {
       _stopwatch.stop();
       _stopwatch.reset();
       _lag = 0;
-    }
-  }
-
-  void _refreshView(AppState state) {
-    switch (_app.state) {
-      case AppState.INITIAL:
-        _appView.showInitialView();
-        break;
-
-      case AppState.PLAYING:
-        _appView.showPlayingView();
-        break;
-
-      case AppState.PAUSED:
-        _appView.showPausedView();
-        break;
     }
   }
 

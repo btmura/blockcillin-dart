@@ -6,6 +6,8 @@ class AppView {
   final MainMenu _mainMenu;
   final GameView _gameView;
 
+  AppView(this._mainMenu, this._gameView);
+
   /// Stream that broadcasts when the continue button is clicked.
   ElementStream<MouseEvent> get onContinueButtonClick => _mainMenu.onContinueButtonClick;
 
@@ -15,10 +17,25 @@ class AppView {
   /// Stream that broadcasts when the pause button is clicked.
   ElementStream<MouseEvent> get onPauseButtonClick => _gameView.buttonBar.onPauseButtonClick;
 
-  AppView(this._mainMenu, this._gameView);
+  void setGame(Game newGame) {
+    _gameView.setGame(newGame);
+  }
 
-  void setGame(Game game) {
-    _gameView.setGame(game);
+  void setState(AppState newState) {
+    _mainMenu.setState(newState);
+    switch (newState) {
+      case AppState.INITIAL:
+      case AppState.PAUSED:
+      case AppState.GAME_OVER:
+        _mainMenu.show();
+        _gameView.buttonBar.hide();
+        break;
+
+      case AppState.PLAYING:
+        _mainMenu.hide();
+        _gameView.buttonBar.show();
+        break;
+    }
   }
 
   void draw() {
@@ -29,23 +46,4 @@ class AppView {
     _mainMenu.center();
     return _gameView.resize();
   }
-
-  void showInitialView() {
-    _mainMenu.continueButtonVisible = false;
-    _mainMenu.show();
-    _gameView.buttonBar.hide();
-  }
-
-  void showPlayingView() {
-    _mainMenu.continueButtonVisible = false;
-    _mainMenu.hide();
-    _gameView.buttonBar.show();
-  }
-
-  void showPausedView() {
-    _mainMenu.continueButtonVisible = true;
-    _mainMenu.show();
-    _gameView.buttonBar.hide();
-  }
 }
-

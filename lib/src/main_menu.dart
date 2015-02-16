@@ -4,17 +4,15 @@ part of client;
 class MainMenu {
 
   final DivElement _menu;
+  final HeadingElement _title;
   final ButtonElement _continueButton;
   final ButtonElement _newGameButton;
   final Fader _fader;
-
-  /// Whether the continue button is visible in the menu.
-  bool continueButtonVisible = false;
+  bool _continueButtonVisible = false;
 
   /// Creates the menu with the production DOM tree and content.
   factory MainMenu.withElements() {
     var title = new HeadingElement.h1()
-      ..text = "blockcillin"
       ..className = "main-menu-title";
 
     makeButton(label) => new ButtonElement()
@@ -37,11 +35,11 @@ class MainMenu {
 
     var fader = new Fader(menu);
 
-    return new MainMenu(menu, continueButton, newGameButton, fader);
+    return new MainMenu(menu, title, continueButton, newGameButton, fader);
   }
 
   /// Creates the menu out of individual components for testing.
-  MainMenu(this._menu, this._continueButton, this._newGameButton, this._fader) {
+  MainMenu(this._menu, this._title, this._continueButton, this._newGameButton, this._fader) {
     _fader
         ..onFadeInStartCallback = _onMenuFadeInStart
         ..onFadeOutEndCallback = _onMenuFadeOutEnd;
@@ -52,6 +50,27 @@ class MainMenu {
 
   /// New game button click stream. Listen to this to start a new game.
   ElementStream<MouseEvent> get onNewGameButtonClick => _newGameButton.onClick;
+
+  /// Sets the menu's state. Instantly refreshes the menu.
+  void setState(AppState newState) {
+    switch (newState) {
+      case AppState.INITIAL:
+      case AppState.PLAYING:
+        _continueButtonVisible = false;
+        _title.text = "blockcillin";
+        break;
+
+      case AppState.PAUSED:
+        _continueButtonVisible = true;
+        _title.text = "PAUSED";
+        break;
+
+      case AppState.GAME_OVER:
+        _continueButtonVisible = false;
+        _title.text = "GAME OVER";
+        break;
+    }
+  }
 
   /// Shows the menu gradually.
   void show() {
@@ -72,7 +91,7 @@ class MainMenu {
 
   void _onMenuFadeInStart() {
     // TODO(btmura): extract toggling of display style to utility class
-    _continueButton.style.display = continueButtonVisible ? "block" : "none";
+    _continueButton.style.display = _continueButtonVisible ? "block" : "none";
 
     // Add menu first to give it some dimensions before centering it.
     document.body.children.add(_menu);

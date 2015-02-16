@@ -40,7 +40,7 @@ class StateQueue {
   }
 
   /// Returns true if the current state is the given one.
-  bool isState(State state) {
+  bool inState(State state) {
     return _queue.isNotEmpty && _queue.first._id == state._id;
   }
 }
