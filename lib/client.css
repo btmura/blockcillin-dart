@@ -38,13 +38,13 @@ html, body {
     rgba(70, 70, 70, 0.9)
   );
   border: 1px;
-  border-radius: 20px;
+  border-radius: 2em;
   box-shadow: inset 0px 0px 2px #555;
   color: #fff;
   cursor: pointer;
   letter-spacing: 0.5em;
   outline: none;
-  padding: 1em 1.5em 1em 2em;
+  padding: 1.5em 1.5em 1.5em 2em;
   text-align: center;
   text-shadow: 1px 1px 1px #333;
   text-transform: uppercase;
@@ -61,7 +61,7 @@ html, body {
 
 .main-menu-button {
   display: block;
-  margin: 0.5em auto;
+  margin: 1em auto;
   min-width: 20em;
 }
 
