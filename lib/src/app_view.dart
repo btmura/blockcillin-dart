@@ -17,12 +17,12 @@ class AppView {
 
   AppView(this._mainMenu, this._gameView);
 
-  void init(Game game) {
-    _gameView.init(game);
+  void setGame(Game game) {
+    _gameView.setGame(game);
   }
 
-  void draw(Game game) {
-    _gameView.draw(game);
+  void draw() {
+    _gameView.draw();
   }
 
   bool resize() {
@@ -48,3 +48,4 @@ class AppView {
     _gameView.buttonBar.hide();
   }
 }
+

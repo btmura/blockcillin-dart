@@ -7,7 +7,14 @@ class Board {
   static const double _emptyRatio = 0.25;
 
   static const double _updatesPerState = 150.0;
-  static const double _startStopRotation = math.PI;
+  static const double _twistRotation = math.PI;
+
+  static const double _initialRotationY = 0.0;
+  static const double _initialTranslationY = -1.0;
+  static const double _initialGrayscaleAmount = 1.0;
+  static const double _initialBlackAmount = 1.0;
+  static const double _pausedGrayscaleAmount = 1.0;
+  static const double _pausedBlackAmount = 0.65;
 
   static final State _gameOverMarker = new State.marker("gm");
   static final State _pausedMarker = new State.marker("pm");
@@ -22,10 +29,10 @@ class Board {
 
   final StateQueue _stateQueue = new StateQueue();
 
-  double _rotationY;
-  double _translationY;
-  double _grayscaleAmount;
-  double _blackAmount;
+  double _rotationY = _initialRotationY;
+  double _translationY = _initialTranslationY;
+  double _grayscaleAmount = _initialGrayscaleAmount;
+  double _blackAmount = _initialBlackAmount;
 
   State _startTransition;
   State _playingState;
@@ -125,10 +132,10 @@ class Board {
 
   State _newStartTransition() => new State.transition("st", _updatesPerState, (i) {
     var interp = _easeOutCubic(i, _updatesPerState);
-    _grayscaleAmount = interp(1.0, 0.0);
-    _blackAmount = interp(1.0, 0.0);
-    _rotationY = interp(0.0, _startStopRotation);
-    _translationY = interp(-1.0, 0.0);
+    _rotationY = interp(_initialRotationY, _twistRotation);
+    _translationY = interp(_initialTranslationY, 0.0);
+    _grayscaleAmount = interp(_initialGrayscaleAmount, 0.0);
+    _blackAmount = interp(_initialBlackAmount, 0.0);
   });
 
   State _newPlayingState() => new State.state("ps", () {
@@ -138,20 +145,20 @@ class Board {
 
   State _newGameOverTransition() => new State.transition("gt", _updatesPerState, (i) {
     var interp = _easeOutCubic(i, _updatesPerState);
-    _grayscaleAmount = interp(0.0, 1.0);
-    _blackAmount = interp(0.0, 0.65);
+    _grayscaleAmount = interp(0.0, _pausedGrayscaleAmount);
+    _blackAmount = interp(0.0, _pausedBlackAmount);
   });
 
   State _newPauseTransition() => new State.transition("ps", _updatesPerState, (i) {
     var interp = _easeOutCubic(i, _updatesPerState);
-    _grayscaleAmount = interp(0.0, 1.0);
-    _blackAmount = interp(0.0, 0.65);
+    _grayscaleAmount = interp(0.0, _pausedGrayscaleAmount);
+    _blackAmount = interp(0.0, _pausedBlackAmount);
   });
 
   State _newResumeTransition() => new State.transition("rt", _updatesPerState, (i) {
     var interp = _easeOutCubic(i, _updatesPerState);
-    _grayscaleAmount = interp(1.0, 0.0);
-    _blackAmount = interp(0.65, 0.0);
+    _grayscaleAmount = interp(_pausedGrayscaleAmount, 0.0);
+    _blackAmount = interp(_pausedBlackAmount, 0.0);
   });
 
   State _newFinishTransition() => () {
@@ -159,10 +166,10 @@ class Board {
     var ct;
     return new State.transition("ft", _updatesPerState, (i) {
       var interp = _easeOutCubic(i, _updatesPerState);
+      _rotationY = interp(cr, cr - _twistRotation);
+      _translationY = interp(ct, ct - 1.0);
       _grayscaleAmount = interp(0.0, 1.0);
       _blackAmount = interp(0.0, 1.0);
-      _rotationY = interp(cr, cr - _startStopRotation);
-      _translationY = interp(ct, ct - 1.0);
     }, enter: () {
       cr = _rotationY;
       ct = _translationY;

@@ -53,7 +53,7 @@ class AppController {
     });
 
     _app.onNewGameStarted.listen((game) {
-      _appView.init(game);
+      _appView.setGame(game);
       _scheduleUpdate();
     });
 
@@ -94,9 +94,7 @@ class AppController {
       }
     }
 
-    if (changed) {
-      _appView.draw(_app.currentGame);
-    }
+    _appView.draw();
 
     if (scheduleUpdate) {
       _scheduleUpdate();
