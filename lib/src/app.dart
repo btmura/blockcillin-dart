@@ -52,27 +52,7 @@ class App {
 
   /// Returns whether the app has changed after advancing it's state.
   bool update() {
-    // Update the current game if there is one. Return true if it changed.
-    if (_currentGame != null && _currentGame.update()) {
-        return true;
-    }
-
-    // If there is a next game and the current game isn't changing, then start the next game.
-    if (_nextGame != null) {
-      _setCurrentGame(_nextGame);
-      return currentGame.update();
-    }
-
-    return false;
-  }
-
-  void _setState(AppState newState) {
-    if (newState != _state) {
-      _state = newState;
-      if (!_stateStream.isPaused) {
-        _stateStream.add(newState);
-      }
-    }
+    return _currentGame != null && _currentGame.update();
   }
 
   void _setCurrentGame(Game newGame) {
@@ -85,6 +65,19 @@ class App {
 
     if (!_newGameStream.isPaused) {
       _newGameStream.add(_currentGame);
+    }
+  }
+
+  void _setState(AppState newState) {
+    if (newState != _state) {
+      _state = newState;
+      if (!_stateStream.isPaused) {
+        _stateStream.add(newState);
+      }
+
+      if (_state == AppState.FINISHED && _nextGame != null) {
+        _setCurrentGame(_nextGame);
+      }
     }
   }
 }
