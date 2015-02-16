@@ -89,12 +89,9 @@ class AppController {
     }
 
     var scheduleUpdate = true;
-    var changed = false;
     for (var i = 0; _lag >= _msPerUpdate; i++) {
       _lag -= _msPerUpdate;
-      if (_app.update()) {
-        changed = true;
-      } else {
+      if (!_app.update()) {
         scheduleUpdate = false;
         break;
       }

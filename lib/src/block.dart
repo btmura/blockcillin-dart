@@ -35,7 +35,6 @@ class Block {
 
     var yAxis = new Vector3(0.0, 1.0, 0.0);
     var halfSwing = new Quaternion.fromAxisAngle(yAxis, theta / 2);
-    var cellRotation = new Quaternion.fromAxisAngle(yAxis, theta);
 
     var outerSwingVector = halfSwing.rotate(outerVector);
     var innerSwingVector = halfSwing.rotate(innerVector);
@@ -47,8 +46,6 @@ class Block {
     var innerX = innerSwingVector.x;
     var innerY = outerX;
     var innerZ = innerSwingVector.z;
-
-    var ringTranslation = new Vector3(0.0, -outerX * 2, 0.0);
 
     var outerUpperRight = new Vector3(outerX, outerY, outerZ);
     var outerUpperLeft = new Vector3(-outerX, outerY, outerZ);
