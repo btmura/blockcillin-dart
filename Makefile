@@ -11,3 +11,7 @@ serve:
 deploy:
 	pub build
 	goapp deploy -oauth
+
+.PHONY: analyze
+analyze:
+	dartanalyzer --enable-enum lib/client.dart
