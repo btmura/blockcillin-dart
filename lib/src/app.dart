@@ -22,8 +22,8 @@ class App {
   /// Current game being played.
   Game get currentGame => _currentGame;
 
-  /// Starts a new game.
-  void startGame(Game newGame) {
+  /// Request a new game to be started.
+  void requestNewGame(Game newGame) {
     _setState(AppState.PLAYING);
 
     // Make the new game the current one if there is no current game.
