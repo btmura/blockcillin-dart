@@ -25,15 +25,31 @@ class AppView {
     _mainMenu.setState(newState);
     switch (newState) {
       case AppState.INITIAL:
+      case AppState.PAUSING:
+      case AppState.GAME_OVERING:
+        _mainMenu.show();
+        _gameView.buttonBar.hide();
+        break;
+
       case AppState.PAUSED:
       case AppState.GAME_OVER:
-        _mainMenu.show();
+      case AppState.FINISHED:
+        break;
+
+      case AppState.STARTING:
+      case AppState.RESUMING:
+        _mainMenu.hide();
         _gameView.buttonBar.hide();
         break;
 
       case AppState.PLAYING:
         _mainMenu.hide();
         _gameView.buttonBar.show();
+        break;
+
+      case AppState.FINISHING:
+        _mainMenu.hide();
+        _gameView.buttonBar.hide();
         break;
     }
   }

@@ -31,19 +31,23 @@ class AppController {
         .listen((_) {
           switch (_app.state) {
             case AppState.INITIAL:
+            case AppState.STARTING:
+            case AppState.PAUSING:
+            case AppState.RESUMING:
+            case AppState.GAME_OVERING:
             case AppState.GAME_OVER:
+            case AppState.FINISHING:
+            case AppState.FINISHED:
               break;
 
             case AppState.PLAYING:
-              if (_app.requestPauseGame()) {
-                _scheduleUpdate();
-              }
+              _app.requestPauseGame();
+              _scheduleUpdate();
               break;
 
             case AppState.PAUSED:
-              if (_app.requestResumeGame()) {
-                _scheduleUpdate();
-              }
+              _app.requestResumeGame();
+              _scheduleUpdate();
               break;
           }
         });
@@ -62,15 +66,13 @@ class AppController {
     });
 
     _appView.onPauseButtonClick.listen((_) {
-      if (_app.requestPauseGame()) {
-        _scheduleUpdate();
-      }
+      _app.requestPauseGame();
+      _scheduleUpdate();
     });
 
     _appView.onContinueButtonClick.listen((_) {
-      if (_app.requestResumeGame()) {
-        _scheduleUpdate();
-      }
+      _app.requestResumeGame();
+      _scheduleUpdate();
     });
 
     _appView.setState(_app.state);

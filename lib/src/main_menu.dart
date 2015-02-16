@@ -60,14 +60,22 @@ class MainMenu {
         _title.text = "blockcillin";
         break;
 
-      case AppState.PAUSED:
+      case AppState.PAUSING:
         _continueButtonVisible = true;
         _title.text = "PAUSED";
         break;
 
-      case AppState.GAME_OVER:
+      case AppState.GAME_OVERING:
         _continueButtonVisible = false;
         _title.text = "GAME OVER";
+        break;
+
+      case AppState.STARTING:
+      case AppState.PAUSED:
+      case AppState.RESUMING:
+      case AppState.GAME_OVER:
+      case AppState.FINISHING:
+      case AppState.FINISHED:
         break;
     }
   }

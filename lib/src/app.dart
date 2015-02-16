@@ -9,6 +9,7 @@ class App {
   AppState _state = AppState.INITIAL;
   Game _currentGame;
   Game _nextGame;
+  StreamSubscription _currentGameSubscription;
 
   /// Stream that broadcasts when the app's state has changed.
   Stream<AppState> get onAppStateChanged => _stateStream.stream;
@@ -24,8 +25,6 @@ class App {
 
   /// Request a new game to be started.
   void requestNewGame(Game newGame) {
-    _setState(AppState.PLAYING);
-
     // Make the new game the current one if there is no current game.
     if (_currentGame == null) {
       _setCurrentGame(newGame);
@@ -38,30 +37,23 @@ class App {
   }
 
   /// Returns true if the request to pause the game was accepted.
-  bool requestPauseGame() {
-    if (_currentGame != null && _currentGame.requestPause()) {
-      _setState(AppState.PAUSED);
-      return true;
+  void requestPauseGame() {
+    if (_currentGame != null) {
+      _currentGame.requestPause();
     }
-    return false;
   }
 
   /// Returns true if the request to resume the game was accepted.
-  bool requestResumeGame() {
-    if (_currentGame != null && _currentGame.requestResume()) {
-      _setState(AppState.PLAYING);
-      return true;
+  void requestResumeGame() {
+    if (_currentGame != null) {
+      _currentGame.requestResume();
     }
-    return false;
   }
 
   /// Returns whether the app has changed after advancing it's state.
   bool update() {
     // Update the current game if there is one. Return true if it changed.
     if (_currentGame != null && _currentGame.update()) {
-        if (_currentGame.gameOver) {
-          _setState(AppState.GAME_OVER);
-        }
         return true;
     }
 
@@ -84,8 +76,13 @@ class App {
   }
 
   void _setCurrentGame(Game newGame) {
+    if (_currentGameSubscription != null) {
+      _currentGameSubscription.cancel();
+    }
     _currentGame = newGame;
+    _currentGameSubscription = _currentGame.onAppStateChanged.listen(_setState);
     _nextGame = null;
+
     if (!_newGameStream.isPaused) {
       _newGameStream.add(_currentGame);
     }
@@ -98,12 +95,30 @@ enum AppState {
   /// No game has ever been started. States never go back to this.
   INITIAL,
 
+  /// Game is starting up.
+  STARTING,
+
   /// Game has been started. Can only go to PAUSED.
   PLAYING,
 
-  /// Game has been paused. Can only goto to PLAYING.
+  /// Game is in the process of pausing.
+  PAUSING,
+
+  /// Game has been paused. Can only go to PLAYING.
   PAUSED,
 
-  /// Game is over. Can only goto to PLAYING.
+  /// Game is playing the game over animation.
+  GAME_OVERING,
+
+  /// Game is over. Can only go to PLAYING.
   GAME_OVER,
+
+  /// Game is in the process of resuming.
+  RESUMING,
+
+  /// Game is finishing up.
+  FINISHING,
+
+  /// Game is finished.
+  FINISHED,
 }

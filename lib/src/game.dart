@@ -12,26 +12,26 @@ class Game {
     return new Game(board);
   }
 
-  /// Whether the game is over.
-  bool get gameOver => board.gameOver;
+  /// Stream that broadcasts when the app's state has changed.
+  Stream<AppState> get onAppStateChanged => board.onAppStateChanged;
 
   /// Returns whether the game changed after advancing it's state.
   bool update() {
     return board.update();
   }
 
-  /// Returns true if the request to pause was accepted.
-  bool requestPause() {
-    return board.requestPause();
+  /// Requests the game to pause.
+  void requestPause() {
+    board.requestPause();
   }
 
-  /// Returns true if the request to resume was accepted.
-  bool requestResume() {
-    return board.requestResume();
+  /// Requests the game to resume.
+  void requestResume() {
+    board.requestResume();
   }
 
-  /// Returns true if the request to finish was accepted.
-  bool requestFinish() {
-    return board.requestFinish();
+  /// Requests the game to finish.
+  void requestFinish() {
+    board.requestFinish();
   }
 }

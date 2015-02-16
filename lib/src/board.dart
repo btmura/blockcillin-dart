@@ -16,10 +16,6 @@ class Board {
   static const double _pausedGrayscaleAmount = 1.0;
   static const double _pausedBlackAmount = 0.65;
 
-  static final State _gameOverMarker = new State.marker("gm");
-  static final State _pausedMarker = new State.marker("pm");
-  static final State _finishedMarker = new State.marker("fm");
-
   final List<Ring> rings;
   final int numRings;
   final int numCells;
@@ -28,6 +24,7 @@ class Board {
   final double innerRadius = _innerRadius;
 
   final StateQueue _stateQueue = new StateQueue();
+  final StreamController<AppState> _stateStream = new StreamController();
 
   double _rotationY = _initialRotationY;
   double _translationY = _initialTranslationY;
@@ -37,18 +34,24 @@ class Board {
   State _startTransition;
   State _playingState;
   State _gameOverTransition;
+  State _gameOverMarker;
   State _pauseTransition;
+  State _pausedMarker;
   State _resumeTransition;
   State _finishTransition;
+  State _finishedMarker;
 
   // TODO(btmura): change num of block colors to set of block colors
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
     _startTransition = _newStartTransition();
     _playingState = _newPlayingState();
     _gameOverTransition = _newGameOverTransition();
+    _gameOverMarker = _newGameOverMarker();
     _pauseTransition = _newPauseTransition();
+    _pausedMarker = _newPausedMarker();
     _resumeTransition = _newResumeTransition();
     _finishTransition = _newFinishTransition();
+    _finishedMarker = _newFinishedMarker();
 
     _stateQueue
       ..add(_startTransition)
@@ -75,6 +78,9 @@ class Board {
     return new Board(rings, numRings, numCells, numBlockColors);
   }
 
+  /// Stream that broadcasts when the app's state has changed.
+  Stream<AppState> get onAppStateChanged => _stateStream.stream;
+
   /// Rotation of the board around the y-axis.
   double get rotationY => _rotationY;
 
@@ -87,50 +93,41 @@ class Board {
   /// How much of the color should be black from 0.0 to 1.0.
   double get blackAmount => _blackAmount;
 
-  /// Whether the game is over.
-  bool get gameOver => _stateQueue.inState(_gameOverTransition) || _stateQueue.inState(_gameOverMarker);
-
   /// Returns whether the board changed after advancing it's state.
   bool update() {
     return _stateQueue.update();
   }
 
-  /// Returns true if the request to pause was accepted.
-  bool requestPause() {
-    if (_stateQueue.inState(_playingState)) {
+  /// Requests the board to pause.
+  void requestPause() {
+    if (_stateQueue.isAt(_playingState)) {
       _stateQueue
         ..clear()
         ..add(_pauseTransition)
         ..add(_pausedMarker);
-      return true;
     }
-    return false;
   }
 
-  /// Returns true if the request to resume was accepted.
-  bool requestResume() {
-    if (_stateQueue.inState(_pausedMarker)) {
+  /// Requests the board to resume.
+  void requestResume() {
+    if (_stateQueue.isAt(_pausedMarker)) {
       _stateQueue
         ..clear()
         ..add(_resumeTransition)
         ..add(_playingState)
         ..add(_gameOverTransition)
         ..add(_gameOverMarker);
-      return true;
     }
-    return false;
   }
 
-  /// Returns true if the request to finish was accepted.
-  bool requestFinish() {
-    if (_stateQueue.inState(_pausedMarker)) {
+  /// Requests the board to finish.
+  void requestFinish() {
+    if (_stateQueue.isAny([_pausedMarker, _gameOverMarker])) {
         _stateQueue
           ..clear()
           ..add(_finishTransition)
           ..add(_finishedMarker);
-        return true;
     }
-    return false;
   }
 
   State _newStartTransition() => new State.transition("st", _updatesPerState, (i) {
@@ -139,43 +136,73 @@ class Board {
     _translationY = interp(_initialTranslationY, 0.0);
     _grayscaleAmount = interp(_initialGrayscaleAmount, 0.0);
     _blackAmount = interp(_initialBlackAmount, 0.0);
+  }, enter: () {
+    _publishState(AppState.STARTING);
   });
 
   State _newPlayingState() => new State.state("ps", () {
-    _translationY += 0.001;
-    return _translationY < 1.5;
+      _translationY += 0.001;
+      return _translationY < 1.5;
+  }, enter: () {
+    _publishState(AppState.PLAYING);
   });
 
   State _newGameOverTransition() => new State.transition("gt", _updatesPerState, (i) {
     var interp = _easeOutCubic(i, _updatesPerState);
     _grayscaleAmount = interp(0.0, _pausedGrayscaleAmount);
     _blackAmount = interp(0.0, _pausedBlackAmount);
+  }, enter: () {
+    _publishState(AppState.GAME_OVERING);
+  });
+
+  State _newGameOverMarker() => new State.marker("gm", enter: () {
+    _publishState(AppState.GAME_OVER);
   });
 
   State _newPauseTransition() => new State.transition("ps", _updatesPerState, (i) {
     var interp = _easeOutCubic(i, _updatesPerState);
     _grayscaleAmount = interp(0.0, _pausedGrayscaleAmount);
     _blackAmount = interp(0.0, _pausedBlackAmount);
+  }, enter: () {
+    _publishState(AppState.PAUSING);
+  });
+
+  State _newPausedMarker() => new State.marker("pm", enter: () {
+    _publishState(AppState.PAUSED);
   });
 
   State _newResumeTransition() => new State.transition("rt", _updatesPerState, (i) {
     var interp = _easeOutCubic(i, _updatesPerState);
     _grayscaleAmount = interp(_pausedGrayscaleAmount, 0.0);
     _blackAmount = interp(_pausedBlackAmount, 0.0);
+  }, enter: () {
+    _publishState(AppState.RESUMING);
   });
 
   State _newFinishTransition() => () {
-    var cr;
-    var ct;
+    var cr, ct, cg, cb;
     return new State.transition("ft", _updatesPerState, (i) {
       var interp = _easeOutCubic(i, _updatesPerState);
       _rotationY = interp(cr, cr - _twistRotation);
       _translationY = interp(ct, ct - 1.0);
-      _grayscaleAmount = interp(0.0, 1.0);
-      _blackAmount = interp(0.0, 1.0);
+      _grayscaleAmount = interp(cg, 1.0);
+      _blackAmount = interp(cb, 1.0);
     }, enter: () {
       cr = _rotationY;
       ct = _translationY;
+      cg = _grayscaleAmount;
+      cb = _blackAmount;
+      _publishState(AppState.FINISHING);
     });
   }();
+
+  State _newFinishedMarker() => new State.marker("fm", enter: () {
+    _publishState(AppState.FINISHED);
+  });
+
+  void _publishState(AppState newState) {
+    if (!_stateStream.isPaused) {
+      _stateStream.add(newState);
+    }
+  }
 }

@@ -26,7 +26,9 @@ class StateQueue {
     }
 
     if (!_enterCalled) {
-      _queue.first._enter.call();
+      if (_queue.first._enter != null) {
+        _queue.first._enter.call();
+      }
       _enterCalled = true;
     }
 
@@ -40,14 +42,21 @@ class StateQueue {
   }
 
   /// Returns true if the current state is the given one.
-  bool inState(State state) {
+  bool isAt(State state) {
     return _queue.isNotEmpty && _queue.first._id == state._id;
   }
+
+  /// Returns true if the current state is any of the given ones.
+  bool isAny(List<State> states) {
+    return _queue.isNotEmpty && states.any((state) => _queue.first._id == state._id);
+  }
+
+  String toString() => "${_queue}";
 }
 
 /// A function that is called when entering a transition.
 /// Use this to initialize variables that will be updated on each update.
-typedef void TransitionEnterFunc();
+typedef void StateEnterFunc();
 
 /// A function that is called to update a transition.
 /// It passes the current update to the caller.
@@ -68,7 +77,7 @@ class State {
 
   /// Constructs a transition that occurs over updateCount number frames.
   /// Transitions make the view refresh itself for updateCount number of frames.
-  factory State.transition(String id, double updateCount, TransitionUpdateFunc update, {TransitionEnterFunc enter}) {
+  factory State.transition(String id, double updateCount, TransitionUpdateFunc update, {StateEnterFunc enter}) {
     var i = 0.0;
 
     var wrappedEnter = () {
@@ -88,14 +97,14 @@ class State {
 
   /// Constructs a state that continues until the update function returns false.
   /// States make the view refresh itself while the update function returns true.
-  factory State.state(String id, StateUpdateFunc update) {
-    return new State._(id, () {}, () => new _StateResult.transition(update()));
+  factory State.state(String id, StateUpdateFunc update, {StateEnterFunc enter}) {
+    return new State._(id, enter, () => new _StateResult.transition(update()));
   }
 
   /// Constructs a marker that must be removed manually via the StateQueue.
   /// Markers do not make the view refresh. They are used to check what the current state is.
-  factory State.marker(String id) {
-    return new State._(id, () {}, () => new _StateResult.marker());
+  factory State.marker(String id, {StateEnterFunc enter}) {
+    return new State._(id, enter, () => new _StateResult.marker());
   }
 
   String toString() => "${_id}";
