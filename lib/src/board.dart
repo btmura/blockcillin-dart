@@ -45,13 +45,13 @@ class Board {
   Board(this.rings, this.numRings, this.numCells, this.numBlockColors) {
     _startTransition = _newStartTransition();
     _playingState = _newPlayingState();
-    _gameOverTransition = _newGameOverTransition();
-    _gameOverMarker = _newGameOverMarker();
-    _pauseTransition = _newPauseTransition();
-    _pausedMarker = _newPausedMarker();
-    _resumeTransition = _newResumeTransition();
+    _gameOverTransition = _newFadeOutTransition("gt", AppState.GAME_OVERING);
+    _gameOverMarker = _newMarker("gm", AppState.GAME_OVER);
+    _pauseTransition = _newFadeOutTransition("pt", AppState.PAUSING);
+    _pausedMarker = _newMarker("pm", AppState.PAUSED);
+    _resumeTransition = _newFadeInTransition("rt", AppState.RESUMING);
     _finishTransition = _newFinishTransition();
-    _finishedMarker = _newFinishedMarker();
+    _finishedMarker = _newMarker("fm", AppState.FINISHED);
 
     _stateQueue
       ..add(_startTransition)
@@ -110,7 +110,7 @@ class Board {
 
   /// Requests the board to resume.
   void requestResume() {
-    if (_stateQueue.isAt(_pausedMarker)) {
+    if (_stateQueue.isAny([_pauseTransition, _pausedMarker])) {
       _stateQueue
         ..clear()
         ..add(_resumeTransition)
@@ -122,7 +122,7 @@ class Board {
 
   /// Requests the board to finish.
   void requestFinish() {
-    if (_stateQueue.isAny([_pausedMarker, _gameOverMarker])) {
+    if (_stateQueue.isAny([_pauseTransition, _pausedMarker, _gameOverMarker])) {
         _stateQueue
           ..clear()
           ..add(_finishTransition)
@@ -147,38 +147,6 @@ class Board {
     _publishState(AppState.PLAYING);
   });
 
-  State _newGameOverTransition() => new State.transition("gt", _updatesPerState, (i) {
-    var interp = _easeOutCubic(i, _updatesPerState);
-    _grayscaleAmount = interp(0.0, _pausedGrayscaleAmount);
-    _blackAmount = interp(0.0, _pausedBlackAmount);
-  }, enter: () {
-    _publishState(AppState.GAME_OVERING);
-  });
-
-  State _newGameOverMarker() => new State.marker("gm", enter: () {
-    _publishState(AppState.GAME_OVER);
-  });
-
-  State _newPauseTransition() => new State.transition("ps", _updatesPerState, (i) {
-    var interp = _easeOutCubic(i, _updatesPerState);
-    _grayscaleAmount = interp(0.0, _pausedGrayscaleAmount);
-    _blackAmount = interp(0.0, _pausedBlackAmount);
-  }, enter: () {
-    _publishState(AppState.PAUSING);
-  });
-
-  State _newPausedMarker() => new State.marker("pm", enter: () {
-    _publishState(AppState.PAUSED);
-  });
-
-  State _newResumeTransition() => new State.transition("rt", _updatesPerState, (i) {
-    var interp = _easeOutCubic(i, _updatesPerState);
-    _grayscaleAmount = interp(_pausedGrayscaleAmount, 0.0);
-    _blackAmount = interp(_pausedBlackAmount, 0.0);
-  }, enter: () {
-    _publishState(AppState.RESUMING);
-  });
-
   State _newFinishTransition() => () {
     var cr, ct, cg, cb;
     return new State.transition("ft", _updatesPerState, (i) {
@@ -196,8 +164,34 @@ class Board {
     });
   }();
 
-  State _newFinishedMarker() => new State.marker("fm", enter: () {
-    _publishState(AppState.FINISHED);
+  State _newFadeInTransition(String id, AppState state) => () {
+    var cg, cb;
+    return new State.transition(id, _updatesPerState, (i) {
+      var interp = _easeOutCubic(i, _updatesPerState);
+      _grayscaleAmount = interp(cg, 0.0);
+      _blackAmount = interp(cb, 0.0);
+    }, enter: () {
+      cg = _grayscaleAmount;
+      cb = _blackAmount;
+      _publishState(state);
+    });
+  }();
+
+  State _newFadeOutTransition(String id, AppState state) => () {
+    var cg, cb;
+    return new State.transition(id, _updatesPerState, (i) {
+      var interp = _easeOutCubic(i, _updatesPerState);
+      _grayscaleAmount = interp(cg, _pausedGrayscaleAmount);
+      _blackAmount = interp(cb, _pausedBlackAmount);
+    }, enter: () {
+      cg = _grayscaleAmount;
+      cb = _blackAmount;
+      _publishState(state);
+    });
+  }();
+
+  State _newMarker(String id, AppState state) => new State.marker(id, enter: () {
+     _publishState(state);
   });
 
   void _publishState(AppState newState) {
