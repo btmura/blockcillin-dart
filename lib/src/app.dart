@@ -81,37 +81,3 @@ class App {
     }
   }
 }
-
-/// State that the app can be in.
-enum AppState {
-
-  /// No game has ever been started. States never go back to this.
-  INITIAL,
-
-  /// Game is starting up.
-  STARTING,
-
-  /// Game has been started. Can only go to PAUSED.
-  PLAYING,
-
-  /// Game is in the process of pausing.
-  PAUSING,
-
-  /// Game has been paused. Can only go to PLAYING.
-  PAUSED,
-
-  /// Game is playing the game over animation.
-  GAME_OVERING,
-
-  /// Game is over. Can only go to PLAYING.
-  GAME_OVER,
-
-  /// Game is in the process of resuming.
-  RESUMING,
-
-  /// Game is finishing up.
-  FINISHING,
-
-  /// Game is finished.
-  FINISHED,
-}

@@ -8,6 +8,7 @@ import 'dart:web_gl' as webgl;
 
 part 'src/app.dart';
 part 'src/app_controller.dart';
+part 'src/app_state.dart';
 part 'src/app_view.dart';
 part 'src/block.dart';
 part 'src/block_color.dart';
