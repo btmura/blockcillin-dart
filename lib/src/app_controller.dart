@@ -7,7 +7,6 @@ class AppController {
   final App _app;
   final AppView _appView;
   final Stopwatch _stopwatch;
-
   int _lag = 0;
 
   AppController(this._app, this._appView, this._stopwatch);
@@ -29,27 +28,8 @@ class AppController {
     window.onKeyUp
         .where((event) => event.keyCode == KeyCode.ESC)
         .listen((_) {
-          switch (_app.state) {
-            case AppState.INITIAL:
-            case AppState.STARTING:
-            case AppState.PAUSING:
-            case AppState.RESUMING:
-            case AppState.GAME_OVERING:
-            case AppState.GAME_OVER:
-            case AppState.FINISHING:
-            case AppState.FINISHED:
-              break;
-
-            case AppState.PLAYING:
-              _app.requestPauseGame();
-              _scheduleUpdate();
-              break;
-
-            case AppState.PAUSED:
-              _app.requestResumeGame();
-              _scheduleUpdate();
-              break;
-          }
+          _app.requestToggleGame();
+          _scheduleUpdate();
         });
 
     _app.onAppStateChanged.listen((state) => _appView.setState(state));

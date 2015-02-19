@@ -47,6 +47,15 @@ class App {
     }
   }
 
+  /// Requests the current game's state to be toggled.
+  void requestToggleGame() {
+    if (_state == AppState.PLAYING) {
+      requestPauseGame();
+    } else if (_state == AppState.PAUSED) {
+      requestResumeGame();
+    }
+  }
+
   /// Returns whether the app has changed after advancing it's state.
   bool update() {
     return _currentGame != null && _currentGame.update();
