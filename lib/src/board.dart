@@ -14,7 +14,7 @@ class Board {
   static const double _initialGrayscaleAmount = 1.0;
   static const double _initialBlackAmount = 1.0;
   static const double _pausedGrayscaleAmount = 1.0;
-  static const double _pausedBlackAmount = 0.65;
+  static const double _pausedBlackAmount = 0.5;
 
   final List<Ring> rings;
   final int numRings;
