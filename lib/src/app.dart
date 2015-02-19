@@ -1,6 +1,6 @@
 part of client;
 
-/// The model that represents the app which may have a current game.
+/// Model of the app which manages the current game and the next game.
 class App {
 
   final StreamController<AppState> _stateStream = new StreamController();
@@ -11,19 +11,16 @@ class App {
   Game _nextGame;
   StreamSubscription _currentGameSubscription;
 
+  /// State of the app.
+  AppState get state => _state;
+
   /// Stream that broadcasts when the app's state has changed.
   Stream<AppState> get onAppStateChanged => _stateStream.stream;
 
   /// Stream that broadcasts when a new game has started.
   Stream<Game> get onNewGameStarted => _newGameStream.stream;
 
-  /// State of the app.
-  AppState get state => _state;
-
-  /// Current game being played.
-  Game get currentGame => _currentGame;
-
-  /// Request a new game to be started.
+  /// Requests a new game to be started.
   void requestNewGame(Game newGame) {
     // Make the new game the current one if there is no current game.
     if (_currentGame == null) {
@@ -36,14 +33,14 @@ class App {
     _nextGame = newGame;
   }
 
-  /// Returns true if the request to pause the game was accepted.
+  /// Requests the current game to be paused.
   void requestPauseGame() {
     if (_currentGame != null) {
       _currentGame.requestPause();
     }
   }
 
-  /// Returns true if the request to resume the game was accepted.
+  /// Requests the current game to be resumed.
   void requestResumeGame() {
     if (_currentGame != null) {
       _currentGame.requestResume();
