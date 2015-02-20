@@ -5,11 +5,12 @@ class AppController {
   static const int _msPerUpdate = 8;
 
   final App _app;
-  final AppView _appView;
+  final MainMenu _mainMenu;
+  final GameView _gameView;
   final Stopwatch _stopwatch;
   int _lag = 0;
 
-  AppController(this._app, this._appView, this._stopwatch);
+  AppController(this._app, this._mainMenu, this._gameView, this._stopwatch);
 
   void run() {
     _init();
@@ -17,10 +18,10 @@ class AppController {
   }
 
   void _init() {
-    _appView.resize();
+    _resize();
 
     window.onResize.listen((_) {
-      if (_appView.resize()) {
+      if (_resize()) {
         _scheduleUpdate();
       }
     });
@@ -32,30 +33,30 @@ class AppController {
           _scheduleUpdate();
         });
 
-    _app.onAppStateChanged.listen((state) => _appView.setState(state));
+    _app.onAppStateChanged.listen((state) => _refresh(state));
 
-    _appView.onNewGameButtonClick.listen((_) {
+    _mainMenu.onNewGameButtonClick.listen((_) {
       var game = new Game.withRandomBoard(20, 24, BlockColor.values.length);
       _app.requestNewGame(game);
       _scheduleUpdate();
     });
 
     _app.onNewGameStarted.listen((game) {
-      _appView.setGame(game);
+      _gameView.setGame(game);
       _scheduleUpdate();
     });
 
-    _appView.onPauseButtonClick.listen((_) {
+    _gameView.buttonBar.onPauseButtonClick.listen((_) {
       _app.requestPauseGame();
       _scheduleUpdate();
     });
 
-    _appView.onContinueButtonClick.listen((_) {
+    _mainMenu.onContinueButtonClick.listen((_) {
       _app.requestResumeGame();
       _scheduleUpdate();
     });
 
-    _appView.setState(_app.state);
+    _refresh(_app.state);
     _stopwatch.start();
   }
 
@@ -77,7 +78,7 @@ class AppController {
       }
     }
 
-    _appView.draw();
+    _gameView.draw();
 
     if (scheduleUpdate) {
       _scheduleUpdate();
@@ -88,7 +89,68 @@ class AppController {
     }
   }
 
+  bool _resize() {
+    _mainMenu.center();
+    return _gameView.resize();
+  }
+
   void _scheduleUpdate() {
     window.animationFrame.then(_update);
+  }
+
+  void _refresh(AppState newState) {
+    switch (newState) {
+      case AppState.INITIAL:
+        _mainMenu.continueButtonVisible = false;
+        _mainMenu.title = "blockcillin";
+        _mainMenu.show();
+        _gameView.buttonBar.hide();
+        break;
+
+      case AppState.STARTING:
+        _mainMenu.hide();
+        _gameView.buttonBar.hide();
+        break;
+
+      case AppState.PLAYING:
+        _mainMenu.continueButtonVisible = false;
+        _mainMenu.title = "blockcillin";
+        _mainMenu.hide();
+        _gameView.buttonBar.show();
+        break;
+
+      case AppState.PAUSING:
+        _mainMenu.continueButtonVisible = true;
+        _mainMenu.title = "PAUSED";
+        _mainMenu.show();
+        _gameView.buttonBar.hide();
+        break;
+
+      case AppState.PAUSED:
+        break;
+
+      case AppState.RESUMING:
+        _mainMenu.hide();
+        _gameView.buttonBar.hide();
+        break;
+
+      case AppState.GAME_OVERING:
+        _mainMenu.continueButtonVisible = false;
+        _mainMenu.title = "GAME OVER";
+        _mainMenu.show();
+        _gameView.buttonBar.hide();
+        break;
+
+      case AppState.GAME_OVER:
+        break;
+
+      case AppState.FINISHING:
+        _mainMenu.hide();
+        _gameView.buttonBar.hide();
+        break;
+
+      case AppState.FINISHED:
+        break;
+    }
   }
 }

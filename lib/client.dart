@@ -9,7 +9,6 @@ import 'dart:web_gl' as webgl;
 part 'src/app.dart';
 part 'src/app_controller.dart';
 part 'src/app_state.dart';
-part 'src/app_view.dart';
 part 'src/block.dart';
 part 'src/block_color.dart';
 part 'src/board.dart';
@@ -53,13 +52,11 @@ void run_client() {
     var glProgram = new GLProgram(gl);
     var boardRenderer = new BoardRenderer(glProgram, image);
     var gameView = new GameView(buttonBar, canvas, glProgram, boardRenderer);
-
     var mainMenu = new MainMenu.withElements();
-    var appView = new AppView(mainMenu, gameView);
 
     var app = new App();
     var stopwatch = new Stopwatch();
-    var appController = new AppController(app, appView, stopwatch);
+    var appController = new AppController(app, mainMenu, gameView, stopwatch);
 
     appController.run();
   });

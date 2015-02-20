@@ -8,7 +8,8 @@ class MainMenu {
   final ButtonElement _continueButton;
   final ButtonElement _newGameButton;
   final Fader _fader;
-  bool _continueButtonVisible = false;
+
+  bool continueButtonVisible = false;
 
   /// Creates the menu with the production DOM tree and content.
   factory MainMenu.withElements() {
@@ -51,33 +52,8 @@ class MainMenu {
   /// New game button click stream. Listen to this to start a new game.
   ElementStream<MouseEvent> get onNewGameButtonClick => _newGameButton.onClick;
 
-  /// Sets the menu's state. Instantly refreshes the menu.
-  void setState(AppState newState) {
-    switch (newState) {
-      case AppState.INITIAL:
-      case AppState.PLAYING:
-        _continueButtonVisible = false;
-        _title.text = "blockcillin";
-        break;
-
-      case AppState.PAUSING:
-        _continueButtonVisible = true;
-        _title.text = "PAUSED";
-        break;
-
-      case AppState.GAME_OVERING:
-        _continueButtonVisible = false;
-        _title.text = "GAME OVER";
-        break;
-
-      case AppState.STARTING:
-      case AppState.PAUSED:
-      case AppState.RESUMING:
-      case AppState.GAME_OVER:
-      case AppState.FINISHING:
-      case AppState.FINISHED:
-        break;
-    }
+  void set title(String newTitle) {
+    _title.text = newTitle;
   }
 
   /// Shows the menu gradually.
@@ -99,7 +75,7 @@ class MainMenu {
 
   void _onMenuFadeInStart() {
     // TODO(btmura): extract toggling of display style to utility class
-    _continueButton.style.display = _continueButtonVisible ? "block" : "none";
+    _continueButton.style.display = continueButtonVisible ? "block" : "none";
 
     // Add menu first to give it some dimensions before centering it.
     document.body.children.add(_menu);

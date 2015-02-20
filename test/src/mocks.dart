@@ -4,10 +4,6 @@ class MockApp extends TypedMock implements App {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class MockAppView extends TypedMock implements AppView {
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
 class MockGame extends TypedMock implements Game {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
