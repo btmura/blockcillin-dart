@@ -12,16 +12,26 @@ class BlockGL {
   /// Number of unique indices in a block's index buffer.
   static const numIndices = 24;
 
-  /// Returns a list of vectors specifying the block's vertices.
-  static List<Vector3> getVertexVectors(double outerRadius, double innerRadius, double theta) {
+  final List<Vector3> vertices;
+  final List<Vector3> normals;
+  final List<int> indices;
+
+  final Quaternion cellRotation;
+  final Vector3 ringTranslation;
+
+  factory BlockGL(double outerRadius, double innerRadius, int cellsPerRing) {
+    var yAxis = new Vector3(0.0, 1.0, 0.0);
+    var theta = 2 * math.PI / cellsPerRing;
+    var halfSwing = new Quaternion.fromAxisAngle(yAxis, theta / 2);
+
     var outerVector = new Vector3(0.0, 0.0, outerRadius);
     var innerVector = new Vector3(0.0, 0.0, innerRadius);
 
-    var yAxis = new Vector3(0.0, 1.0, 0.0);
-    var halfSwing = new Quaternion.fromAxisAngle(yAxis, theta / 2);
-
     var outerSwingVector = halfSwing.rotate(outerVector);
     var innerSwingVector = halfSwing.rotate(innerVector);
+
+    var cellRotation = new Quaternion.fromAxisAngle(yAxis, theta);
+    var ringTranslation = new Vector3(0.0, -outerSwingVector.x * 2, 0.0);
 
     var outerX = outerSwingVector.x;
     var outerY = outerX;
@@ -44,7 +54,7 @@ class BlockGL {
     var innerBottomLeft = new Vector3(-innerX, -innerY, innerZ);
 
     // ur, ccw
-    return [
+    var vertices = [
       // Front
       outerUpperRight,
       outerUpperLeft,
@@ -81,11 +91,7 @@ class BlockGL {
       innerBottomLeft,
       innerBottomRight,
     ];
-  }
 
-  /// Returns a list of vectors specifying the block's normals.
-  static List<Vector3> getNormalVectors(double theta) {
-    var yAxis = new Vector3(0.0, 1.0, 0.0);
     var halfSwingLeft = new Quaternion.fromAxisAngle(yAxis, -theta / 2);
     var halfSwingRight = new Quaternion.fromAxisAngle(yAxis, theta / 2);
 
@@ -101,7 +107,7 @@ class BlockGL {
     var topNormal = new Vector3(0.0, 1.0, 0.0);
     var bottomNormal = new Vector3(0.0, -1.0, 0.0);
 
-    return [
+    var normals = [
       // Front
       frontNormal,
       frontNormal,
@@ -138,10 +144,39 @@ class BlockGL {
       bottomNormal,
       bottomNormal,
     ];
+
+    var indices = const [
+      // Front
+      0, 1, 2,
+      2, 3, 0,
+
+      // Back
+      4, 5, 6,
+      6, 7, 4,
+
+      // Left
+      8, 9, 10,
+      10, 11, 8,
+
+      // Right
+      12, 13, 14,
+      14, 15, 12,
+
+      // Top
+      16, 17, 18,
+      18, 19, 16,
+
+      // Bottom
+      20, 21, 22,
+      22, 23, 20,
+    ];
+
+    return new BlockGL._(vertices, normals, indices, cellRotation, ringTranslation);
   }
 
-  /// Returns a flattened texture coordinate list to draw a block of some color.
-  static List<double> getTextureData(BlockColor color) {
+  BlockGL._(this.vertices, this.normals, this.indices, this.cellRotation, this.ringTranslation);
+
+  List<double> getTextureCoords(BlockColor color) {
     // ul = (0, 0), br = (1, 1)
     var texturePoints = [
       // Front
@@ -181,7 +216,7 @@ class BlockGL {
       new Vector2(1.0, 1.0),
     ];
 
-    var data = [];
+    var textureCoords = [];
     for (var relPoint in texturePoints) {
       // Translate the relative point to absolute space.
       var absPoint = relPoint * _textureTileSize;
@@ -189,38 +224,9 @@ class BlockGL {
       // Move right to change colors relying on the image tiles.
       absPoint.x += color.index * _textureTileSize;
 
-      data.add(absPoint.x);
-      data.add(absPoint.y);
+      textureCoords.add(absPoint.x);
+      textureCoords.add(absPoint.y);
     }
-    return data;
-  }
-
-  /// Returns a list of indices to draw the block.
-  static List<int> getIndexData() {
-    return const [
-      // Front
-      0, 1, 2,
-      2, 3, 0,
-
-      // Back
-      4, 5, 6,
-      6, 7, 4,
-
-      // Left
-      8, 9, 10,
-      10, 11, 8,
-
-      // Right
-      12, 13, 14,
-      14, 15, 12,
-
-      // Top+
-      16, 17, 18,
-      18, 19, 16,
-
-      // Bottom
-      20, 21, 22,
-      22, 23, 20,
-    ];
+    return textureCoords;
   }
 }

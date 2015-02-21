@@ -58,6 +58,7 @@ class AppController {
       _scheduleUpdate();
     });
 
+    _gameView.init();
     _refresh(_app.state);
     _stopwatch.start();
   }

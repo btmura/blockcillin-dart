@@ -12,8 +12,6 @@ class GameView {
   Matrix4 _viewMatrix;
   Matrix4 _normalMatrix;
 
-  Game _game;
-
   GameView(this.buttonBar, this.canvas, this._program, this._boardRenderer) {
     _program.gl
       ..clearColor(0.0, 0.0, 0.0, 1.0)
@@ -24,16 +22,15 @@ class GameView {
     _normalMatrix = _viewMatrix.inverse().transpose();
   }
 
+  void init() {
+    _boardRenderer.init();
+  }
+
   void setGame(Game newGame) {
-    this._game = newGame;
-    _boardRenderer.init(newGame.board);
+    _boardRenderer.setBoard(newGame.board);
   }
 
   void draw() {
-    if (_game == null) {
-      return;
-    }
-
     _program.gl
       ..clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT)
       ..viewport(0, 0, canvas.width, canvas.height);
@@ -44,7 +41,7 @@ class GameView {
       ..uniformMatrix4fv(_program.viewMatrixUniform, false, _viewMatrix.floatList)
       ..uniformMatrix4fv(_program.normalMatrixUniform, false, _normalMatrix.floatList);
 
-    _boardRenderer.render(_game.board);
+    _boardRenderer.render();
   }
 
   Matrix4 _makeProjectionMatrix() {
