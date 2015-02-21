@@ -1,5 +1,6 @@
 part of client;
 
+/// Controller of the app that connects the model and view together via events.
 class AppController {
 
   static const int _msPerUpdate = 8;
@@ -12,6 +13,7 @@ class AppController {
 
   AppController(this._app, this._mainMenu, this._gameView, this._stopwatch);
 
+  /// Run the application.
   void run() {
     _init();
     _update();
