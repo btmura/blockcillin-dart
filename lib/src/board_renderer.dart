@@ -43,8 +43,8 @@ class BoardRenderer {
     var outerSwingVector = halfSwing.rotate(outerVector);
     var ringTranslation = new Vector3(0.0, -outerSwingVector.x * 2, 0.0);
 
-    var vertexVectors = Block.getVertexVectors(board.outerRadius, board.innerRadius, theta);
-    var normalVectors = Block.getNormalVectors(theta);
+    var vertexVectors = BlockGL.getVertexVectors(board.outerRadius, board.innerRadius, theta);
+    var normalVectors = BlockGL.getNormalVectors(theta);
 
     var positionData = [];
     var positionOffsetData = [];
@@ -90,7 +90,7 @@ class BoardRenderer {
     for (var ring in board.rings) {
       for (var cell in ring.cells) {
         var color = cell.block != null ? cell.block.color : BlockColor.RED;
-        data.addAll(Block.getTextureData(color));
+        data.addAll(BlockGL.getTextureData(color));
       }
     }
     return data;
@@ -100,8 +100,8 @@ class BoardRenderer {
     var data = [];
     for (var i = 0; i < board.numRings; i++) {
       for (var j = 0; j < board.numCells; j++) {
-        data.addAll(Block.getIndexData().map((index) {
-          var offset = (i * board.numCells + j) * Block.numIndices;
+        data.addAll(BlockGL.getIndexData().map((index) {
+          var offset = (i * board.numCells + j) * BlockGL.numIndices;
           return offset + index;
         }));
       }

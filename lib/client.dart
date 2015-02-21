@@ -11,6 +11,7 @@ part 'src/app_controller.dart';
 part 'src/app_state.dart';
 part 'src/block.dart';
 part 'src/block_color.dart';
+part 'src/block_gl.dart';
 part 'src/board.dart';
 part 'src/board_renderer.dart';
 part 'src/button_bar.dart';
