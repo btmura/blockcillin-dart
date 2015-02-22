@@ -1,6 +1,6 @@
 part of client;
 
-class GLProgram {
+class BoardProgram {
 
   final webgl.RenderingContext gl;
   final webgl.Program program;
@@ -18,7 +18,7 @@ class GLProgram {
   final int normalAttrib;
   final int textureCoordAttrib;
 
-  factory GLProgram(webgl.RenderingContext gl) {
+  factory BoardProgram(webgl.RenderingContext gl) {
     var vertexShaderSource = '''
       // TODO(btmura): use uniforms to make these configurable
       const vec3 ambientLight = vec3(0.7, 0.7, 0.7);
@@ -104,7 +104,7 @@ class GLProgram {
       return location;
     }
 
-    return new GLProgram._(
+    return new BoardProgram._(
         gl,
         program,
 
@@ -122,7 +122,7 @@ class GLProgram {
         attrib("a_textureCoord"));
   }
 
-  GLProgram._(
+  BoardProgram._(
       this.gl,
       this.program,
 

@@ -20,7 +20,7 @@ part 'src/fader.dart';
 part 'src/game.dart';
 part 'src/game_view.dart';
 part 'src/gl.dart';
-part 'src/gl_program.dart';
+part 'src/board_program.dart';
 part 'src/main_menu.dart';
 part 'src/math.dart';
 part 'src/matrix4.dart';
@@ -50,9 +50,9 @@ void run_client() {
   // Wait for the texture to load before showing the main menu.
   var image = new ImageElement(src: "packages/blockcillin/texture.png");
   image.onLoad.listen((_) {
-    var glProgram = new GLProgram(gl);
-    var boardRenderer = new BoardRenderer(glProgram, image);
-    var gameView = new GameView(buttonBar, canvas, glProgram, boardRenderer);
+    var boardProgram = new BoardProgram(gl);
+    var boardRenderer = new BoardRenderer(boardProgram, image);
+    var gameView = new GameView(buttonBar, canvas, boardProgram, boardRenderer);
     var mainMenu = new MainMenu.withElements();
 
     var app = new App();

@@ -5,15 +5,15 @@ class GameView {
   final ButtonBar buttonBar;
   final CanvasElement canvas;
 
-  final GLProgram _program;
+  final BoardProgram _boardProgram;
   final BoardRenderer _boardRenderer;
 
   Matrix4 _projectionMatrix;
   Matrix4 _viewMatrix;
   Matrix4 _normalMatrix;
 
-  GameView(this.buttonBar, this.canvas, this._program, this._boardRenderer) {
-    _program.gl
+  GameView(this.buttonBar, this.canvas, this._boardProgram, this._boardRenderer) {
+    _boardProgram.gl
       ..clearColor(0.0, 0.0, 0.0, 1.0)
       ..enable(webgl.DEPTH_TEST);
 
@@ -31,15 +31,15 @@ class GameView {
   }
 
   void draw() {
-    _program.gl
+    _boardProgram.gl
       ..clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT)
       ..viewport(0, 0, canvas.width, canvas.height);
 
-    _program.gl
-      ..useProgram(_program.program)
-      ..uniformMatrix4fv(_program.projectionMatrixUniform, false, _projectionMatrix.floatList)
-      ..uniformMatrix4fv(_program.viewMatrixUniform, false, _viewMatrix.floatList)
-      ..uniformMatrix4fv(_program.normalMatrixUniform, false, _normalMatrix.floatList);
+    _boardProgram.gl
+      ..useProgram(_boardProgram.program)
+      ..uniformMatrix4fv(_boardProgram.projectionMatrixUniform, false, _projectionMatrix.floatList)
+      ..uniformMatrix4fv(_boardProgram.viewMatrixUniform, false, _viewMatrix.floatList)
+      ..uniformMatrix4fv(_boardProgram.normalMatrixUniform, false, _normalMatrix.floatList);
 
     _boardRenderer.render();
   }
