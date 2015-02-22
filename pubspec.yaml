@@ -3,7 +3,6 @@ version: 0.1.0
 author: Brian Muramatsu
 dependencies:
   browser: any
-  typed_mock: any
   unittest: any
 transformers:
 - $dart2js:
