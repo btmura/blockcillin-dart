@@ -4,7 +4,6 @@ class GameView {
 
   final ButtonBar _buttonBar;
   final CanvasElement _canvas;
-
   final webgl.RenderingContext _gl;
   final ImageElement _textureImage;
 

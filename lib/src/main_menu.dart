@@ -12,7 +12,7 @@ class MainMenu {
   bool continueButtonVisible = false;
 
   /// Creates the menu with the production DOM tree and content.
-  factory MainMenu.withElements() {
+  factory MainMenu() {
     var title = new HeadingElement.h1()
       ..className = "main-menu-title";
 
@@ -36,11 +36,10 @@ class MainMenu {
 
     var fader = new Fader(menu);
 
-    return new MainMenu(menu, title, continueButton, newGameButton, fader);
+    return new MainMenu._(menu, title, continueButton, newGameButton, fader);
   }
 
-  /// Creates the menu out of individual components for testing.
-  MainMenu(this._menu, this._title, this._continueButton, this._newGameButton, this._fader) {
+  MainMenu._(this._menu, this._title, this._continueButton, this._newGameButton, this._fader) {
     _fader
         ..onFadeInStartCallback = _onMenuFadeInStart
         ..onFadeOutEndCallback = _onMenuFadeOutEnd;

@@ -31,33 +31,6 @@ part 'src/state.dart';
 part 'src/vector2.dart';
 part 'src/vector3.dart';
 
-void run_client() {
-  // Create the button bar for pausing the game and add it first to put it at the top.
-  var buttonBar = new ButtonBar.withElements();
-  document.body.children.add(buttonBar.element);
-
-  // Create the canvas. Add canvas after button bar to maximize it below the bar.
-  var canvas = new CanvasElement()
-      ..className = "canvas";
-  document.body.children.add(canvas);
-
-  // Initialize the canvas now that we're done setting up the DOM.
-  var gl = getWebGL(canvas);
-  if (gl == null) {
-    // TODO(btmura): handle when WebGL isn't supported
-    return;
-  }
-
-  // Wait for the texture to load before showing the main menu.
-  var textureImage = new ImageElement(src: "packages/blockcillin/texture.png");
-  textureImage.onLoad.listen((_) {
-    var gameView = new GameView(buttonBar, canvas, gl, textureImage);
-    var mainMenu = new MainMenu.withElements();
-
-    var app = new App();
-    var stopwatch = new Stopwatch();
-    var appController = new AppController(app, mainMenu, buttonBar, gameView, stopwatch);
-
-    appController.run();
-  });
+void run() {
+  new AppController().run();
 }

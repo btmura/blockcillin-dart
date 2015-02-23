@@ -5,19 +5,40 @@ class AppController {
 
   static const int _msPerUpdate = 8;
 
-  final App _app;
-  final MainMenu _mainMenu;
-  final ButtonBar _buttonBar;
-  final GameView _gameView;
-  final Stopwatch _stopwatch;
-  int _lag = 0;
+  final App _app = new App();
+  final MainMenu _mainMenu = new MainMenu();
+  final Stopwatch _stopwatch = new Stopwatch();
 
-  AppController(this._app, this._mainMenu, this._buttonBar, this._gameView, this._stopwatch);
+  ButtonBar _buttonBar;
+  GameView _gameView;
+
+  int _lag = 0;
 
   /// Run the application.
   void run() {
-    _init();
-    _update();
+    // Add button bar at the top.
+    _buttonBar = new ButtonBar();
+    document.body.children.add(_buttonBar.element);
+
+    // Add canvas below the button bar.
+    var canvas = new CanvasElement()
+        ..className = "canvas";
+    document.body.children.add(canvas);
+
+    // Get the WebGL rendering context.
+    var gl = getWebGL(canvas);
+    if (gl == null) {
+      // TODO(btmura): handle when WebGL isn't supported
+      return;
+    }
+
+    // Wait for the texture to load before starting the game.
+    var textureImage = new ImageElement(src: "packages/blockcillin/texture.png");
+    textureImage.onLoad.listen((_) {
+      _gameView = new GameView(_buttonBar, canvas, gl, textureImage);
+      _init();
+      _update();
+    });
   }
 
   void _init() {

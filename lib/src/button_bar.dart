@@ -8,7 +8,7 @@ class ButtonBar {
   final Fader _fader;
 
   /// Creates the button bar with the production DOM tree and content.
-  factory ButtonBar.withElements() {
+  factory ButtonBar() {
     var pauseButton = new ButtonElement()
         ..text = "Pause"
         ..className = "game-menu-button";
@@ -19,11 +19,10 @@ class ButtonBar {
 
     var fader = new Fader(buttonBar);
 
-    return new ButtonBar(buttonBar, pauseButton, fader);
+    return new ButtonBar._(buttonBar, pauseButton, fader);
   }
 
-  /// Creates the button bar out of individual components for testing.
-  ButtonBar(this._buttonBar, this._pauseButton, this._fader);
+  ButtonBar._(this._buttonBar, this._pauseButton, this._fader);
 
   /// DOM Element of the button bar. Add it to the DOM to show the bar.
   Element get element => _buttonBar;
