@@ -56,7 +56,7 @@ void run_client() {
 
     var app = new App();
     var stopwatch = new Stopwatch();
-    var appController = new AppController(app, mainMenu, gameView, stopwatch);
+    var appController = new AppController(app, mainMenu, buttonBar, gameView, stopwatch);
 
     appController.run();
   });

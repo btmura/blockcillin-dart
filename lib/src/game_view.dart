@@ -2,8 +2,8 @@ part of client;
 
 class GameView {
 
-  final ButtonBar buttonBar;
-  final CanvasElement canvas;
+  final ButtonBar _buttonBar;
+  final CanvasElement _canvas;
 
   final webgl.RenderingContext _gl;
   final ImageElement _textureImage;
@@ -15,7 +15,7 @@ class GameView {
   BoardProgram _boardProgram;
   BoardRenderer _boardRenderer;
 
-  GameView(this.buttonBar, this.canvas, this._gl, this._textureImage) {
+  GameView(this._buttonBar, this._canvas, this._gl, this._textureImage) {
     _projectionMatrix = _makeProjectionMatrix();
     _viewMatrix = _makeViewMatrix();
     _normalMatrix = _viewMatrix.inverse().transpose();
@@ -44,7 +44,7 @@ class GameView {
   void draw() {
     _gl
       ..clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT)
-      ..viewport(0, 0, canvas.width, canvas.height);
+      ..viewport(0, 0, _canvas.width, _canvas.height);
 
     _gl
       ..useProgram(_boardProgram.program)
@@ -56,7 +56,7 @@ class GameView {
   }
 
   Matrix4 _makeProjectionMatrix() {
-    var aspect = canvas.width / canvas.height;
+    var aspect = _canvas.width / _canvas.height;
     var fovRadians = math.PI / 2;
     return new Matrix4.perspective(fovRadians, aspect, 1.0, 2000.0);
   }
@@ -77,21 +77,21 @@ class GameView {
   }
 
   bool _maximizeCanvas() {
-    var height = document.body.clientHeight - buttonBar.height;
+    var height = document.body.clientHeight - _buttonBar.height;
 
     var changed = false;
 
     // Adjust the height of the canvas if it has changed.
-    if (canvas.clientHeight != height) {
-      canvas.style.height = "${height}px";
+    if (_canvas.clientHeight != height) {
+      _canvas.style.height = "${height}px";
       changed = true;
     }
 
     // Adjust the canvas dimensions to match it's displayed size to avoid scaling.
-    if (canvas.width != canvas.clientWidth || canvas.height != canvas.clientHeight) {
-      canvas
-          ..width = canvas.clientWidth
-          ..height = canvas.clientHeight;
+    if (_canvas.width != _canvas.clientWidth || _canvas.height != _canvas.clientHeight) {
+      _canvas
+          ..width = _canvas.clientWidth
+          ..height = _canvas.clientHeight;
       changed = true;
     }
 

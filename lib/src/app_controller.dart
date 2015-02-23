@@ -7,11 +7,12 @@ class AppController {
 
   final App _app;
   final MainMenu _mainMenu;
+  final ButtonBar _buttonBar;
   final GameView _gameView;
   final Stopwatch _stopwatch;
   int _lag = 0;
 
-  AppController(this._app, this._mainMenu, this._gameView, this._stopwatch);
+  AppController(this._app, this._mainMenu, this._buttonBar, this._gameView, this._stopwatch);
 
   /// Run the application.
   void run() {
@@ -48,7 +49,7 @@ class AppController {
       _scheduleUpdate();
     });
 
-    _gameView.buttonBar.onPauseButtonClick.listen((_) {
+    _buttonBar.onPauseButtonClick.listen((_) {
       _app.requestPauseGame();
       _scheduleUpdate();
     });
@@ -107,26 +108,26 @@ class AppController {
         _mainMenu.continueButtonVisible = false;
         _mainMenu.title = "blockcillin";
         _mainMenu.show();
-        _gameView.buttonBar.hide();
+        _buttonBar.hide();
         break;
 
       case AppState.STARTING:
         _mainMenu.hide();
-        _gameView.buttonBar.hide();
+        _buttonBar.hide();
         break;
 
       case AppState.PLAYING:
         _mainMenu.continueButtonVisible = false;
         _mainMenu.title = "blockcillin";
         _mainMenu.hide();
-        _gameView.buttonBar.show();
+        _buttonBar.show();
         break;
 
       case AppState.PAUSING:
         _mainMenu.continueButtonVisible = true;
         _mainMenu.title = "PAUSED";
         _mainMenu.show();
-        _gameView.buttonBar.hide();
+        _buttonBar.hide();
         break;
 
       case AppState.PAUSED:
@@ -134,14 +135,14 @@ class AppController {
 
       case AppState.RESUMING:
         _mainMenu.hide();
-        _gameView.buttonBar.hide();
+        _buttonBar.hide();
         break;
 
       case AppState.GAME_OVERING:
         _mainMenu.continueButtonVisible = false;
         _mainMenu.title = "GAME OVER";
         _mainMenu.show();
-        _gameView.buttonBar.hide();
+        _buttonBar.hide();
         break;
 
       case AppState.GAME_OVER:
@@ -149,7 +150,7 @@ class AppController {
 
       case AppState.FINISHING:
         _mainMenu.hide();
-        _gameView.buttonBar.hide();
+        _buttonBar.hide();
         break;
 
       case AppState.FINISHED:
