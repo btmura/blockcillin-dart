@@ -3,22 +3,11 @@ part of client;
 class BoardRenderer {
 
   final BoardProgram _boardProgram;
-  final ImageElement _textureImage;
 
   webgl.Buffer _indexBuffer;
   Board _board;
 
-  BoardRenderer(this._boardProgram, this._textureImage);
-
-  void init() {
-    var gl = _boardProgram.gl;
-    gl
-      ..bindTexture(webgl.TEXTURE_2D, gl.createTexture())
-      ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, _textureImage)
-      ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR)
-      ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR_MIPMAP_NEAREST)
-      ..generateMipmap(webgl.TEXTURE_2D);
-  }
+  BoardRenderer(this._boardProgram);
 
   void setBoard(Board board) {
     this._board = board;

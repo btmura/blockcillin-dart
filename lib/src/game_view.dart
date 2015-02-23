@@ -5,25 +5,36 @@ class GameView {
   final ButtonBar buttonBar;
   final CanvasElement canvas;
 
-  final BoardProgram _boardProgram;
-  final BoardRenderer _boardRenderer;
+  final webgl.RenderingContext _gl;
+  final ImageElement _textureImage;
 
   Matrix4 _projectionMatrix;
   Matrix4 _viewMatrix;
   Matrix4 _normalMatrix;
 
-  GameView(this.buttonBar, this.canvas, this._boardProgram, this._boardRenderer) {
-    _boardProgram.gl
-      ..clearColor(0.0, 0.0, 0.0, 1.0)
-      ..enable(webgl.DEPTH_TEST);
+  BoardProgram _boardProgram;
+  BoardRenderer _boardRenderer;
 
+  GameView(this.buttonBar, this.canvas, this._gl, this._textureImage) {
     _projectionMatrix = _makeProjectionMatrix();
     _viewMatrix = _makeViewMatrix();
     _normalMatrix = _viewMatrix.inverse().transpose();
+
+    _boardProgram = new BoardProgram(_gl);
+    _boardRenderer = new BoardRenderer(_boardProgram);
   }
 
   void init() {
-    _boardRenderer.init();
+    _gl
+        ..clearColor(0.0, 0.0, 0.0, 1.0)
+        ..enable(webgl.DEPTH_TEST);
+
+    _gl
+        ..bindTexture(webgl.TEXTURE_2D, _gl.createTexture())
+        ..texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, _textureImage)
+        ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR)
+        ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR_MIPMAP_NEAREST)
+        ..generateMipmap(webgl.TEXTURE_2D);
   }
 
   void setGame(Game newGame) {
@@ -31,11 +42,11 @@ class GameView {
   }
 
   void draw() {
-    _boardProgram.gl
+    _gl
       ..clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT)
       ..viewport(0, 0, canvas.width, canvas.height);
 
-    _boardProgram.gl
+    _gl
       ..useProgram(_boardProgram.program)
       ..uniformMatrix4fv(_boardProgram.projectionMatrixUniform, false, _projectionMatrix.floatList)
       ..uniformMatrix4fv(_boardProgram.viewMatrixUniform, false, _viewMatrix.floatList)

@@ -49,11 +49,9 @@ void run_client() {
   }
 
   // Wait for the texture to load before showing the main menu.
-  var image = new ImageElement(src: "packages/blockcillin/texture.png");
-  image.onLoad.listen((_) {
-    var boardProgram = new BoardProgram(gl);
-    var boardRenderer = new BoardRenderer(boardProgram, image);
-    var gameView = new GameView(buttonBar, canvas, boardProgram, boardRenderer);
+  var textureImage = new ImageElement(src: "packages/blockcillin/texture.png");
+  textureImage.onLoad.listen((_) {
+    var gameView = new GameView(buttonBar, canvas, gl, textureImage);
     var mainMenu = new MainMenu.withElements();
 
     var app = new App();
