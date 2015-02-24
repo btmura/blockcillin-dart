@@ -25,6 +25,7 @@ part 'src/main_menu.dart';
 part 'src/math.dart';
 part 'src/matrix4.dart';
 part 'src/quaternion.dart';
+part 'src/selector_program.dart';
 part 'src/selector_renderer.dart';
 part 'src/ring.dart';
 part 'src/state.dart';

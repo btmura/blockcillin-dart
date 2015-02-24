@@ -1,5 +1,6 @@
 part of client;
 
+/// GLSL program for the board.
 class BoardProgram {
 
   final webgl.RenderingContext gl;
