@@ -2,13 +2,13 @@ part of test;
 
 _gl_tests() {
   group("gl", () {
-    const vertexShaderSource = '''
+    const vertexShader = '''
       void main(void) {
         gl_Position = vec4(0.0, 0.0, 0.0, 0.0);    
       }
     ''';
 
-    const fragmentShaderSource = '''
+    const fragmentShader = '''
       precision mediump float;
     
       void main(void) {
@@ -25,18 +25,22 @@ _gl_tests() {
     });
 
     test("createProgram - valid shaders", () {
-      var program = createProgram(gl, vertexShaderSource, fragmentShaderSource);
+      var program = createProgram(gl, vertexShader, fragmentShader);
       expect(program, isNotNull);
     });
 
     test("createProgram - invalid vertex shader", () {
-      var program = createProgram(gl, "bad vertex shader source", fragmentShaderSource);
-      expect(program, isNull);
+      try {
+        createProgram(gl, "bad vertex shader source", fragmentShader);
+        fail("should have thrown exception");
+      } on ArgumentError {}
     });
 
     test("createProgram - invalid fragment shader", () {
-      var program = createProgram(gl, vertexShaderSource, "bad fragment shader source");
-      expect(program, isNull);
+      try {
+        createProgram(gl, vertexShader, "bad fragment shader source");
+        fail("should have thrown exception");
+      } on ArgumentError {}
     });
   });
 }

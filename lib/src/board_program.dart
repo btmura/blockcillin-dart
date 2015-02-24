@@ -84,10 +84,6 @@ class BoardProgram {
     ''';
 
     var program = createProgram(gl, vertexShader, fragmentShader);
-    if (program == null) {
-      throw new StateError("couldn't create program");
-    }
-
     var uniform = newUniformLocator(gl, program);
     var attrib = newAttribLocator(gl, program);
 
