@@ -1,5 +1,6 @@
 part of blockcillin;
 
+/// Returns the GL context from a canvas or null if not supported.
 webgl.RenderingContext getWebGL(CanvasElement canvas) {
   var gl = canvas.getContext("webgl");
   if (gl != null) {
@@ -15,18 +16,18 @@ webgl.RenderingContext getWebGL(CanvasElement canvas) {
   return null;
 }
 
-webgl.Program createProgram(webgl.RenderingContext gl, String vertexShaderSource, String fragmentShaderSource) {
-  var vertexShader = _createShader(gl, webgl.VERTEX_SHADER, vertexShaderSource);
-  var fragmentShader = _createShader(gl, webgl.FRAGMENT_SHADER, fragmentShaderSource);
+/// Returns a program created from vertex and fragment shader source code or throws an exception.
+webgl.Program createProgram(webgl.RenderingContext gl, String vertexShader, String fragmentShader) {
+  var vs = _createShader(gl, webgl.VERTEX_SHADER, vertexShader);
+  var fs = _createShader(gl, webgl.FRAGMENT_SHADER, fragmentShader);
 
   var program = gl.createProgram();
   gl
-    ..attachShader(program, vertexShader)
-    ..attachShader(program, fragmentShader)
+    ..attachShader(program, vs)
+    ..attachShader(program, fs)
     ..linkProgram(program);
 
-  var linked = gl.getProgramParameter(program, webgl.LINK_STATUS);
-  if (!linked) {
+  if (!gl.getProgramParameter(program, webgl.LINK_STATUS)) {
     var error = gl.getProgramInfoLog(program);
     gl.deleteProgram(program);
     throw new StateError("gl: error linking program: $error");
@@ -35,14 +36,14 @@ webgl.Program createProgram(webgl.RenderingContext gl, String vertexShaderSource
   return program;
 }
 
+/// Returns a shader created from a type and source code or throws an exception.
 webgl.Shader _createShader(webgl.RenderingContext gl, int type, String source) {
   var shader = gl.createShader(type);
   gl
     ..shaderSource(shader, source)
     ..compileShader(shader);
 
-  var compiled = gl.getShaderParameter(shader, webgl.COMPILE_STATUS);
-  if (!compiled) {
+  if (!gl.getShaderParameter(shader, webgl.COMPILE_STATUS)) {
     var error = gl.getShaderInfoLog(shader);
     gl.deleteShader(shader);
     throw new ArgumentError("gl: error compiling shader: $type $error");
@@ -51,7 +52,7 @@ webgl.Shader _createShader(webgl.RenderingContext gl, int type, String source) {
   return shader;
 }
 
-/// Creates a STATIC_DRAW array buffer with the data.
+/// Returns a STATIC_DRAW array buffer filled with data.
 webgl.Buffer createArrayBuffer(webgl.RenderingContext gl, List<double> data) {
   var buffer = gl.createBuffer();
   gl
@@ -60,7 +61,7 @@ webgl.Buffer createArrayBuffer(webgl.RenderingContext gl, List<double> data) {
   return buffer;
 }
 
-/// Creates a STATIC_DRAW element array buffer with the data.
+/// Returns a STATIC_DRAW element array buffer filled with data.
 webgl.Buffer createElementArrayBuffer(webgl.RenderingContext gl, List<int> data) {
   var buffer = gl.createBuffer();
   gl
