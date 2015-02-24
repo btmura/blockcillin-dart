@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// A queue that acts as a sequential finite state machine.
 /// It is up to the caller to handle the logic of state transitions and enqueue states.

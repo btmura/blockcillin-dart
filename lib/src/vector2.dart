@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// A vector with x and y components.
 class Vector2 {

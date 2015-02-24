@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// Model of the app which manages the current game and the next game.
 class App {

@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 webgl.RenderingContext getWebGL(CanvasElement canvas) {
   var gl = canvas.getContext("webgl");

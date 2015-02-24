@@ -7,7 +7,7 @@ import 'dart:web_gl' as webgl;
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 
-import 'package:blockcillin/client.dart';
+import 'package:blockcillin/blockcillin.dart';
 
 part 'src/block_test.dart';
 part 'src/board_test.dart';

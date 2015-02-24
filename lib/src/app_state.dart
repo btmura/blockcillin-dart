@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// State of the app.
 enum AppState {

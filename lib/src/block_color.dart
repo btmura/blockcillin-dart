@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// Color of a block.
 enum BlockColor {

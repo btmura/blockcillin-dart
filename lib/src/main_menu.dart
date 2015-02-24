@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// The main menu used to start a new game or continue an existing one.
 class MainMenu {

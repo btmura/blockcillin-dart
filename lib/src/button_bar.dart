@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// The button bar above the game used to pause the game.
 class ButtonBar {

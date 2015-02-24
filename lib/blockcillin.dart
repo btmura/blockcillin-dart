@@ -1,4 +1,4 @@
-library client;
+library blockcillin;
 
 import 'dart:async';
 import 'dart:math' as math;

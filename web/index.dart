@@ -1,4 +1,4 @@
-import 'package:blockcillin/client.dart';
+import 'package:blockcillin/blockcillin.dart';
 
 main() {
   run();

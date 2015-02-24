@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 class Board {
 

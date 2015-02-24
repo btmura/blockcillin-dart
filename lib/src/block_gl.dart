@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// GL-related code to render a block.
 class BlockGL {

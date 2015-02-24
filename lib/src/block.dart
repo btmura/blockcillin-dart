@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// Block of a certain color.
 class Block {

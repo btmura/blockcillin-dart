@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// Controller of the app that connects the model and view together via events.
 class AppController {

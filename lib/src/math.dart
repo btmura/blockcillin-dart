@@ -1,4 +1,4 @@
-part of client;
+part of blockcillin;
 
 /// A function that interpolates from start value to end value.
 typedef double InterpolateFunc(double start, double end);
