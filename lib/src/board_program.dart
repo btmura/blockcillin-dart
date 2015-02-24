@@ -85,24 +85,11 @@ class BoardProgram {
 
     var program = createProgram(gl, vertexShader, fragmentShader);
     if (program == null) {
-      throw new StateError("couldn't create board program");
+      throw new StateError("couldn't create program");
     }
 
-    webgl.UniformLocation uniform(String name) {
-      var location = gl.getUniformLocation(program, name);
-      if (location == null) {
-        throw new StateError("${name} not found");
-      }
-      return location;
-    }
-
-    int attrib(String name) {
-      var location = gl.getAttribLocation(program, name);
-      if (location == -1) {
-        throw new StateError("${name} not found");
-      }
-      return location;
-    }
+    var uniform = newUniformLocator(gl, program);
+    var attrib = newAttribLocator(gl, program);
 
     return new BoardProgram._(
         program,

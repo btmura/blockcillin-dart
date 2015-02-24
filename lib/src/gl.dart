@@ -77,3 +77,31 @@ webgl.Buffer createElementArrayBuffer(webgl.RenderingContext gl, List<int> data)
     ..bufferData(webgl.ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(data), webgl.STATIC_DRAW);
   return buffer;
 }
+
+/// Function that returns a uniform's location given a name.
+typedef webgl.UniformLocation UniformLocator(String name);
+
+/// Returns a UniformLocator that locates a uniform or throws an exception.
+UniformLocator newUniformLocator(webgl.RenderingContext gl, webgl.Program program) {
+  return (String name) {
+    var location = gl.getUniformLocation(program, name);
+    if (location == null) {
+      throw new ArgumentError("${name} not found");
+    }
+    return location;
+  };
+}
+
+/// Function that returns an attribute's location given a name.
+typedef int AttribLocator(String name);
+
+/// Returns an AttribLocator that locates an attribute or throws an exception.
+AttribLocator newAttribLocator(webgl.RenderingContext gl, webgl.Program program) {
+  return (String name) {
+    var location = gl.getAttribLocation(program, name);
+    if (location == -1) {
+      throw new ArgumentError("${name} not found");
+    }
+    return location;
+  };
+}
