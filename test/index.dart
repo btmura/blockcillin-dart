@@ -1,9 +1,7 @@
 library test;
 
-import 'dart:html';
 import 'dart:math' as math;
 import 'dart:typed_data';
-import 'dart:web_gl' as webgl;
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 
@@ -13,7 +11,6 @@ part 'src/block_test.dart';
 part 'src/board_test.dart';
 part 'src/cell_test.dart';
 part 'src/game_test.dart';
-part 'src/gl_test.dart';
 part 'src/quaternion_test.dart';
 part 'src/ring_test.dart';
 part 'src/vector2_test.dart';
@@ -26,7 +23,6 @@ void main() {
   _board_tests();
   _cell_tests();
   _game_tests();
-  _gl_tests();
   _quaternion_tests();
   _ring_tests();
   _vector2_tests();

@@ -33,9 +33,6 @@ class SelectorProgram {
     ''';
 
     var program = createProgram(gl, vertexShader, fragmentShader);
-    if (program == null) {
-      throw new StateError("couldn't create selector program");
-    }
 
     return new SelectorProgram._(program);
   }
