@@ -2,12 +2,13 @@ part of blockcillin;
 
 class BoardRenderer {
 
+  final webgl.RenderingContext _gl;
   final BoardProgram _boardProgram;
 
   webgl.Buffer _indexBuffer;
   Board _board;
 
-  BoardRenderer(this._boardProgram);
+  BoardRenderer(this._gl, this._boardProgram);
 
   void setBoard(Board board) {
     this._board = board;
@@ -63,33 +64,32 @@ class BoardRenderer {
       totalRingTranslation += blockGL.ringTranslation;
     }
 
-    var gl = _boardProgram.gl;
-    var positionBuffer = createArrayBuffer(gl, positionData);
-    var positionOffsetBuffer = createArrayBuffer(gl, positionOffsetData);
-    var normalBuffer = createArrayBuffer(gl, normalData);
-    var textureBuffer = createArrayBuffer(gl, textureData);
+    var positionBuffer = createArrayBuffer(_gl, positionData);
+    var positionOffsetBuffer = createArrayBuffer(_gl, positionOffsetData);
+    var normalBuffer = createArrayBuffer(_gl, normalData);
+    var textureBuffer = createArrayBuffer(_gl, textureData);
 
-    gl
+    _gl
       ..bindBuffer(webgl.ARRAY_BUFFER, positionBuffer)
       ..enableVertexAttribArray(_boardProgram.positionAttrib)
       ..vertexAttribPointer(_boardProgram.positionAttrib, 3, webgl.FLOAT, false, 0, 0);
 
-    gl
+    _gl
       ..bindBuffer(webgl.ARRAY_BUFFER, positionOffsetBuffer)
       ..enableVertexAttribArray(_boardProgram.positionOffsetAttrib)
       ..vertexAttribPointer(_boardProgram.positionOffsetAttrib, 3, webgl.FLOAT, false, 0, 0);
 
-    gl
+    _gl
       ..bindBuffer(webgl.ARRAY_BUFFER, normalBuffer)
       ..enableVertexAttribArray(_boardProgram.normalAttrib)
       ..vertexAttribPointer(_boardProgram.normalAttrib, 3, webgl.FLOAT, false, 0, 0);
 
-    gl
+    _gl
       ..bindBuffer(webgl.ARRAY_BUFFER, textureBuffer)
       ..enableVertexAttribArray(_boardProgram.textureCoordAttrib)
       ..vertexAttribPointer(_boardProgram.textureCoordAttrib, 2, webgl.FLOAT, false, 0, 0);
 
-     _indexBuffer = createElementArrayBuffer(gl, indexData);
+    _indexBuffer = createElementArrayBuffer(_gl, indexData);
   }
 
   void render() {
@@ -100,13 +100,13 @@ class BoardRenderer {
     var rotationMatrix = new Matrix4.rotation(0.0, _board.rotationY, 0.0);
     var translationMatrix = new Matrix4.translation(0.0, _board.translationY, 0.0);
 
-    _boardProgram.gl
+    _gl
       ..uniformMatrix4fv(_boardProgram.boardRotationMatrixUniform, false, rotationMatrix.floatList)
       ..uniformMatrix4fv(_boardProgram.boardTranslationMatrixUniform, false, translationMatrix.floatList)
       ..uniform1f(_boardProgram.grayscaleAmountUniform, _board.grayscaleAmount)
       ..uniform1f(_boardProgram.blackAmountUniform, _board.blackAmount);
 
-    _boardProgram.gl
+    _gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
       ..drawElements(webgl.TRIANGLES, 36 * _board.numRings * _board.numCells, webgl.UNSIGNED_SHORT, 0);
   }

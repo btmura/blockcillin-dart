@@ -3,7 +3,6 @@ part of blockcillin;
 /// GLSL program for the board.
 class BoardProgram {
 
-  final webgl.RenderingContext gl;
   final webgl.Program program;
 
   final webgl.UniformLocation projectionMatrixUniform;
@@ -106,7 +105,6 @@ class BoardProgram {
     }
 
     return new BoardProgram._(
-        gl,
         program,
 
         uniform("u_projectionMatrix"),
@@ -124,7 +122,6 @@ class BoardProgram {
   }
 
   BoardProgram._(
-      this.gl,
       this.program,
 
       this.projectionMatrixUniform,

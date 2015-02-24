@@ -20,7 +20,7 @@ class GameView {
     _normalMatrix = _viewMatrix.inverse().transpose();
 
     _boardProgram = new BoardProgram(_gl);
-    _boardRenderer = new BoardRenderer(_boardProgram);
+    _boardRenderer = new BoardRenderer(_gl, _boardProgram);
   }
 
   void init() {
