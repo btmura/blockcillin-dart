@@ -19,7 +19,7 @@ class BoardProgram {
   final int textureCoordAttrib;
 
   factory BoardProgram(webgl.RenderingContext gl) {
-    var vertexShaderSource = '''
+    var vertexShader = '''
       // TODO(btmura): use uniforms to make these configurable
       const vec3 ambientLight = vec3(0.7, 0.7, 0.7);
       const vec3 directionalLightColor = vec3(0.4, 0.4, 0.4);
@@ -61,7 +61,7 @@ class BoardProgram {
       }
     ''';
 
-    var fragmentShaderSource = '''
+    var fragmentShader = '''
       precision mediump float;
 
       const vec3 blackColor = vec3(0.0, 0.0, 0.0);
@@ -83,9 +83,9 @@ class BoardProgram {
       }
     ''';
 
-    var program = createProgram(gl, vertexShaderSource, fragmentShaderSource);
+    var program = createProgram(gl, vertexShader, fragmentShader);
     if (program == null) {
-      throw new StateError("couldn't create program");
+      throw new StateError("couldn't create board program");
     }
 
     webgl.UniformLocation uniform(String name) {
