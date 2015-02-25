@@ -5,8 +5,6 @@ class BoardProgram {
 
   final webgl.Program program;
 
-  final webgl.UniformLocation projectionViewMatrixUniform;
-  final webgl.UniformLocation normalMatrixUniform;
   final webgl.UniformLocation boardRotationMatrixUniform;
   final webgl.UniformLocation boardTranslationMatrixUniform;
   final webgl.UniformLocation grayscaleAmountUniform;
@@ -16,6 +14,10 @@ class BoardProgram {
   final int positionOffsetAttrib;
   final int normalAttrib;
   final int textureCoordAttrib;
+
+  final webgl.RenderingContext _gl;
+  final webgl.UniformLocation _projectionViewMatrixUniform;
+  final webgl.UniformLocation _normalMatrixUniform;
 
   factory BoardProgram(webgl.RenderingContext gl) {
     var vertexShader = '''
@@ -84,6 +86,7 @@ class BoardProgram {
     var attrib = newAttribLocator(gl, program);
 
     return new BoardProgram._(
+        gl,
         program,
         uniform("u_projectionViewMatrix"),
         uniform("u_normalMatrix"),
@@ -98,9 +101,10 @@ class BoardProgram {
   }
 
   BoardProgram._(
+      this._gl,
       this.program,
-      this.projectionViewMatrixUniform,
-      this.normalMatrixUniform,
+      this._projectionViewMatrixUniform,
+      this._normalMatrixUniform,
       this.boardRotationMatrixUniform,
       this.boardTranslationMatrixUniform,
       this.grayscaleAmountUniform,
@@ -109,4 +113,16 @@ class BoardProgram {
       this.positionOffsetAttrib,
       this.normalAttrib,
       this.textureCoordAttrib);
+
+  void setProjectionViewMatrix(Matrix4 matrix) {
+    _gl
+      ..useProgram(program)
+      ..uniformMatrix4fv(_projectionViewMatrixUniform, false, matrix.floatList);
+  }
+
+  void setNormalMatrix(Matrix4 matrix) {
+    _gl
+      ..useProgram(program)
+      ..uniformMatrix4fv(_normalMatrixUniform, false, matrix.floatList);
+  }
 }

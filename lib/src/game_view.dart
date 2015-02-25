@@ -7,23 +7,16 @@ class GameView {
   final webgl.RenderingContext _gl;
   final ImageElement _textureImage;
 
-  Matrix4 _viewMatrix;
-  Matrix4 _projectionViewMatrix;
-  Matrix4 _normalMatrix;
-
   BoardProgram _boardProgram;
   BoardRenderer _boardRenderer;
   SelectorProgram _selectorProgram;
+  Matrix4 _viewMatrix;
 
   GameView(this._buttonBar, this._canvas, this._gl, this._textureImage) {
-    _viewMatrix = _makeViewMatrix();
-    _projectionViewMatrix = _viewMatrix * _makeProjectionMatrix();
-    _normalMatrix = _viewMatrix.inverse().transpose();
-
     _boardProgram = new BoardProgram(_gl);
     _boardRenderer = new BoardRenderer(_gl, _boardProgram);
-
     _selectorProgram = new SelectorProgram(_gl);
+    _viewMatrix = _makeViewMatrix();
   }
 
   void init() {
@@ -37,6 +30,9 @@ class GameView {
         ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MAG_FILTER, webgl.LINEAR)
         ..texParameteri(webgl.TEXTURE_2D, webgl.TEXTURE_MIN_FILTER, webgl.LINEAR_MIPMAP_NEAREST)
         ..generateMipmap(webgl.TEXTURE_2D);
+
+    _updateProjectionMatrix();
+    _updateNormalMatrix();
   }
 
   void setGame(Game newGame) {
@@ -48,30 +44,12 @@ class GameView {
       ..clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT)
       ..viewport(0, 0, _canvas.width, _canvas.height);
 
-    _gl
-      ..useProgram(_boardProgram.program)
-      ..uniformMatrix4fv(_boardProgram.projectionViewMatrixUniform, false, _projectionViewMatrix.floatList)
-      ..uniformMatrix4fv(_boardProgram.normalMatrixUniform, false, _normalMatrix.floatList);
-
     _boardRenderer.render();
-  }
-
-  Matrix4 _makeProjectionMatrix() {
-    var aspect = _canvas.width / _canvas.height;
-    var fovRadians = math.PI / 2;
-    return new Matrix4.perspective(fovRadians, aspect, 1.0, 2000.0);
-  }
-
-  Matrix4 _makeViewMatrix() {
-    var cameraPosition = new Vector3(0.0, 0.5, 3.0);
-    var targetPosition = new Vector3(0.0, 0.0, 0.0);
-    var up = new Vector3(0.0, 1.0, 0.0);
-    return new Matrix4.view(cameraPosition, targetPosition, up);
   }
 
   bool resize() {
     if (_maximizeCanvas()) {
-      _projectionViewMatrix = _viewMatrix * _makeProjectionMatrix();
+      _updateProjectionMatrix();
       return true;
     }
     return false;
@@ -97,5 +75,28 @@ class GameView {
     }
 
     return changed;
+  }
+
+  void _updateProjectionMatrix() {
+    var projectionViewMatrix = _viewMatrix * _makeProjectionMatrix();
+    _boardProgram.setProjectionViewMatrix(projectionViewMatrix);
+  }
+
+  void _updateNormalMatrix() {
+    var normalMatrix = _viewMatrix.inverse().transpose();
+    _boardProgram.setNormalMatrix(normalMatrix);
+  }
+
+  Matrix4 _makeProjectionMatrix() {
+    var aspect = _canvas.width / _canvas.height;
+    var fovRadians = math.PI / 2;
+    return new Matrix4.perspective(fovRadians, aspect, 1.0, 2000.0);
+  }
+
+  Matrix4 _makeViewMatrix() {
+    var cameraPosition = new Vector3(0.0, 0.5, 3.0);
+    var targetPosition = new Vector3(0.0, 0.0, 0.0);
+    var up = new Vector3(0.0, 1.0, 0.0);
+    return new Matrix4.view(cameraPosition, targetPosition, up);
   }
 }

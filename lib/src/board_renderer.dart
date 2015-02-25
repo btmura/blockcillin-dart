@@ -69,6 +69,8 @@ class BoardRenderer {
     var normalBuffer = createArrayBuffer(_gl, normalData);
     var textureBuffer = createArrayBuffer(_gl, textureData);
 
+    _gl.useProgram(_boardProgram.program);
+
     _gl
       ..bindBuffer(webgl.ARRAY_BUFFER, positionBuffer)
       ..enableVertexAttribArray(_boardProgram.positionAttrib)
@@ -101,6 +103,7 @@ class BoardRenderer {
     var translationMatrix = new Matrix4.translation(0.0, _board.translationY, 0.0);
 
     _gl
+      ..useProgram(_boardProgram.program)
       ..uniformMatrix4fv(_boardProgram.boardRotationMatrixUniform, false, rotationMatrix.floatList)
       ..uniformMatrix4fv(_boardProgram.boardTranslationMatrixUniform, false, translationMatrix.floatList)
       ..uniform1f(_boardProgram.grayscaleAmountUniform, _board.grayscaleAmount)
