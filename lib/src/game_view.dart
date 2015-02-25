@@ -40,16 +40,14 @@ class GameView {
   }
 
   void draw() {
-    _gl
-      ..clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT)
-      ..viewport(0, 0, _canvas.width, _canvas.height);
-
+    _gl.clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT);
     _boardRenderer.render();
   }
 
   bool resize() {
     if (_maximizeCanvas()) {
       _updateProjectionMatrix();
+      _gl.viewport(0, 0, _canvas.width, _canvas.height);
       return true;
     }
     return false;
@@ -79,12 +77,16 @@ class GameView {
 
   void _updateProjectionMatrix() {
     var projectionViewMatrix = _viewMatrix * _makeProjectionMatrix();
-    _boardProgram.setProjectionViewMatrix(projectionViewMatrix);
+    _boardProgram
+      ..useProgram()
+      ..setProjectionViewMatrix(projectionViewMatrix);
   }
 
   void _updateNormalMatrix() {
     var normalMatrix = _viewMatrix.inverse().transpose();
-    _boardProgram.setNormalMatrix(normalMatrix);
+    _boardProgram
+      ..useProgram()
+      ..setNormalMatrix(normalMatrix);
   }
 
   Matrix4 _makeProjectionMatrix() {

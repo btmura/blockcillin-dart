@@ -3,8 +3,6 @@ part of blockcillin;
 /// GLSL program for the board.
 class BoardProgram {
 
-  final webgl.Program program;
-
   final webgl.UniformLocation boardRotationMatrixUniform;
   final webgl.UniformLocation boardTranslationMatrixUniform;
   final webgl.UniformLocation grayscaleAmountUniform;
@@ -16,6 +14,7 @@ class BoardProgram {
   final int textureCoordAttrib;
 
   final webgl.RenderingContext _gl;
+  final webgl.Program _program;
   final webgl.UniformLocation _projectionViewMatrixUniform;
   final webgl.UniformLocation _normalMatrixUniform;
 
@@ -102,7 +101,7 @@ class BoardProgram {
 
   BoardProgram._(
       this._gl,
-      this.program,
+      this._program,
       this._projectionViewMatrixUniform,
       this._normalMatrixUniform,
       this.boardRotationMatrixUniform,
@@ -114,15 +113,15 @@ class BoardProgram {
       this.normalAttrib,
       this.textureCoordAttrib);
 
+  void useProgram() {
+    _gl.useProgram(_program);
+  }
+
   void setProjectionViewMatrix(Matrix4 matrix) {
-    _gl
-      ..useProgram(program)
-      ..uniformMatrix4fv(_projectionViewMatrixUniform, false, matrix.floatList);
+    _gl.uniformMatrix4fv(_projectionViewMatrixUniform, false, matrix.floatList);
   }
 
   void setNormalMatrix(Matrix4 matrix) {
-    _gl
-      ..useProgram(program)
-      ..uniformMatrix4fv(_normalMatrixUniform, false, matrix.floatList);
+    _gl.uniformMatrix4fv(_normalMatrixUniform, false, matrix.floatList);
   }
 }
