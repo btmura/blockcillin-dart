@@ -85,14 +85,12 @@ class BoardProgram {
 
     return new BoardProgram._(
         program,
-
         uniform("u_projectionViewMatrix"),
         uniform("u_normalMatrix"),
         uniform("u_boardRotationMatrix"),
         uniform("u_boardTranslationMatrix"),
         uniform("u_grayscaleAmount"),
         uniform("u_blackAmount"),
-
         attrib("a_position"),
         attrib("a_positionOffset"),
         attrib("a_normal"),
@@ -101,14 +99,12 @@ class BoardProgram {
 
   BoardProgram._(
       this.program,
-
       this.projectionViewMatrixUniform,
       this.normalMatrixUniform,
       this.boardRotationMatrixUniform,
       this.boardTranslationMatrixUniform,
       this.grayscaleAmountUniform,
       this.blackAmountUniform,
-
       this.positionAttrib,
       this.positionOffsetAttrib,
       this.normalAttrib,

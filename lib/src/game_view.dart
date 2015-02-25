@@ -13,6 +13,7 @@ class GameView {
 
   BoardProgram _boardProgram;
   BoardRenderer _boardRenderer;
+  SelectorProgram _selectorProgram;
 
   GameView(this._buttonBar, this._canvas, this._gl, this._textureImage) {
     _viewMatrix = _makeViewMatrix();
@@ -21,6 +22,8 @@ class GameView {
 
     _boardProgram = new BoardProgram(_gl);
     _boardRenderer = new BoardRenderer(_gl, _boardProgram);
+
+    _selectorProgram = new SelectorProgram(_gl);
   }
 
   void init() {

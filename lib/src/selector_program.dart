@@ -5,6 +5,10 @@ class SelectorProgram {
 
   final webgl.Program program;
 
+  final webgl.UniformLocation projectionViewMatrixUniform;
+  final int positionAttrib;
+  final int textureCoordAttrib;
+
   factory SelectorProgram(webgl.RenderingContext gl) {
     var vertexShader = '''
       uniform mat4 u_projectionViewMatrix;
@@ -33,9 +37,19 @@ class SelectorProgram {
     ''';
 
     var program = createProgram(gl, vertexShader, fragmentShader);
+    var uniform = newUniformLocator(gl, program);
+    var attrib = newAttribLocator(gl, program);
 
-    return new SelectorProgram._(program);
+    return new SelectorProgram._(
+        program,
+        uniform("u_projectionViewMatrix"),
+        attrib("a_position"),
+        attrib("a_textureCoord"));
   }
 
-  SelectorProgram._(this.program);
+  SelectorProgram._(
+      this.program,
+      this.projectionViewMatrixUniform,
+      this.positionAttrib,
+      this.textureCoordAttrib);
 }
