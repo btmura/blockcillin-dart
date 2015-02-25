@@ -7,16 +7,16 @@ class GameView {
   final webgl.RenderingContext _gl;
   final ImageElement _textureImage;
 
-  Matrix4 _projectionMatrix;
   Matrix4 _viewMatrix;
+  Matrix4 _projectionViewMatrix;
   Matrix4 _normalMatrix;
 
   BoardProgram _boardProgram;
   BoardRenderer _boardRenderer;
 
   GameView(this._buttonBar, this._canvas, this._gl, this._textureImage) {
-    _projectionMatrix = _makeProjectionMatrix();
     _viewMatrix = _makeViewMatrix();
+    _projectionViewMatrix = _viewMatrix * _makeProjectionMatrix();
     _normalMatrix = _viewMatrix.inverse().transpose();
 
     _boardProgram = new BoardProgram(_gl);
@@ -47,8 +47,7 @@ class GameView {
 
     _gl
       ..useProgram(_boardProgram.program)
-      ..uniformMatrix4fv(_boardProgram.projectionMatrixUniform, false, _projectionMatrix.floatList)
-      ..uniformMatrix4fv(_boardProgram.viewMatrixUniform, false, _viewMatrix.floatList)
+      ..uniformMatrix4fv(_boardProgram.projectionViewMatrixUniform, false, _projectionViewMatrix.floatList)
       ..uniformMatrix4fv(_boardProgram.normalMatrixUniform, false, _normalMatrix.floatList);
 
     _boardRenderer.render();
@@ -69,7 +68,7 @@ class GameView {
 
   bool resize() {
     if (_maximizeCanvas()) {
-      _projectionMatrix = _makeProjectionMatrix();
+      _projectionViewMatrix = _viewMatrix * _makeProjectionMatrix();
       return true;
     }
     return false;

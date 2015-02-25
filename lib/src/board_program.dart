@@ -5,8 +5,7 @@ class BoardProgram {
 
   final webgl.Program program;
 
-  final webgl.UniformLocation projectionMatrixUniform;
-  final webgl.UniformLocation viewMatrixUniform;
+  final webgl.UniformLocation projectionViewMatrixUniform;
   final webgl.UniformLocation normalMatrixUniform;
   final webgl.UniformLocation boardRotationMatrixUniform;
   final webgl.UniformLocation boardTranslationMatrixUniform;
@@ -25,8 +24,7 @@ class BoardProgram {
       const vec3 directionalLightColor = vec3(0.4, 0.4, 0.4);
       const vec3 directionalVector = vec3(0.0, 3.0, -3.0);
 
-      uniform mat4 u_projectionMatrix;
-      uniform mat4 u_viewMatrix;
+      uniform mat4 u_projectionViewMatrix;
       uniform mat4 u_normalMatrix;
       uniform mat4 u_boardRotationMatrix;
       uniform mat4 u_boardTranslationMatrix;
@@ -46,9 +44,7 @@ class BoardProgram {
             * u_boardTranslationMatrix
             * vec4(a_position + a_positionOffset, 1.0);
 
-        gl_Position = u_projectionMatrix
-            * u_viewMatrix
-            * position;
+        gl_Position = u_projectionViewMatrix * position;
 
         v_textureCoord = a_textureCoord;
 
@@ -90,8 +86,7 @@ class BoardProgram {
     return new BoardProgram._(
         program,
 
-        uniform("u_projectionMatrix"),
-        uniform("u_viewMatrix"),
+        uniform("u_projectionViewMatrix"),
         uniform("u_normalMatrix"),
         uniform("u_boardRotationMatrix"),
         uniform("u_boardTranslationMatrix"),
@@ -107,8 +102,7 @@ class BoardProgram {
   BoardProgram._(
       this.program,
 
-      this.projectionMatrixUniform,
-      this.viewMatrixUniform,
+      this.projectionViewMatrixUniform,
       this.normalMatrixUniform,
       this.boardRotationMatrixUniform,
       this.boardTranslationMatrixUniform,
