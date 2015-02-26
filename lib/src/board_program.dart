@@ -5,8 +5,6 @@ class BoardProgram {
 
   final webgl.UniformLocation boardRotationMatrixUniform;
   final webgl.UniformLocation boardTranslationMatrixUniform;
-  final webgl.UniformLocation grayscaleAmountUniform;
-  final webgl.UniformLocation blackAmountUniform;
 
   final int positionAttrib;
   final int positionOffsetAttrib;
@@ -17,6 +15,8 @@ class BoardProgram {
   final webgl.Program _program;
   final webgl.UniformLocation _projectionViewMatrixUniform;
   final webgl.UniformLocation _normalMatrixUniform;
+  final webgl.UniformLocation _grayscaleAmountUniform;
+  final webgl.UniformLocation _blackAmountUniform;
 
   factory BoardProgram(webgl.RenderingContext gl) {
     var vertexShader = '''
@@ -106,8 +106,8 @@ class BoardProgram {
       this._normalMatrixUniform,
       this.boardRotationMatrixUniform,
       this.boardTranslationMatrixUniform,
-      this.grayscaleAmountUniform,
-      this.blackAmountUniform,
+      this._grayscaleAmountUniform,
+      this._blackAmountUniform,
       this.positionAttrib,
       this.positionOffsetAttrib,
       this.normalAttrib,
@@ -123,5 +123,13 @@ class BoardProgram {
 
   void setNormalMatrix(Matrix4 matrix) {
     _gl.uniformMatrix4fv(_normalMatrixUniform, false, matrix.floatList);
+  }
+
+  void setGrayscaleAmount(double amount) {
+    _gl.uniform1f(_grayscaleAmountUniform, amount);
+  }
+
+  void setBlackAmount(double amount) {
+    _gl.uniform1f(_blackAmountUniform, amount);
   }
 }

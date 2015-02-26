@@ -107,8 +107,9 @@ class BoardRenderer {
     _gl
       ..uniformMatrix4fv(_boardProgram.boardRotationMatrixUniform, false, rotationMatrix.floatList)
       ..uniformMatrix4fv(_boardProgram.boardTranslationMatrixUniform, false, translationMatrix.floatList)
-      ..uniform1f(_boardProgram.grayscaleAmountUniform, _board.grayscaleAmount)
-      ..uniform1f(_boardProgram.blackAmountUniform, _board.blackAmount);
+
+   _boardProgram.setGrayscaleAmount(_board.grayscaleAmount);
+   _boardProgram.setBlackAmount(_board.blackAmount);
 
     _gl
       ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
