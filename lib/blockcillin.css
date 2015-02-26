@@ -32,14 +32,15 @@ html, body {
 
 .main-menu-button, .game-menu-button {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  background: rgba(50, 50, 50, 0.9);
+  -webkit-user-select: none;
   background-image: linear-gradient(
-    rgba(40, 40, 40, 0.9),
-    rgba(70, 70, 70, 0.9)
+    rgb(200, 200, 200),
+    rgb(20, 20, 20),
+    rgb(40, 40, 40),
+    rgb(60, 60, 60)
   );
-  border: 1px;
+  border: 0;
   border-radius: 2em;
-  box-shadow: inset 0px 0px 2px #555;
   color: #fff;
   cursor: pointer;
   letter-spacing: 0.5em;
@@ -48,15 +49,27 @@ html, body {
   text-align: center;
   text-shadow: 1px 1px 1px #333;
   text-transform: uppercase;
+  transition: 0.1s ease;
   white-space: nowrap;
 }
 
 .main-menu-button:hover, .game-menu-button:hover {
-  background: rgba(70, 0, 0, 0.9);
   background-image: linear-gradient(
-    rgba(70, 0, 0, 0.9),
-    rgba(140, 0, 0, 0.9)
+    rgb(200, 200, 200),
+    rgb(80, 0, 0),
+    rgb(100, 0, 0),
+    rgb(120, 0, 0)
   );
+}
+
+.main-menu-button:active, .game-menu-button:active {
+  background-image: linear-gradient(
+    rgb(200, 200, 200),
+    rgb(120, 0, 0),
+    rgb(140, 0, 0),
+    rgb(160, 0, 0)
+  );
+  box-shadow: inset 0px 0px 5px #fff;
 }
 
 .main-menu-button {
