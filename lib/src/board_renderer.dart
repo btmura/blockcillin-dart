@@ -64,32 +64,12 @@ class BoardRenderer {
       totalRingTranslation += blockGL.ringTranslation;
     }
 
-    var positionBuffer = createArrayBuffer(_gl, positionData);
-    var positionOffsetBuffer = createArrayBuffer(_gl, positionOffsetData);
-    var normalBuffer = createArrayBuffer(_gl, normalData);
-    var textureBuffer = createArrayBuffer(_gl, textureData);
-
-    _boardProgram.useProgram();
-
-    _gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, positionBuffer)
-      ..enableVertexAttribArray(_boardProgram.positionAttrib)
-      ..vertexAttribPointer(_boardProgram.positionAttrib, 3, webgl.FLOAT, false, 0, 0);
-
-    _gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, positionOffsetBuffer)
-      ..enableVertexAttribArray(_boardProgram.positionOffsetAttrib)
-      ..vertexAttribPointer(_boardProgram.positionOffsetAttrib, 3, webgl.FLOAT, false, 0, 0);
-
-    _gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, normalBuffer)
-      ..enableVertexAttribArray(_boardProgram.normalAttrib)
-      ..vertexAttribPointer(_boardProgram.normalAttrib, 3, webgl.FLOAT, false, 0, 0);
-
-    _gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, textureBuffer)
-      ..enableVertexAttribArray(_boardProgram.textureCoordAttrib)
-      ..vertexAttribPointer(_boardProgram.textureCoordAttrib, 2, webgl.FLOAT, false, 0, 0);
+    _boardProgram
+      ..useProgram()
+      ..setPositions(positionData)
+      ..setPositionOffsets(positionOffsetData)
+      ..setNormals(normalData)
+      ..setTextureCoords(textureData);
 
     _indexBuffer = createElementArrayBuffer(_gl, indexData);
   }

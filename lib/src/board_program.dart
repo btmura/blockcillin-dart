@@ -3,11 +3,6 @@ part of blockcillin;
 /// GLSL program for the board.
 class BoardProgram {
 
-  final int positionAttrib;
-  final int positionOffsetAttrib;
-  final int normalAttrib;
-  final int textureCoordAttrib;
-
   final webgl.RenderingContext _gl;
   final webgl.Program _program;
   final webgl.UniformLocation _projectionViewMatrixUniform;
@@ -15,6 +10,10 @@ class BoardProgram {
   final webgl.UniformLocation _normalMatrixUniform;
   final webgl.UniformLocation _grayscaleUniform;
   final webgl.UniformLocation _blackUniform;
+  final int _positionAttrib;
+  final int _positionOffsetAttrib;
+  final int _normalAttrib;
+  final int _textureCoordAttrib;
 
   factory BoardProgram(webgl.RenderingContext gl) {
     var vertexShader = '''
@@ -77,7 +76,7 @@ class BoardProgram {
 
     var program = createProgram(gl, vertexShader, fragmentShader);
     var uniform = newUniformLocator(gl, program);
-    var attrib = newAttribLocator(gl, program);
+    var attribute = newAttribLocator(gl, program);
 
     return new BoardProgram._(
         gl,
@@ -87,10 +86,10 @@ class BoardProgram {
         uniform("u_normalMatrix"),
         uniform("u_grayscale"),
         uniform("u_black"),
-        attrib("a_position"),
-        attrib("a_positionOffset"),
-        attrib("a_normal"),
-        attrib("a_textureCoord"));
+        attribute("a_position"),
+        attribute("a_positionOffset"),
+        attribute("a_normal"),
+        attribute("a_textureCoord"));
   }
 
   BoardProgram._(
@@ -101,10 +100,10 @@ class BoardProgram {
       this._normalMatrixUniform,
       this._grayscaleUniform,
       this._blackUniform,
-      this.positionAttrib,
-      this.positionOffsetAttrib,
-      this.normalAttrib,
-      this.textureCoordAttrib);
+      this._positionAttrib,
+      this._positionOffsetAttrib,
+      this._normalAttrib,
+      this._textureCoordAttrib);
 
   void useProgram() {
     _gl.useProgram(_program);
@@ -128,5 +127,37 @@ class BoardProgram {
 
   void setBlack(double amount) {
     _gl.uniform1f(_blackUniform, amount);
+  }
+
+  void setPositions(List<double> data) {
+    var buffer = createArrayBuffer(_gl, data);
+    _gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
+      ..enableVertexAttribArray(_positionAttrib)
+      ..vertexAttribPointer(_positionAttrib, 3, webgl.FLOAT, false, 0, 0);
+  }
+
+  void setPositionOffsets(List<double> data) {
+    var buffer = createArrayBuffer(_gl, data);
+    _gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
+      ..enableVertexAttribArray(_positionOffsetAttrib)
+      ..vertexAttribPointer(_positionOffsetAttrib, 3, webgl.FLOAT, false, 0, 0);
+  }
+
+  void setNormals(List<double> data) {
+    var buffer = createArrayBuffer(_gl, data);
+    _gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
+      ..enableVertexAttribArray(_normalAttrib)
+      ..vertexAttribPointer(_normalAttrib, 3, webgl.FLOAT, false, 0, 0);
+  }
+
+  void setTextureCoords(List<double> data) {
+    var buffer = createArrayBuffer(_gl, data);
+    _gl
+      ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
+      ..enableVertexAttribArray(_textureCoordAttrib)
+      ..vertexAttribPointer(_textureCoordAttrib, 2, webgl.FLOAT, false, 0, 0);
   }
 }

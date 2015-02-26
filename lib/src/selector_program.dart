@@ -38,13 +38,13 @@ class SelectorProgram {
 
     var program = createProgram(gl, vertexShader, fragmentShader);
     var uniform = newUniformLocator(gl, program);
-    var attrib = newAttribLocator(gl, program);
+    var attribute = newAttribLocator(gl, program);
 
     return new SelectorProgram._(
         program,
         uniform("u_projectionViewMatrix"),
-        attrib("a_position"),
-        attrib("a_textureCoord"));
+        attribute("a_position"),
+        attribute("a_textureCoord"));
   }
 
   SelectorProgram._(
