@@ -99,14 +99,12 @@ class BoardRenderer {
       return;
     }
 
-    var rotationMatrix = new Matrix4.rotation(0.0, _board.rotationY, 0.0);
-    var translationMatrix = new Matrix4.translation(0.0, _board.translationY, 0.0);
-
     _boardProgram.useProgram();
 
-    _gl
-      ..uniformMatrix4fv(_boardProgram.boardRotationMatrixUniform, false, rotationMatrix.floatList)
-      ..uniformMatrix4fv(_boardProgram.boardTranslationMatrixUniform, false, translationMatrix.floatList);
+    var rotationMatrix = new Matrix4.rotation(0.0, _board.rotationY, 0.0);
+    var translationMatrix = new Matrix4.translation(0.0, _board.translationY, 0.0);
+    var boardMatrix = translationMatrix * rotationMatrix;
+    _boardProgram.setBoardMatrix(boardMatrix);
 
     if (_board.grayscaleAmountDirty) {
       _boardProgram.setGrayscaleAmount(_board.grayscaleAmount);

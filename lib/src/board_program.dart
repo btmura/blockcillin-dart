@@ -3,9 +3,6 @@ part of blockcillin;
 /// GLSL program for the board.
 class BoardProgram {
 
-  final webgl.UniformLocation boardRotationMatrixUniform;
-  final webgl.UniformLocation boardTranslationMatrixUniform;
-
   final int positionAttrib;
   final int positionOffsetAttrib;
   final int normalAttrib;
@@ -14,6 +11,7 @@ class BoardProgram {
   final webgl.RenderingContext _gl;
   final webgl.Program _program;
   final webgl.UniformLocation _projectionViewMatrixUniform;
+  final webgl.UniformLocation _boardMatrixUniform;
   final webgl.UniformLocation _normalMatrixUniform;
   final webgl.UniformLocation _grayscaleAmountUniform;
   final webgl.UniformLocation _blackAmountUniform;
@@ -26,9 +24,8 @@ class BoardProgram {
       const vec3 directionalVector = vec3(0.0, 3.0, -3.0);
 
       uniform mat4 u_projectionViewMatrix;
+      uniform mat4 u_boardMatrix;
       uniform mat4 u_normalMatrix;
-      uniform mat4 u_boardRotationMatrix;
-      uniform mat4 u_boardTranslationMatrix;
       uniform float u_blackAmount;
 
       attribute vec3 a_position;
@@ -41,9 +38,7 @@ class BoardProgram {
       varying vec3 v_lighting;
 
       void main(void) {
-        vec4 position = u_boardRotationMatrix
-            * u_boardTranslationMatrix
-            * vec4(a_position + a_positionOffset, 1.0);
+        vec4 position = u_boardMatrix * vec4(a_position + a_positionOffset, 1.0);
 
         gl_Position = u_projectionViewMatrix * position;
 
@@ -88,9 +83,8 @@ class BoardProgram {
         gl,
         program,
         uniform("u_projectionViewMatrix"),
+        uniform("u_boardMatrix"),
         uniform("u_normalMatrix"),
-        uniform("u_boardRotationMatrix"),
-        uniform("u_boardTranslationMatrix"),
         uniform("u_grayscaleAmount"),
         uniform("u_blackAmount"),
         attrib("a_position"),
@@ -103,9 +97,8 @@ class BoardProgram {
       this._gl,
       this._program,
       this._projectionViewMatrixUniform,
+      this._boardMatrixUniform,
       this._normalMatrixUniform,
-      this.boardRotationMatrixUniform,
-      this.boardTranslationMatrixUniform,
       this._grayscaleAmountUniform,
       this._blackAmountUniform,
       this.positionAttrib,
@@ -119,6 +112,10 @@ class BoardProgram {
 
   void setProjectionViewMatrix(Matrix4 matrix) {
     _gl.uniformMatrix4fv(_projectionViewMatrixUniform, false, matrix.floatList);
+  }
+
+  void setBoardMatrix(Matrix4 matrix) {
+    _gl.uniformMatrix4fv(_boardMatrixUniform, false, matrix.floatList);
   }
 
   void setNormalMatrix(Matrix4 matrix) {
