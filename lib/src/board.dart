@@ -23,13 +23,20 @@ class Board {
   final double outerRadius = _outerRadius;
   final double innerRadius = _innerRadius;
 
+  /// How much of the color should be grayscale from 0.0 to 1.0.
+  double grayscaleAmount = _initialGrayscaleAmount;
+
+  /// How much of the color should be black from 0.0 to 1.0.
+  double blackAmount = _initialBlackAmount;
+
+  bool grayscaleAmountDirty = false;
+  bool blackAmountDirty = false;
+
   final StateQueue _stateQueue = new StateQueue();
   final StreamController<AppState> _stateStream = new StreamController();
 
   double _rotationY = _initialRotationY;
   double _translationY = _initialTranslationY;
-  double _grayscaleAmount = _initialGrayscaleAmount;
-  double _blackAmount = _initialBlackAmount;
 
   State _startTransition;
   State _playingState;
@@ -87,12 +94,6 @@ class Board {
   /// Translation of the board on the y-axis.
   double get translationY => _translationY;
 
-  /// How much of the color should be grayscale from 0.0 to 1.0.
-  double get grayscaleAmount => _grayscaleAmount;
-
-  /// How much of the color should be black from 0.0 to 1.0.
-  double get blackAmount => _blackAmount;
-
   /// Returns whether the board changed after advancing it's state.
   bool update() {
     return _stateQueue.update();
@@ -134,17 +135,21 @@ class Board {
     var interp = _easeOutCubic(i, _updatesPerState);
     _rotationY = interp(_initialRotationY, _twistRotation);
     _translationY = interp(_initialTranslationY, 0.0);
-    _grayscaleAmount = interp(_initialGrayscaleAmount, 0.0);
-    _blackAmount = interp(_initialBlackAmount, 0.0);
+    grayscaleAmount = interp(_initialGrayscaleAmount, 0.0);
+    blackAmount = interp(_initialBlackAmount, 0.0);
   }, enter: () {
     _publishState(AppState.STARTING);
+    grayscaleAmountDirty = true;
+    blackAmountDirty = true;
   });
 
   State _newPlayingState() => new State.state("ps", () {
-      _translationY += 0.001;
-      return _translationY < 1.5;
+    _translationY += 0.001;
+    return _translationY < 1.5;
   }, enter: () {
     _publishState(AppState.PLAYING);
+    grayscaleAmountDirty = false;
+    blackAmountDirty = false;
   });
 
   State _newFinishTransition() => () {
@@ -153,14 +158,16 @@ class Board {
       var interp = _easeOutCubic(i, _updatesPerState);
       _rotationY = interp(cr, cr - _twistRotation);
       _translationY = interp(ct, ct - 1.0);
-      _grayscaleAmount = interp(cg, 1.0);
-      _blackAmount = interp(cb, 1.0);
+      grayscaleAmount = interp(cg, 1.0);
+      blackAmount = interp(cb, 1.0);
     }, enter: () {
       cr = _rotationY;
       ct = _translationY;
-      cg = _grayscaleAmount;
-      cb = _blackAmount;
+      cg = grayscaleAmount;
+      cb = blackAmount;
       _publishState(AppState.FINISHING);
+      grayscaleAmountDirty = true;
+      blackAmountDirty = true;
     });
   }();
 
@@ -168,12 +175,14 @@ class Board {
     var cg, cb;
     return new State.transition(id, _updatesPerState, (i) {
       var interp = _easeOutCubic(i, _updatesPerState);
-      _grayscaleAmount = interp(cg, 0.0);
-      _blackAmount = interp(cb, 0.0);
+      grayscaleAmount = interp(cg, 0.0);
+      blackAmount = interp(cb, 0.0);
     }, enter: () {
-      cg = _grayscaleAmount;
-      cb = _blackAmount;
+      cg = grayscaleAmount;
+      cb = blackAmount;
       _publishState(state);
+      grayscaleAmountDirty = true;
+      blackAmountDirty = true;
     });
   }();
 
@@ -181,12 +190,14 @@ class Board {
     var cg, cb;
     return new State.transition(id, _updatesPerState, (i) {
       var interp = _easeOutCubic(i, _updatesPerState);
-      _grayscaleAmount = interp(cg, _pausedGrayscaleAmount);
-      _blackAmount = interp(cb, _pausedBlackAmount);
+      grayscaleAmount = interp(cg, _pausedGrayscaleAmount);
+      blackAmount = interp(cb, _pausedBlackAmount);
     }, enter: () {
-      cg = _grayscaleAmount;
-      cb = _blackAmount;
+      cg = grayscaleAmount;
+      cb = blackAmount;
       _publishState(state);
+      grayscaleAmountDirty = true;
+      blackAmountDirty = true;
     });
   }();
 
