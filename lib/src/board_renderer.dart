@@ -101,17 +101,18 @@ class BoardRenderer {
 
     _boardProgram.useProgram();
 
-    var rotationMatrix = new Matrix4.rotation(0.0, _board.rotationY, 0.0);
-    var translationMatrix = new Matrix4.translation(0.0, _board.translationY, 0.0);
-    var boardMatrix = translationMatrix * rotationMatrix;
-    _boardProgram.setBoardMatrix(boardMatrix);
-
-    if (_board.grayscaleAmountDirty) {
-      _boardProgram.setGrayscaleAmount(_board.grayscaleAmount);
+    if (_board.dirtyRotationY || _board.dirtyTranslationY) {
+      var rm = new Matrix4.rotation(0.0, _board.rotationY, 0.0);
+      var tm = new Matrix4.translation(0.0, _board.translationY, 0.0);
+      _boardProgram.setBoardMatrix(tm * rm);
     }
 
-    if (_board.blackAmountDirty) {
-      _boardProgram.setBlackAmount(_board.blackAmount);
+    if (_board.dirtyGrayscale) {
+      _boardProgram.setGrayscale(_board.grayscale);
+    }
+
+    if (_board.dirtyBlack) {
+      _boardProgram.setBlack(_board.black);
     }
 
     _gl

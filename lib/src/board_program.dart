@@ -13,8 +13,8 @@ class BoardProgram {
   final webgl.UniformLocation _projectionViewMatrixUniform;
   final webgl.UniformLocation _boardMatrixUniform;
   final webgl.UniformLocation _normalMatrixUniform;
-  final webgl.UniformLocation _grayscaleAmountUniform;
-  final webgl.UniformLocation _blackAmountUniform;
+  final webgl.UniformLocation _grayscaleUniform;
+  final webgl.UniformLocation _blackUniform;
 
   factory BoardProgram(webgl.RenderingContext gl) {
     var vertexShader = '''
@@ -26,7 +26,7 @@ class BoardProgram {
       uniform mat4 u_projectionViewMatrix;
       uniform mat4 u_boardMatrix;
       uniform mat4 u_normalMatrix;
-      uniform float u_blackAmount;
+      uniform float u_black;
 
       attribute vec3 a_position;
       attribute vec3 a_positionOffset;
@@ -34,7 +34,7 @@ class BoardProgram {
       attribute vec2 a_textureCoord;
 
       varying vec2 v_textureCoord;
-      varying float v_blackAmount;
+      varying float v_black;
       varying vec3 v_lighting;
 
       void main(void) {
@@ -45,7 +45,7 @@ class BoardProgram {
         v_textureCoord = a_textureCoord;
 
         // TODO(btmura): use uniform to specify step thresholds
-        v_blackAmount = max(1.0 - smoothstep(-2.0, 0.0, position.y), u_blackAmount);
+        v_black = max(1.0 - smoothstep(-2.0, 0.0, position.y), u_black);
 
         vec4 transformedNormal = u_normalMatrix * vec4(a_normal, 1.0);
         float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
@@ -59,17 +59,17 @@ class BoardProgram {
       const vec3 blackColor = vec3(0.0, 0.0, 0.0);
 
       uniform sampler2D u_texture;
-      uniform float u_grayscaleAmount;
+      uniform float u_grayscale;
 
       varying vec2 v_textureCoord;
-      varying float v_blackAmount;
+      varying float v_black;
       varying vec3 v_lighting;
       
       void main(void) {
         vec4 color = texture2D(u_texture, v_textureCoord);
         vec3 grayscaleColor = vec3(color.r * 0.21 + color.g * 0.72 + color.b * 0.07);
-        color = vec4(mix(color.rgb, grayscaleColor, u_grayscaleAmount), color.a);
-        color = vec4(mix(color.rgb, blackColor, v_blackAmount), color.a);
+        color = vec4(mix(color.rgb, grayscaleColor, u_grayscale), color.a);
+        color = vec4(mix(color.rgb, blackColor, v_black), color.a);
         color = vec4(color.rgb * v_lighting, color.a);
         gl_FragColor = color;
       }
@@ -85,8 +85,8 @@ class BoardProgram {
         uniform("u_projectionViewMatrix"),
         uniform("u_boardMatrix"),
         uniform("u_normalMatrix"),
-        uniform("u_grayscaleAmount"),
-        uniform("u_blackAmount"),
+        uniform("u_grayscale"),
+        uniform("u_black"),
         attrib("a_position"),
         attrib("a_positionOffset"),
         attrib("a_normal"),
@@ -99,8 +99,8 @@ class BoardProgram {
       this._projectionViewMatrixUniform,
       this._boardMatrixUniform,
       this._normalMatrixUniform,
-      this._grayscaleAmountUniform,
-      this._blackAmountUniform,
+      this._grayscaleUniform,
+      this._blackUniform,
       this.positionAttrib,
       this.positionOffsetAttrib,
       this.normalAttrib,
@@ -122,11 +122,11 @@ class BoardProgram {
     _gl.uniformMatrix4fv(_normalMatrixUniform, false, matrix.floatList);
   }
 
-  void setGrayscaleAmount(double amount) {
-    _gl.uniform1f(_grayscaleAmountUniform, amount);
+  void setGrayscale(double amount) {
+    _gl.uniform1f(_grayscaleUniform, amount);
   }
 
-  void setBlackAmount(double amount) {
-    _gl.uniform1f(_blackAmountUniform, amount);
+  void setBlack(double amount) {
+    _gl.uniform1f(_blackUniform, amount);
   }
 }
