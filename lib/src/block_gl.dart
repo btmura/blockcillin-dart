@@ -20,9 +20,8 @@ class BlockGL {
   final Vector3 ringTranslation;
 
   factory BlockGL(double outerRadius, double innerRadius, int cellsPerRing) {
-    var yAxis = new Vector3(0.0, 1.0, 0.0);
     var theta = 2 * math.PI / cellsPerRing;
-    var halfSwing = new Quaternion.fromAxisAngle(yAxis, theta / 2);
+    var halfSwing = new Quaternion.fromAxisAngle(_yAxis, theta / 2);
 
     var outerVector = new Vector3(0.0, 0.0, outerRadius);
     var innerVector = new Vector3(0.0, 0.0, innerRadius);
@@ -30,7 +29,7 @@ class BlockGL {
     var outerSwingVector = halfSwing.rotate(outerVector);
     var innerSwingVector = halfSwing.rotate(innerVector);
 
-    var cellRotation = new Quaternion.fromAxisAngle(yAxis, theta);
+    var cellRotation = new Quaternion.fromAxisAngle(_yAxis, theta);
     var ringTranslation = new Vector3(0.0, -outerSwingVector.x * 2, 0.0);
 
     var outerX = outerSwingVector.x;
@@ -92,15 +91,14 @@ class BlockGL {
       innerBottomRight,
     ];
 
-    var halfSwingLeft = new Quaternion.fromAxisAngle(yAxis, -theta / 2);
-    var halfSwingRight = new Quaternion.fromAxisAngle(yAxis, theta / 2);
+    var halfSwingLeft = new Quaternion.fromAxisAngle(_yAxis, -theta / 2);
+    var halfSwingRight = new Quaternion.fromAxisAngle(_yAxis, theta / 2);
 
-    var zAxis = new Vector3(0.0, 0.0, 1.0);
-    var vectorSwungLeft = halfSwingLeft.rotate(zAxis);
-    var vectorSwungRight = halfSwingRight.rotate(zAxis);
+    var vectorSwungLeft = halfSwingLeft.rotate(_zAxis);
+    var vectorSwungRight = halfSwingRight.rotate(_zAxis);
 
-    var leftNormal = vectorSwungLeft.cross(yAxis).normalize();
-    var rightNormal = yAxis.cross(vectorSwungRight).normalize();
+    var leftNormal = vectorSwungLeft.cross(_yAxis).normalize();
+    var rightNormal = _yAxis.cross(vectorSwungRight).normalize();
 
     var frontNormal = new Vector3(0.0, 0.0, 1.0);
     var backNormal = new Vector3(0.0, 0.0, -1.0);
@@ -176,7 +174,7 @@ class BlockGL {
 
   BlockGL._(this.vertices, this.normals, this.indices, this.cellRotation, this.ringTranslation);
 
-  List<double> getTextureCoords(BlockColor color) {
+  List<Vector2> getTextureCoords(BlockColor color) {
     // ul = (0, 0), br = (1, 1)
     var texturePoints = [
       // Front
@@ -224,8 +222,7 @@ class BlockGL {
       // Move right to change colors relying on the image tiles.
       absPoint.x += color.index * _textureTileSize;
 
-      textureCoords.add(absPoint.x);
-      textureCoords.add(absPoint.y);
+      textureCoords.add(absPoint);
     }
     return textureCoords;
   }

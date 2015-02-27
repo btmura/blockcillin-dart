@@ -129,35 +129,19 @@ class BoardProgram {
     _gl.uniform1f(_blackUniform, amount);
   }
 
-  void setPositions(List<double> data) {
-    var buffer = createArrayBuffer(_gl, data);
-    _gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
-      ..enableVertexAttribArray(_positionAttrib)
-      ..vertexAttribPointer(_positionAttrib, 3, webgl.FLOAT, false, 0, 0);
+  void setPositionBuffer(webgl.Buffer buffer) {
+    setVertexAttribBuffer3f(_gl, buffer, _positionAttrib);
   }
 
-  void setPositionOffsets(List<double> data) {
-    var buffer = createArrayBuffer(_gl, data);
-    _gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
-      ..enableVertexAttribArray(_positionOffsetAttrib)
-      ..vertexAttribPointer(_positionOffsetAttrib, 3, webgl.FLOAT, false, 0, 0);
+  void setPositionOffsetBuffer(webgl.Buffer buffer) {
+    setVertexAttribBuffer3f(_gl, buffer, _positionOffsetAttrib);
   }
 
-  void setNormals(List<double> data) {
-    var buffer = createArrayBuffer(_gl, data);
-    _gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
-      ..enableVertexAttribArray(_normalAttrib)
-      ..vertexAttribPointer(_normalAttrib, 3, webgl.FLOAT, false, 0, 0);
+  void setNormalBuffer(webgl.Buffer buffer) {
+    setVertexAttribBuffer3f(_gl, buffer, _normalAttrib);
   }
 
-  void setTextureCoords(List<double> data) {
-    var buffer = createArrayBuffer(_gl, data);
-    _gl
-      ..bindBuffer(webgl.ARRAY_BUFFER, buffer)
-      ..enableVertexAttribArray(_textureCoordAttrib)
-      ..vertexAttribPointer(_textureCoordAttrib, 2, webgl.FLOAT, false, 0, 0);
+  void setTextureCoordBuffer(webgl.Buffer buffer) {
+    setVertexAttribBuffer2f(_gl, buffer, _textureCoordAttrib);
   }
 }

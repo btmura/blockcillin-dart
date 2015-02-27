@@ -2,6 +2,9 @@ part of blockcillin;
 
 class BoardRenderer {
 
+  /// Vector to translate cells out of the scene to make them appear empty.
+  static final Vector3 _emptyTranslation = new Vector3(0.0, -100.0, 0.0);
+
   final webgl.RenderingContext _gl;
   final BoardProgram _boardProgram;
 
@@ -13,29 +16,24 @@ class BoardRenderer {
   void setBoard(Board board) {
     this._board = board;
 
-    var positionData = [];
-    var positionOffsetData = [];
-    var normalData = [];
-    var textureData = [];
-    var indexData = [];
-
-    var yAxis = new Vector3(0.0, 1.0, 0.0);
-
-    // Vector to translate cells out of the scene to make them appear empty.
-    var emptyTranslation = new Vector3(0.0, -100.0, 0.0);
-
     var blockGL = new BlockGL(board.outerRadius, board.innerRadius, board.numCells);
+
+    var positions = [];
+    var positionOffsets = [];
+    var normals = [];
+    var textureCoords = [];
+    var indices = [];
 
     var totalRingTranslation = new Vector3(0.0, 0.0, 0.0);
     for (var i = 0; i < board.numRings; i++) {
-      var totalCellRotation = new Quaternion.fromAxisAngle(yAxis, 0.0);
+      var totalCellRotation = new Quaternion.fromAxisAngle(_yAxis, 0.0);
       for (var j = 0; j < board.numCells; j++) {
         var cell = board.rings[i].cells[j];
 
         var color = cell.block != null ? cell.block.color : BlockColor.RED;
-        textureData.addAll(blockGL.getTextureCoords(color));
+        textureCoords.addAll(blockGL.getTextureCoords(color));
 
-        indexData.addAll(blockGL.indices.map((index) {
+        indices.addAll(blockGL.indices.map((index) {
           var offset = (i * board.numCells + j) * BlockGL.numIndices;
           return offset + index;
         }));
@@ -43,35 +41,29 @@ class BoardRenderer {
         for (var k = 0; k < blockGL.vertices.length; k++) {
           var rotatedVertex = totalCellRotation.rotate(totalRingTranslation + blockGL.vertices[k]);
           if (cell.block == null) {
-            rotatedVertex += emptyTranslation;
+            rotatedVertex += _emptyTranslation;
           }
 
-          positionData.add(rotatedVertex.x);
-          positionData.add(rotatedVertex.y);
-          positionData.add(rotatedVertex.z);
-
-          positionOffsetData.add(cell.positionOffset.x);
-          positionOffsetData.add(cell.positionOffset.y);
-          positionOffsetData.add(cell.positionOffset.z);
-
-          var rotatedNormal = totalCellRotation.rotate(blockGL.normals[k]);
-          normalData.add(rotatedNormal.x);
-          normalData.add(rotatedNormal.y);
-          normalData.add(rotatedNormal.z);
+          positions.add(rotatedVertex);
+          positionOffsets.add(cell.positionOffset);
+          normals.add(totalCellRotation.rotate(blockGL.normals[k]));
         }
         totalCellRotation *= blockGL.cellRotation;
       }
       totalRingTranslation += blockGL.ringTranslation;
     }
 
-    _boardProgram
-      ..useProgram()
-      ..setPositions(positionData)
-      ..setPositionOffsets(positionOffsetData)
-      ..setNormals(normalData)
-      ..setTextureCoords(textureData);
+    var positionBuffer = newArrayBuffer(_gl, Vector3.flatten(positions));
+    var positionOffsetBuffer = newArrayBuffer(_gl, Vector3.flatten(positionOffsets));
+    var normalBuffer = newArrayBuffer(_gl, Vector3.flatten(normals));
+    var textureCoordBuffer = newArrayBuffer(_gl, Vector2.flatten(textureCoords));
+    _indexBuffer = newElementArrayBuffer(_gl, indices);
 
-    _indexBuffer = createElementArrayBuffer(_gl, indexData);
+    _boardProgram.useProgram();
+    _boardProgram.setPositionBuffer(positionBuffer);
+    _boardProgram.setPositionOffsetBuffer(positionOffsetBuffer);
+    _boardProgram.setNormalBuffer(normalBuffer);
+    _boardProgram.setTextureCoordBuffer(textureCoordBuffer);
   }
 
   void render() {
@@ -95,8 +87,7 @@ class BoardRenderer {
       _boardProgram.setBlack(_board.black);
     }
 
-    _gl
-      ..bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer)
-      ..drawElements(webgl.TRIANGLES, 36 * _board.numRings * _board.numCells, webgl.UNSIGNED_SHORT, 0);
+    _gl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer);
+    _gl.drawElements(webgl.TRIANGLES, 36 * _board.numRings * _board.numCells, webgl.UNSIGNED_SHORT, 0);
   }
 }

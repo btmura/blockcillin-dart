@@ -33,4 +33,13 @@ class Vector2 {
 
   /// Prints out the x and y values.
   String toString() => "($x, $y)";
+
+  static List<double> flatten(List<Vector2> vectors) {
+    var list = new List<double>();
+    for (var v in vectors) {
+      list.add(v.x);
+      list.add(v.y);
+    }
+    return list;
+  }
 }

@@ -67,4 +67,18 @@ class Vector3 {
   }
 
   String toString() => "($x, $y, $z)";
+
+  static List<double> flatten(List<Vector3> vectors) {
+    var list = new List<double>();
+    for (var v in vectors) {
+      list.add(v.x);
+      list.add(v.y);
+      list.add(v.z);
+    }
+    return list;
+  }
 }
+
+final Vector3 _xAxis = new Vector3(1.0, 0.0, 0.0);
+final Vector3 _yAxis = new Vector3(0.0, 1.0, 0.0);
+final Vector3 _zAxis = new Vector3(0.0, 0.0, 1.0);
