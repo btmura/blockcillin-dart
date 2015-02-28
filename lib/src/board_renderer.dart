@@ -1,17 +1,18 @@
 part of blockcillin;
 
+/// Renderer of the board.
 class BoardRenderer {
 
   /// Vector to translate cells out of the scene to make them appear empty.
   static final Vector3 _emptyTranslation = new Vector3(0.0, -100.0, 0.0);
 
   final webgl.RenderingContext _gl;
-  final BoardProgram _boardProgram;
+  final BoardProgram _program;
 
   webgl.Buffer _indexBuffer;
   Board _board;
 
-  BoardRenderer(this._gl, this._boardProgram);
+  BoardRenderer(this._gl, this._program);
 
   void setBoard(Board board) {
     this._board = board;
@@ -59,11 +60,11 @@ class BoardRenderer {
     var textureCoordBuffer = newArrayBuffer(_gl, Vector2.flatten(textureCoords));
     _indexBuffer = newElementArrayBuffer(_gl, indices);
 
-    _boardProgram.useProgram();
-    _boardProgram.setPositionBuffer(positionBuffer);
-    _boardProgram.setPositionOffsetBuffer(positionOffsetBuffer);
-    _boardProgram.setNormalBuffer(normalBuffer);
-    _boardProgram.setTextureCoordBuffer(textureCoordBuffer);
+    _program.useProgram();
+    _program.setPositionBuffer(positionBuffer);
+    _program.setPositionOffsetBuffer(positionOffsetBuffer);
+    _program.setNormalBuffer(normalBuffer);
+    _program.setTextureCoordBuffer(textureCoordBuffer);
   }
 
   void render() {
@@ -71,20 +72,20 @@ class BoardRenderer {
       return;
     }
 
-    _boardProgram.useProgram();
+    _program.useProgram();
 
     if (_board.dirtyRotationY || _board.dirtyTranslationY) {
       var rm = new Matrix4.rotation(0.0, _board.rotationY, 0.0);
       var tm = new Matrix4.translation(0.0, _board.translationY, 0.0);
-      _boardProgram.setBoardMatrix(tm * rm);
+      _program.setBoardMatrix(tm * rm);
     }
 
     if (_board.dirtyGrayscale) {
-      _boardProgram.setGrayscale(_board.grayscale);
+      _program.setGrayscale(_board.grayscale);
     }
 
     if (_board.dirtyBlack) {
-      _boardProgram.setBlack(_board.black);
+      _program.setBlack(_board.black);
     }
 
     _gl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer);

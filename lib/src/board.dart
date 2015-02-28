@@ -101,32 +101,29 @@ class Board {
   /// Requests the board to pause.
   void requestPause() {
     if (_stateQueue.isAt(_playingState)) {
-      _stateQueue
-        ..clear()
-        ..add(_pauseTransition)
-        ..add(_pausedMarker);
+      _stateQueue.clear();
+      _stateQueue.add(_pauseTransition);
+      _stateQueue.add(_pausedMarker);
     }
   }
 
   /// Requests the board to resume.
   void requestResume() {
     if (_stateQueue.isAny([_pauseTransition, _pausedMarker])) {
-      _stateQueue
-        ..clear()
-        ..add(_resumeTransition)
-        ..add(_playingState)
-        ..add(_gameOverTransition)
-        ..add(_gameOverMarker);
+      _stateQueue.clear();
+      _stateQueue.add(_resumeTransition);
+      _stateQueue.add(_playingState);
+      _stateQueue.add(_gameOverTransition);
+      _stateQueue.add(_gameOverMarker);
     }
   }
 
   /// Requests the board to finish.
   void requestFinish() {
     if (_stateQueue.isAny([_pauseTransition, _pausedMarker, _gameOverMarker])) {
-        _stateQueue
-          ..clear()
-          ..add(_finishTransition)
-          ..add(_finishedMarker);
+        _stateQueue.clear();
+        _stateQueue.add(_finishTransition);
+        _stateQueue.add(_finishedMarker);
     }
   }
 

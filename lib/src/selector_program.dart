@@ -3,11 +3,11 @@ part of blockcillin;
 /// GLSL program for the selector.
 class SelectorProgram {
 
-  final webgl.Program program;
-
-  final webgl.UniformLocation projectionViewMatrixUniform;
-  final int positionAttrib;
-  final int textureCoordAttrib;
+  final webgl.RenderingContext _gl;
+  final webgl.Program _program;
+  final webgl.UniformLocation _projectionViewMatrixUniform;
+  final int _positionAttrib;
+  final int _textureCoordAttrib;
 
   factory SelectorProgram(webgl.RenderingContext gl) {
     var vertexShader = '''
@@ -41,6 +41,7 @@ class SelectorProgram {
     var attribute = newAttribLocator(gl, program);
 
     return new SelectorProgram._(
+        gl,
         program,
         uniform("u_projectionViewMatrix"),
         attribute("a_position"),
@@ -48,8 +49,25 @@ class SelectorProgram {
   }
 
   SelectorProgram._(
-      this.program,
-      this.projectionViewMatrixUniform,
-      this.positionAttrib,
-      this.textureCoordAttrib);
+      this._gl,
+      this._program,
+      this._projectionViewMatrixUniform,
+      this._positionAttrib,
+      this._textureCoordAttrib);
+
+  void useProgram() {
+    _gl.useProgram(_program);
+  }
+
+  void setProjectionViewMatrix(Matrix4 matrix) {
+    _gl.uniformMatrix4fv(_projectionViewMatrixUniform, false, matrix.floatList);
+  }
+
+  void setPositionBuffer(webgl.Buffer buffer) {
+    setVertexAttribBuffer3f(_gl, buffer, _positionAttrib);
+  }
+
+  void setTextureCoordBuffer(webgl.Buffer buffer) {
+    setVertexAttribBuffer2f(_gl, buffer, _textureCoordAttrib);
+  }
 }

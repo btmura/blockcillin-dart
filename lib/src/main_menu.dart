@@ -13,26 +13,29 @@ class MainMenu {
 
   /// Creates the menu with the production DOM tree and content.
   factory MainMenu() {
-    var title = new HeadingElement.h1()
-      ..className = "main-menu-title";
+    var title = new HeadingElement.h1();
+    title.className = "main-menu-title";
 
-    makeButton(label) => new ButtonElement()
-      ..text = label
-      ..className = "main-menu-button";
+    ButtonElement makeButton(label) {
+      var button = new ButtonElement();
+      button.text = label;
+      button.className = "main-menu-button";
+      return button;
+    }
 
     var continueButton = makeButton("Continue");
     var newGameButton = makeButton("New Game");
 
-    var footer = new ParagraphElement()
-      ..text = "© 2014 BM Software v0.1"
-      ..className = "main-menu-footer";
+    var footer = new ParagraphElement();
+    footer.text = "© 2014 BM Software v0.1";
+    footer.className = "main-menu-footer";
 
-    var menu = new DivElement()
-      ..className = "main-menu"
-      ..append(title)
-      ..append(continueButton)
-      ..append(newGameButton)
-      ..append(footer);
+    var menu = new DivElement();
+    menu.className = "main-menu";
+    menu.append(title);
+    menu.append(continueButton);
+    menu.append(newGameButton);
+    menu.append(footer);
 
     var fader = new Fader(menu);
 
@@ -40,9 +43,8 @@ class MainMenu {
   }
 
   MainMenu._(this._menu, this._title, this._continueButton, this._newGameButton, this._fader) {
-    _fader
-        ..onFadeInStartCallback = _onMenuFadeInStart
-        ..onFadeOutEndCallback = _onMenuFadeOutEnd;
+    _fader.onFadeInStartCallback = _onMenuFadeInStart;
+    _fader.onFadeOutEndCallback = _onMenuFadeOutEnd;
   }
 
   /// Continue button click stream. Listen to this to resume the game.

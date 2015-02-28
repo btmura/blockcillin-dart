@@ -9,13 +9,13 @@ class ButtonBar {
 
   /// Creates the button bar with the production DOM tree and content.
   factory ButtonBar() {
-    var pauseButton = new ButtonElement()
-        ..text = "Pause"
-        ..className = "game-menu-button";
+    var pauseButton = new ButtonElement();
+    pauseButton.text = "Pause";
+    pauseButton.className = "game-menu-button";
 
-    var buttonBar = new DivElement()
-        ..className = "button-bar"
-        ..append(pauseButton);
+    var buttonBar = new DivElement();
+    buttonBar.className = "button-bar";
+    buttonBar.append(pauseButton);
 
     var fader = new Fader(buttonBar);
 
