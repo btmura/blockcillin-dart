@@ -59,11 +59,15 @@ class SelectorRenderer {
   }
 
   void render() {
-    _program.useProgram();
     if (_indexBuffer != null) {
+      _gl.enable(webgl.BLEND);
+
+      _program.useProgram();
       _program.enableArrays(_positionBuffer, _textureCoordBuffer);
       drawTriangles(_gl, _indexBuffer, _indexCount);
       _program.disableArrays();
+
+      _gl.disable(webgl.BLEND);
     }
   }
 }

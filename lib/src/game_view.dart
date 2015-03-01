@@ -24,7 +24,6 @@ class GameView {
   void init() {
     _gl.clearColor(0.0, 0.0, 0.0, 1.0);
     _gl.enable(webgl.DEPTH_TEST);
-    _gl.enable(webgl.BLEND);
     _gl.blendFunc(webgl.SRC_ALPHA, webgl.ONE_MINUS_SRC_ALPHA);
 
     _gl.bindTexture(webgl.TEXTURE_2D, _gl.createTexture());
