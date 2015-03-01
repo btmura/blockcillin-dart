@@ -8,7 +8,10 @@ class BoardRenderer {
 
   final webgl.RenderingContext _gl;
   final BoardProgram _program;
-
+  webgl.Buffer _positionBuffer;
+  webgl.Buffer _positionOffsetBuffer;
+  webgl.Buffer _normalBuffer;
+  webgl.Buffer _textureCoordBuffer;
   webgl.Buffer _indexBuffer;
   Board _board;
 
@@ -35,7 +38,7 @@ class BoardRenderer {
         textureCoords.addAll(blockGL.getTextureCoords(color));
 
         indices.addAll(blockGL.indices.map((index) {
-          var offset = (i * board.numCells + j) * BlockGL.numIndices;
+          var offset = (i * board.numCells + j) * BlockGL.uniqueIndexCount;
           return offset + index;
         }));
 
@@ -54,17 +57,11 @@ class BoardRenderer {
       totalRingTranslation += blockGL.ringTranslation;
     }
 
-    var positionBuffer = newArrayBuffer(_gl, Vector3.flatten(positions));
-    var positionOffsetBuffer = newArrayBuffer(_gl, Vector3.flatten(positionOffsets));
-    var normalBuffer = newArrayBuffer(_gl, Vector3.flatten(normals));
-    var textureCoordBuffer = newArrayBuffer(_gl, Vector2.flatten(textureCoords));
+    _positionBuffer = newArrayBuffer(_gl, Vector3.flatten(positions));
+    _positionOffsetBuffer = newArrayBuffer(_gl, Vector3.flatten(positionOffsets));
+    _normalBuffer = newArrayBuffer(_gl, Vector3.flatten(normals));
+    _textureCoordBuffer = newArrayBuffer(_gl, Vector2.flatten(textureCoords));
     _indexBuffer = newElementArrayBuffer(_gl, indices);
-
-    _program.useProgram();
-    _program.setPositionBuffer(positionBuffer);
-    _program.setPositionOffsetBuffer(positionOffsetBuffer);
-    _program.setNormalBuffer(normalBuffer);
-    _program.setTextureCoordBuffer(textureCoordBuffer);
   }
 
   void render() {
@@ -88,7 +85,11 @@ class BoardRenderer {
       _program.setBlack(_board.black);
     }
 
+    _program.enableArrays(_positionBuffer, _positionOffsetBuffer, _normalBuffer, _textureCoordBuffer);
+
     _gl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, _indexBuffer);
-    _gl.drawElements(webgl.TRIANGLES, 36 * _board.numRings * _board.numCells, webgl.UNSIGNED_SHORT, 0);
+    _gl.drawElements(webgl.TRIANGLES, _board.numRings * _board.numCells * BlockGL.indexCount, webgl.UNSIGNED_SHORT, 0);
+
+    _program.disableArrays();
   }
 }

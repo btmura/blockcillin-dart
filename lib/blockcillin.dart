@@ -25,10 +25,11 @@ part 'src/main_menu.dart';
 part 'src/math.dart';
 part 'src/matrix4.dart';
 part 'src/quaternion.dart';
+part 'src/ring.dart';
 part 'src/selector_program.dart';
 part 'src/selector_renderer.dart';
-part 'src/ring.dart';
 part 'src/state.dart';
+part 'src/texture.dart';
 part 'src/vector2.dart';
 part 'src/vector3.dart';
 

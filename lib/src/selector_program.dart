@@ -63,11 +63,13 @@ class SelectorProgram {
     _gl.uniformMatrix4fv(_projectionViewMatrixUniform, false, matrix.floatList);
   }
 
-  void setPositionBuffer(webgl.Buffer buffer) {
-    setVertexAttribBuffer3f(_gl, buffer, _positionAttrib);
+  void enableArrays(webgl.Buffer positionBuffer, webgl.Buffer textureCoordBuffer) {
+    enableVertexAttribArray3f(_gl, positionBuffer, _positionAttrib);
+    enableVertexAttribArray2f(_gl, textureCoordBuffer, _textureCoordAttrib);
   }
 
-  void setTextureCoordBuffer(webgl.Buffer buffer) {
-    setVertexAttribBuffer2f(_gl, buffer, _textureCoordAttrib);
+  void disableArrays() {
+    disableVertexAttribArray(_gl, _positionAttrib);
+    disableVertexAttribArray(_gl, _textureCoordAttrib);
   }
 }

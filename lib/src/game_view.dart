@@ -24,6 +24,8 @@ class GameView {
   void init() {
     _gl.clearColor(0.0, 0.0, 0.0, 1.0);
     _gl.enable(webgl.DEPTH_TEST);
+    _gl.enable(webgl.BLEND);
+    _gl.blendFunc(webgl.SRC_ALPHA, webgl.ONE_MINUS_SRC_ALPHA);
 
     _gl.bindTexture(webgl.TEXTURE_2D, _gl.createTexture());
     _gl.texImage2D(webgl.TEXTURE_2D, 0, webgl.RGBA, webgl.RGBA, webgl.UNSIGNED_BYTE, _textureImage);
@@ -33,6 +35,8 @@ class GameView {
 
     _updateProjectionMatrix();
     _updateNormalMatrix();
+
+    _selectorRenderer.init();
   }
 
   void setGame(Game newGame) {
@@ -77,8 +81,12 @@ class GameView {
 
   void _updateProjectionMatrix() {
     var projectionViewMatrix = _viewMatrix * _makeProjectionMatrix();
-    _boardProgram.useProgram();
-    _boardProgram.setProjectionViewMatrix(projectionViewMatrix);
+    _boardProgram
+      ..useProgram()
+      ..setProjectionViewMatrix(projectionViewMatrix);
+    _selectorProgram
+      ..useProgram()
+      ..setProjectionViewMatrix(projectionViewMatrix);
   }
 
   void _updateNormalMatrix() {

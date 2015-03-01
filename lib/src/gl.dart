@@ -67,17 +67,22 @@ webgl.Buffer newElementArrayBuffer(webgl.RenderingContext gl, List<int> data) {
 }
 
 /// Binds a buffer to a vertex attribute with 2 floats per vertex.
-void setVertexAttribBuffer2f(webgl.RenderingContext gl, webgl.Buffer buffer, int attribLocation) {
+void enableVertexAttribArray2f(webgl.RenderingContext gl, webgl.Buffer buffer, int attribLocation) {
   gl.bindBuffer(webgl.ARRAY_BUFFER, buffer);
   gl.enableVertexAttribArray(attribLocation);
   gl.vertexAttribPointer(attribLocation, 2, webgl.FLOAT, false, 0, 0);
 }
 
 /// Binds a buffer to a vertex attribute with 3 floats per vertex.
-void setVertexAttribBuffer3f(webgl.RenderingContext gl, webgl.Buffer buffer, int attribLocation) {
+void enableVertexAttribArray3f(webgl.RenderingContext gl, webgl.Buffer buffer, int attribLocation) {
   gl.bindBuffer(webgl.ARRAY_BUFFER, buffer);
   gl.enableVertexAttribArray(attribLocation);
   gl.vertexAttribPointer(attribLocation, 3, webgl.FLOAT, false, 0, 0);
+}
+
+/// Disables a vertex attribute array.
+void disableVertexAttribArray(webgl.RenderingContext gl, int attribLocation) {
+  gl.disableVertexAttribArray(attribLocation);
 }
 
 /// Function that returns a uniform's location given a name.
@@ -106,4 +111,9 @@ AttribLocator newAttribLocator(webgl.RenderingContext gl, webgl.Program program)
     }
     return location;
   };
+}
+
+void drawTriangles(webgl.RenderingContext gl, webgl.Buffer indexBuffer, int triangleCount) {
+    gl.bindBuffer(webgl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.drawElements(webgl.TRIANGLES, triangleCount, webgl.UNSIGNED_SHORT, 0);
 }

@@ -3,14 +3,11 @@ part of blockcillin;
 /// GL-related code to render a block.
 class BlockGL {
 
-  /// Number of tiles per row in the single square texture.
-  static const double _numTextureTiles = 8.0;
-
-  /// Relative size of a single texture tile in the larger texture.
-  static const double _textureTileSize = 1.0 / _numTextureTiles;
-
   /// Number of unique indices in a block's index buffer.
-  static const numIndices = 24;
+  static const uniqueIndexCount = 24;
+
+  /// Number of indices in the block's index buffer.
+  static const indexCount = 36;
 
   final List<Vector3> vertices;
   final List<Vector3> normals;
@@ -176,7 +173,7 @@ class BlockGL {
 
   List<Vector2> getTextureCoords(BlockColor color) {
     // ul = (0, 0), br = (1, 1)
-    var texturePoints = [
+    var textureCoords = [
       // Front
       new Vector2(1.0, 0.0),
       new Vector2(0.0, 0.0),
@@ -214,16 +211,6 @@ class BlockGL {
       new Vector2(1.0, 1.0),
     ];
 
-    var textureCoords = [];
-    for (var relPoint in texturePoints) {
-      // Translate the relative point to absolute space.
-      var absPoint = relPoint * _textureTileSize;
-
-      // Move right to change colors relying on the image tiles.
-      absPoint.x += color.index * _textureTileSize;
-
-      textureCoords.add(absPoint);
-    }
-    return textureCoords;
+    return _toTextureTileCoords(textureCoords, color.index, 0);
   }
 }

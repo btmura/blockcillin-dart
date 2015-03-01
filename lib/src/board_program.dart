@@ -129,19 +129,17 @@ class BoardProgram {
     _gl.uniform1f(_blackUniform, amount);
   }
 
-  void setPositionBuffer(webgl.Buffer buffer) {
-    setVertexAttribBuffer3f(_gl, buffer, _positionAttrib);
+  void enableArrays(webgl.Buffer positionBuffer, webgl.Buffer positionOffsetBuffer, webgl.Buffer normalBuffer, webgl.Buffer textureCoordBuffer) {
+    enableVertexAttribArray3f(_gl, positionBuffer, _positionAttrib);
+    enableVertexAttribArray3f(_gl, positionOffsetBuffer, _positionOffsetAttrib);
+    enableVertexAttribArray3f(_gl, normalBuffer, _normalAttrib);
+    enableVertexAttribArray2f(_gl, textureCoordBuffer, _textureCoordAttrib);
   }
 
-  void setPositionOffsetBuffer(webgl.Buffer buffer) {
-    setVertexAttribBuffer3f(_gl, buffer, _positionOffsetAttrib);
-  }
-
-  void setNormalBuffer(webgl.Buffer buffer) {
-    setVertexAttribBuffer3f(_gl, buffer, _normalAttrib);
-  }
-
-  void setTextureCoordBuffer(webgl.Buffer buffer) {
-    setVertexAttribBuffer2f(_gl, buffer, _textureCoordAttrib);
+  void disableArrays() {
+    disableVertexAttribArray(_gl, _positionAttrib);
+    disableVertexAttribArray(_gl, _positionOffsetAttrib);
+    disableVertexAttribArray(_gl, _normalAttrib);
+    disableVertexAttribArray(_gl, _textureCoordAttrib);
   }
 }
