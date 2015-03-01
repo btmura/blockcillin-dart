@@ -34,12 +34,13 @@ class GameView {
 
     _updateProjectionMatrix();
     _updateNormalMatrix();
-
-    _selectorRenderer.init();
   }
 
   void setGame(Game newGame) {
-    _boardRenderer.setBoard(newGame.board);
+    var board = newGame.board;
+    var geo = new BoardGeometry(board.outerRadius, board.innerRadius, board.numCells);
+    _boardRenderer.init(board, geo);
+    _selectorRenderer.init(geo);
   }
 
   void draw() {

@@ -17,10 +17,10 @@ class BoardRenderer {
 
   BoardRenderer(this._gl, this._program);
 
-  void setBoard(Board board) {
+  void init(Board board, BoardGeometry geometry) {
     this._board = board;
 
-    var blockGL = new BlockGL(board.outerRadius, board.innerRadius, board.numCells);
+    var blockGL = new BlockGL(geometry);
 
     var positions = [];
     var positionOffsets = [];

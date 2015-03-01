@@ -16,12 +16,12 @@ class BlockGL {
   final Quaternion cellRotation;
   final Vector3 ringTranslation;
 
-  factory BlockGL(double outerRadius, double innerRadius, int cellsPerRing) {
-    var theta = 2 * math.PI / cellsPerRing;
+  factory BlockGL(BoardGeometry geometry) {
+    var theta = 2 * math.PI / geometry.ringCellCount;
     var halfSwing = new Quaternion.fromAxisAngle(_yAxis, theta / 2);
 
-    var outerVector = new Vector3(0.0, 0.0, outerRadius);
-    var innerVector = new Vector3(0.0, 0.0, innerRadius);
+    var outerVector = new Vector3(0.0, 0.0, geometry.outerRadius);
+    var innerVector = new Vector3(0.0, 0.0, geometry.innerRadius);
 
     var outerSwingVector = halfSwing.rotate(outerVector);
     var innerSwingVector = halfSwing.rotate(innerVector);
